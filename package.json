@@ -10,6 +10,7 @@
     "bootswatch": "^3.3.7",
     "express": "^4.15.2",
     "font-awesome": "^4.7.0",
+    "isomorphic-fetch": "^2.2.1",
     "morgan": "^1.8.1",
     "plotly": "^1.0.6",
     "react": "^15.4.2",
