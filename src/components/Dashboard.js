@@ -18,7 +18,8 @@ const TotalAssetsChart = () => {
         <h3 className="panel-title">Total Assets over time</h3>
       </div>
       <div className="panel-body">
-        <ResponsiveContainer width="100%" aspect={4.0 / 3.0}>
+        <ChartFilter />
+        <ResponsiveContainer width="100%" height={300}>
           <LineChart data={data}>
             <XAxis dataKey="date" />
             <Tooltip />
@@ -32,11 +33,21 @@ const TotalAssetsChart = () => {
 }
 
 
+const ChartFilter = () => {
+    return (
+        <ul className="nav nav-pills">
+            <li className="active"><a href="#">Last Month</a></li>
+            <li><a href="#">2 Months Ago</a></li>
+            <li><a href="#">Year to Date</a></li>
+            <li><a href="#">All Time</a></li>
+        </ul>
+    )
+}
 const Dashboard = () => {
   return (
     <div className="container">
       <div className="row">
-        <div className="col-md-12">
+        <div className="col-md-12 col-lg-12">
           <TotalAssetsChart />
         </div>
       </div>

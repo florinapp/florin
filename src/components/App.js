@@ -11,7 +11,7 @@ const App = () => {
       <div>
         <Navigation />
         <Route path="/dashboard" component={Dashboard} />
-        <Route path="/account" component={Account} />
+        <Route path="/accounts" component={Account} />
       </div>
     </HashRouter>
   )

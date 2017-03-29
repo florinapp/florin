@@ -16,7 +16,7 @@ const Navigation = () => {
         </div>
         <div className="collapse navbar-collapse" id="navcol-1">
           <ul className="nav navbar-nav">
-            <li role="presentation" className="active"><Link to="dashboard">Dashboard</Link></li>
+            <li role="presentation"><Link to="dashboard">Dashboard</Link></li>
             <li role="presentation"><Link to="accounts">Accounts</Link></li>
             <li role="presentation"><Link to="categories">Categories</Link></li>
           </ul>
