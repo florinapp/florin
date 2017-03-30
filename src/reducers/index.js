@@ -1,7 +1,8 @@
-const initState = {}
+import { combineReducers } from 'redux'
+import dashboard from './dashboard'
 
-const rootReducer = (state=initState, action) => {
-  return state
-}
+const rootReducer = combineReducers({
+  dashboard,
+})
 
 export default rootReducer

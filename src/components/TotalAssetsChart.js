@@ -1,31 +1,22 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { ResponsiveContainer, Line, LineChart, XAxis, CartesianGrid, Tooltip } from 'recharts'
+import ChartFilter from './ChartFilter'
 
-const ChartFilter = () => {
-    return (
-        <ul className="nav nav-pills">
-            <li className="active"><a href="#">Last Month</a></li>
-            <li><a href="#">2 Months Ago</a></li>
-            <li><a href="#">Year to Date</a></li>
-            <li><a href="#">All Time</a></li>
-        </ul>
-    )
-}
-
-const TotalAssetsChart = ({dashboard, onRefresh}) => {
-    // let data = dashboard.assetChartData || []
-    let data = []
+const TotalAssetsChart = ({data, onRefresh, onLastMonth, onTwoMonthsAgo, onYearToDate, onAllTime}) => {
+    let charFilterProps = {onLastMonth, onTwoMonthsAgo, onYearToDate, onAllTime}
+    console.log(charFilterProps)
     return (
         <div className="panel panel-default">
             <div className="panel-heading">
                 <span className="panel-title">Total Assets over time</span>
-                {/*<i className="fa fa-bar-chart-o fa-fw">Total Assets Over Time</i>*/}
                 <div className="pull-right">
-                    <button type="button" className="btn btn-primary btn-sm" onClick={onRefresh}>Refresh</button>
+                    <button type="button" className="btn btn-primary btn-sm" onClick={onRefresh}>
+                        <span className="glyphicon glyphicon-refresh"></span>
+                    </button>
                 </div>
             </div>
             <div className="panel-body">
-                <ChartFilter />
+                <ChartFilter {...charFilterProps}/>
                 <ResponsiveContainer width="100%" height={300}>
                     <LineChart data={data}>
                         <XAxis dataKey="date" />
@@ -38,20 +29,5 @@ const TotalAssetsChart = ({dashboard, onRefresh}) => {
         </div>
     )
 }
-
-// class TotalAssetsChart extends Component {
-//     constructor(props) {
-//         super(props)
-//         this.data = [
-//             { 'date': '2015-01-01', 'amount': 50911 },
-//             { 'date': '2015-02-01', 'amount': 48913 },
-//             { 'date': '2015-03-01', 'amount': 51132 },
-//             { 'date': '2015-04-01', 'amount': 52311 },
-//             { 'date': '2015-05-01', 'amount': 53914 },
-//             { 'date': '2015-06-01', 'amount': 60013 },
-//         ]
-//     }
-
-// }
 
 export default TotalAssetsChart
