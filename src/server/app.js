@@ -1,13 +1,12 @@
 const express = require('express')
 const cors = require('cors')
-// const morgan = require('morgan')
+const morgan = require('morgan')
 const path = require('path')
 
 const app = express()
 
 // setup logger
-// app.use(morgan(':remote-addr - :remote-user [:data[clf]] ":method :url HTTP/:http-version" :status :res[content-length] :response-time ms'))
-
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms'))
 // Serve static assets
 app.use(cors())
 app.use(express.static(path.resolve(__dirname, '..', '..', 'build')))

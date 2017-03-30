@@ -8,7 +8,6 @@ class ChartFilter extends Component {
 
     render() {
         let { onLastMonth, onTwoMonthsAgo, onYearToDate, onAllTime } = this.props
-        let that = this
         return (
             <ul className="nav nav-pills">
                 <li name="last-month" className="active"><a onClick={onLastMonth}>Last Month</a></li>
