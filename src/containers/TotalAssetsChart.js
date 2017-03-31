@@ -12,18 +12,6 @@ const mapDispatchToProps = (dispatch) => {
     return {
         onRefresh: () => {
             dispatch(fetchAssetsChartData())
-        },
-        onLastMonth: () => {
-            alert('last month')
-        },
-        onTwoMonthsAgo: () => {
-            alert('two months ago')
-        },
-        onYearToDate: () => {
-            alert('YTD')
-        },
-        onAllTime: () => {
-            alert('all time')
         }
     }
 }

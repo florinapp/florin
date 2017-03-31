@@ -37,7 +37,7 @@ class TotalAssetsChart extends Component {
                             <YAxis />
                             <Tooltip />
                             {accounts.map((account, idx) => (
-                                <Area key={account} type="monotone" dataKey={account} stackId="1" stroke={colors[idx]} fillOpacity={1} fill={colors[idx]} />
+                                <Area name={assets.accounts[account]} key={account} type="monotone" dataKey={account} stackId="1" stroke={colors[idx]} fillOpacity={1} fill={colors[idx]} />
                             ))}
                         </AreaChart>
                     </ResponsiveContainer>
