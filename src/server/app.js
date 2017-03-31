@@ -9,9 +9,31 @@ const app = express()
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms'))
 // Serve static assets
 app.use(cors())
-app.use(express.static(path.resolve(__dirname, '..', '..', 'build')))
+// app.use(express.static(path.resolve(__dirname, '..', '..', 'build')))
 
-app.get('/charts/assets', (req, res) => {
+app.get('/api/accounts', (req, res) => {
+    res.json({
+        accounts: [
+            {
+                name: 'Tangerine Investment Fund',
+                type: 'TFSA',
+                currentValue: 40325.93
+            },
+            {
+                name: 'WealthSimple TFSA',
+                type: 'TFSA',
+                currentValue: 15699.35
+            },
+            {
+                name: 'WealthBar RRSP',
+                type: 'RRSP',
+                currentValue: 16773.56
+            }
+        ]
+    })
+})
+
+app.get('/api/charts/assets', (req, res) => {
     res.json({
         data: [
             {
@@ -30,8 +52,8 @@ app.get('/charts/assets', (req, res) => {
     })
 })
 
-app.get('*', (req, res) => {
-    res.sendFile(path.resolve(__dirname, '..', '..', 'build', 'index.html'))
-})
+// app.get('*', (req, res) => {
+//     res.sendFile(path.resolve(__dirname, '..', '..', 'build', 'index.html'))
+// })
 
 module.exports = app

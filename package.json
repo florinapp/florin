@@ -22,12 +22,14 @@
     "recharts": "^0.21.2",
     "redux": "^3.6.0",
     "redux-logger": "^3.0.0",
-    "redux-thunk": "^2.2.0"
+    "redux-thunk": "^2.2.0",
+    "sqlite3": "^3.1.8"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "server": "node src/server/index.js"
   }
 }

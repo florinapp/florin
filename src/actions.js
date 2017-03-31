@@ -17,8 +17,31 @@ export const receiveAssetsChartData = (json) => {
 export const fetchAssetsChartData = () => {
     return (dispatch) => {
         dispatch(requestAssetsChartData())
-        return fetch('http://localhost:9000/charts/assets')
+        return fetch('http://localhost:9000/api/charts/assets')
             .then(response => response.json())
             .then(json => dispatch(receiveAssetsChartData(json)))
+    }
+}
+
+export const REQUEST_ACCOUNTS_DATA = 'REQUEST_ACCOUNTS_DATA'
+export const RECEIVE_ACCOUNTS_DATA = 'RECEIVE_ACCOUNTS_DATA'
+export const requestAccountsData = () => {
+    return {
+        type: REQUEST_ACCOUNTS_DATA
+    }
+}
+export const receiveAccountsData = (json) => {
+    return {
+        type: RECEIVE_ACCOUNTS_DATA,
+        accounts: json.accounts,
+        receivedAt: Date.now()
+    }
+}
+export const fetchAccountsData = () => {
+    return (dispatch) => {
+        dispatch(requestAccountsData())
+        return fetch('http://localhost:9000/api/accounts')
+            .then(response => response.json())
+            .then(json => dispatch(receiveAccountsData(json)))
     }
 }

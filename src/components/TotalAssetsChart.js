@@ -4,7 +4,6 @@ import ChartFilter from './ChartFilter'
 
 const TotalAssetsChart = ({data, onRefresh, onLastMonth, onTwoMonthsAgo, onYearToDate, onAllTime}) => {
     let charFilterProps = {onLastMonth, onTwoMonthsAgo, onYearToDate, onAllTime}
-    console.log(charFilterProps)
     return (
         <div className="panel panel-default">
             <div className="panel-heading">

@@ -1,11 +1,15 @@
 import React from 'react'
 import TotalAssetsChart from '../containers/TotalAssetsChart'
+import AccountOverview from './AccountOverview'
 
 const Dashboard = () => {
   return (
     <div className="container">
       <div className="row">
-        <div className="col-md-12 col-lg-12">
+        <div className="col-md-4 col-lg-4">
+          <AccountOverview />
+        </div>
+        <div className="col-md-8 col-lg-8">
           <TotalAssetsChart />
         </div>
       </div>
