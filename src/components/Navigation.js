@@ -18,7 +18,6 @@ const Navigation = () => {
           <ul className="nav navbar-nav">
             <li role="presentation"><Link to="dashboard">Dashboard</Link></li>
             <li role="presentation"><Link to="accounts">Accounts</Link></li>
-            <li role="presentation"><Link to="categories">Categories</Link></li>
           </ul>
         </div>
       </div>

@@ -1,4 +1,4 @@
-import { RECEIVE_ASSETS_CHART_DATA } from '../actions'
+import { RECEIVE_ASSETS_CHART_DATA, RECEIVE_ACCOUNTS_DATA } from '../actions'
 
 const initState = {}
 
@@ -8,6 +8,11 @@ const dashboard = (state=initState, action) => {
             return {
                 ...state,
                 assets: action.data
+            }
+        case RECEIVE_ACCOUNTS_DATA:
+            return {
+                ...state,
+                accounts: action.accounts
             }
         default:
             return state
