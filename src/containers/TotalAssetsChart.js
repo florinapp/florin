@@ -4,7 +4,7 @@ import { fetchAssetsChartData } from '../actions'
 
 const mapStateToProps = ({dashboard}) => {
     return {
-        data: dashboard.assets
+        assets: dashboard.assets
     }
 }
 

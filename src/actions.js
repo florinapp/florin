@@ -10,7 +10,7 @@ export const requestAssetsChartData = () => {
 export const receiveAssetsChartData = (json) => {
     return {
         type: RECEIVE_ASSETS_CHART_DATA,
-        data: json.data,
+        data: json,
         receivedAt: Date.now()
     }
 }

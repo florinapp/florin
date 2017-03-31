@@ -1,32 +1,51 @@
-import React from 'react'
-import { ResponsiveContainer, Line, LineChart, XAxis, CartesianGrid, Tooltip } from 'recharts'
-import ChartFilter from './ChartFilter'
+import React, { Component } from 'react'
+import { ResponsiveContainer, AreaChart, Area, YAxis, XAxis, Tooltip } from 'recharts'
 
-const TotalAssetsChart = ({data, onRefresh, onLastMonth, onTwoMonthsAgo, onYearToDate, onAllTime}) => {
-    let charFilterProps = {onLastMonth, onTwoMonthsAgo, onYearToDate, onAllTime}
-    return (
-        <div className="panel panel-default">
-            <div className="panel-heading">
-                <span className="panel-title">Total Assets over time</span>
-                <div className="pull-right">
-                    <button type="button" className="btn btn-primary btn-sm" onClick={onRefresh}>
-                        <span className="glyphicon glyphicon-refresh"></span>
-                    </button>
+const generateColor = () => {
+    var r = (Math.round(Math.random() * 127) + 127).toString(16);
+    var g = (Math.round(Math.random() * 127) + 127).toString(16);
+    var b = (Math.round(Math.random() * 127) + 127).toString(16);
+    return '#' + r + g + b;
+}
+
+class TotalAssetsChart extends Component {
+    componentDidMount() {
+        let {onRefresh} = this.props
+        onRefresh.call(this)
+    }
+
+    render() {
+        let {assets, onRefresh} = this.props
+        assets = assets || {}
+        let accounts = Object.keys(assets.accounts || {})
+        let data = assets.data || []
+        let colors = [...Array(5).keys()].map(()=>generateColor())
+        return (
+            <div className="panel panel-default">
+                <div className="panel-heading">
+                    <span className="panel-title">Total Assets over time</span>
+                    <div className="pull-right">
+                        <button type="button" className="btn btn-primary btn-sm" onClick={onRefresh}>
+                            <span className="glyphicon glyphicon-refresh"></span>
+                        </button>
+                    </div>
+                </div>
+                <div className="panel-body">
+                    <ResponsiveContainer width="100%" height={300}>
+                        <AreaChart data={data}>
+                            <XAxis dataKey="name" />
+                            <YAxis />
+                            <Tooltip />
+                            {accounts.map((account, idx) => (
+                                <Area key={account} type="monotone" dataKey={account} stackId="1" stroke={colors[idx]} fillOpacity={1} fill={colors[idx]} />
+                            ))}
+                        </AreaChart>
+                    </ResponsiveContainer>
                 </div>
             </div>
-            <div className="panel-body">
-                <ChartFilter {...charFilterProps}/>
-                <ResponsiveContainer width="100%" height={300}>
-                    <LineChart data={data}>
-                        <XAxis dataKey="date" />
-                        <Tooltip />
-                        <CartesianGrid stroke="#f5f5f5" />
-                        <Line type="monotone" dataKey="amount" stroke="#8884d8" activeDot={{ r: 8 }} />
-                    </LineChart>
-                </ResponsiveContainer>
-            </div>
-        </div>
-    )
+        )
+
+    }
 }
 
 export default TotalAssetsChart

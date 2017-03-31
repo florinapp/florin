@@ -35,19 +35,27 @@ app.get('/api/accounts', (req, res) => {
 
 app.get('/api/charts/assets', (req, res) => {
     res.json({
+        accounts: {
+            'tif': 'Tangerine Investment Fund',
+            'wb': 'WealthBar',
+            'ws': 'WealthSimple'
+        },
         data: [
             {
-                "date": "2015-01-01",
-                "amount": 19203.12
+                date: "2015-01-01",
+                tif: 10000
             },
             {
-                "date": "2016-01-01",
-                "amount": 23107.34
+                date: "2015-01-10",
+                tif: 10010,
+                wb: 15000
             },
             {
-                "date": "2017-01-01",
-                "amount": 22357.43
-            }
+                date: "2015-02-10",
+                tif: 10030,
+                wb: 15010,
+                ws: 10010
+            },
         ]
     })
 })
