@@ -12,19 +12,19 @@ def _seed_accounts():
     Account = app.db.Account
     AccountSnapshot = app.db.AccountSnapshot
 
-    a1 = Account(id=uuid.uuid4().hex, name='Tangerine Investment Fund', type='TFSA')
+    a1 = Account(id=uuid.uuid4().hex, institution='Tangerine', name='Tangerine Investment Fund', type='TFSA')
     AccountSnapshot(account=a1, date=datetime.date(2016, 1, 1), value=Decimal('35500')),
     AccountSnapshot(account=a1, date=datetime.date(2017, 2, 21), value=Decimal('39638.83')),
     AccountSnapshot(account=a1, date=datetime.date(2017, 3, 4), value=Decimal('40046.28')),
     commit()
 
-    a2 = Account(id=uuid.uuid4().hex, name='WealthSimple TFSA', type='TFSA')
+    a2 = Account(id=uuid.uuid4().hex, institution='WealthSimple', name='WealthSimple TFSA', type='TFSA')
     AccountSnapshot(account=a2, date=datetime.date(2017, 1, 1), value=Decimal('5000')),
     AccountSnapshot(account=a2, date=datetime.date(2017, 2, 1), value=Decimal('5068.41')),
     AccountSnapshot(account=a2, date=datetime.date(2017, 2, 21), value=Decimal('5127.81')),
     commit()
 
-    Account(id=uuid.uuid4().hex, name='Questrade RESP', type='RESP')
+    Account(id=uuid.uuid4().hex, institution='Questrade', name='Questrade RESP', type='RESP')
     commit()
 
 

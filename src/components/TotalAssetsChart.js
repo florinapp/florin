@@ -19,7 +19,7 @@ class TotalAssetsChart extends Component {
         assets = assets || {}
         let accounts = Object.keys(assets.accounts || {})
         let data = assets.data || []
-        let colors = [...Array(5).keys()].map(()=>generateColor())
+        let colors = [...Array(accounts.length).keys()].map(()=>generateColor())
         return (
             <div className="panel panel-default">
                 <div className="panel-heading">
@@ -37,7 +37,7 @@ class TotalAssetsChart extends Component {
                             <YAxis />
                             <Tooltip />
                             {accounts.map((account, idx) => (
-                                <Area name={assets.accounts[account]} key={account} type="monotone" dataKey={account} stackId="1" connectNulls="true" stroke={colors[idx]} fillOpacity={1} fill={colors[idx]} />
+                                <Area name={assets.accounts[account]} key={account} type="monotone" dataKey={account} stackId="1" stroke={colors[idx]} fillOpacity={1} fill={colors[idx]} />
                             ))}
                         </AreaChart>
                     </ResponsiveContainer>

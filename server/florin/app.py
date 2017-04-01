@@ -8,11 +8,15 @@ from . import database
 
 logging.basicConfig()
 
-app = flask.Flask(__name__)
 
-CORS(app)
+def create_app():
+    app = flask.Flask(__name__)
+    CORS(app)
+    database.init(app)
+    return app
 
-database.init(app)
+
+app = create_app()
 
 
 def transform_account_model_to_response(account):

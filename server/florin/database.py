@@ -9,6 +9,7 @@ db = Database()
 
 class Account(db.Entity):
     id = PrimaryKey(str)
+    institution = Required(str)
     name = Required(str)
     type = Required(str)
     snapshots = Set('AccountSnapshot')
