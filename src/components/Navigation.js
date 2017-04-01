@@ -1,7 +1,16 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Route, Link } from 'react-router-dom'
 
-const Navigation = () => {
+const NavLink = (props) => {
+  let { to, caption} = props
+  return (
+    <Route exact path={to} children={({match}) =>
+      <li className={match ? "active" : ""} role="presentation"><Link to={to}>{caption}</Link></li>
+    } />
+  )
+}
+
+const Navigation = (props) => {
   return (
     <nav className="navbar navbar-default">
       <div className="container-fluid">
@@ -16,8 +25,8 @@ const Navigation = () => {
         </div>
         <div className="collapse navbar-collapse" id="navcol-1">
           <ul className="nav navbar-nav">
-            <li role="presentation"><Link to="dashboard">Dashboard</Link></li>
-            <li role="presentation"><Link to="accounts">Accounts</Link></li>
+            <NavLink to="/dashboard" caption="Dashboard" />
+            <NavLink to="/accounts" caption="Accounts" />
           </ul>
         </div>
       </div>
