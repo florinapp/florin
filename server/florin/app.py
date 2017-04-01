@@ -43,7 +43,8 @@ def get_asset_chart_data():
         accounts = list(app.db.Account.select())
 
     accounts_lookup_table = {account.id: account.name for account in accounts}
-    data_by_date = defaultdict(dict)
+    default = {account.id: None for account in accounts}
+    data_by_date = defaultdict(lambda: dict(default))
 
     for account in accounts:
         with db_session:
@@ -52,9 +53,20 @@ def get_asset_chart_data():
             data_by_date[snapshot.date].update({account.id: str(snapshot.value)})
 
     data = []
-    for date, account_values in data_by_date.items():
-        account_values.update({'date': str(date)})
-        data.append(account_values)
+    for date, account_values in sorted(data_by_date.items()):
+        if len(data) == 0:
+            prev_data = dict(default)
+        else:
+            prev_data = data[-1]
+
+        value = dict(account_values)
+        value.update({'date': str(date)})
+
+        for account_id, account_value in value.items():
+            if account_value is None:
+                value[account_id] = prev_data.get(account_id) or '0'
+
+        data.append(value)
 
     return flask.jsonify({
         'accounts': accounts_lookup_table,
