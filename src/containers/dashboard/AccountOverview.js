@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
-import AccountOverview from '../components/AccountOverview'
-import { fetchAccountsData } from '../actions'
+import AccountOverview from '../../components/dashboard/AccountOverview'
+import { fetchAccountsData } from '../../actions'
 
 const mapStateToProps = ({dashboard}) => {
     console.log(dashboard)

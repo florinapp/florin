@@ -1,7 +1,7 @@
 import React from 'react'
 import Navigation from './Navigation'
 import { Route, HashRouter } from 'react-router-dom'
-import Dashboard from '../containers/Dashboard'
+import Dashboard from '../containers/dashboard/Dashboard'
 
 const Account = () => <div>Account</div>
 

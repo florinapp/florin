@@ -1,6 +1,6 @@
 import React from 'react'
-import TotalAssetsChart from '../containers/TotalAssetsChart'
-import AccountOverview from '../containers/AccountOverview'
+import TotalAssetsChart from '../../containers/dashboard/TotalAssetsChart'
+import AccountOverview from '../../containers/dashboard/AccountOverview'
 
 const Dashboard = () => {
   return (

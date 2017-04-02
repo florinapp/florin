@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
-import TotalAssetsChart from '../components/TotalAssetsChart'
-import { fetchAssetsChartData } from '../actions'
+import TotalAssetsChart from '../../components/dashboard/TotalAssetsChart'
+import { fetchAssetsChartData } from '../../actions'
 
 const mapStateToProps = ({dashboard}) => {
     return {
