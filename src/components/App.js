@@ -2,8 +2,7 @@ import React from 'react'
 import Navigation from './Navigation'
 import { Route, HashRouter } from 'react-router-dom'
 import Dashboard from '../containers/dashboard/Dashboard'
-
-const Account = () => <div>Account</div>
+import Accounts from './accounts/Accounts'
 
 const App = () => {
   return (
@@ -11,7 +10,7 @@ const App = () => {
       <div>
         <Navigation />
         <Route path="/dashboard" component={Dashboard} />
-        <Route path="/accounts" component={Account} />
+        <Route path="/accounts" component={Accounts} />
       </div>
     </HashRouter>
   )

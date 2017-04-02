@@ -45,3 +45,11 @@ export const fetchAccountsData = () => {
             .then(json => dispatch(receiveAccountsData(json)))
     }
 }
+
+export const ACCOUNT_SELECTED = 'ACCOUNT_SELECTED'
+export const selectAccount = (accountId) => {
+    return {
+        type: ACCOUNT_SELECTED,
+        accountId,
+    }
+}

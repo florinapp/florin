@@ -4,14 +4,12 @@ import AccountOverview from '../../containers/dashboard/AccountOverview'
 
 const Dashboard = () => {
   return (
-    <div className="container">
-      <div className="row">
-        <div className="col-md-4 col-lg-4">
-          <AccountOverview />
-        </div>
-        <div className="col-md-8 col-lg-8">
-          <TotalAssetsChart />
-        </div>
+    <div>
+      <div className="col-md-6 col-lg-3">
+        <AccountOverview />
+      </div>
+      <div className="col-md-6 col-lg-9">
+        <TotalAssetsChart />
       </div>
     </div>
   )
