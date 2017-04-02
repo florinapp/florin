@@ -1,18 +1,20 @@
 import React from 'react'
 import Navigation from './Navigation'
-import { Route, HashRouter } from 'react-router-dom'
+import { Route } from 'react-router-dom'
+import { ConnectedRouter }  from 'react-router-redux'
 import Dashboard from '../containers/dashboard/Dashboard'
 import Accounts from './accounts/Accounts'
 
-const App = () => {
+const App = ({history}) => {
   return (
-    <HashRouter>
+    <ConnectedRouter history={history}>
       <div>
         <Navigation />
         <Route path="/dashboard" component={Dashboard} />
-        <Route path="/accounts" component={Accounts} />
+        <Route exact path="/accounts" component={Accounts}/>
+        <Route path="/accounts/:accountid" component={Accounts}/>
       </div>
-    </HashRouter>
+    </ConnectedRouter>
   )
 }
 

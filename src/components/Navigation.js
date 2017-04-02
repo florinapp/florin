@@ -2,7 +2,7 @@ import React from 'react'
 import { Route, Link } from 'react-router-dom'
 
 const NavLink = (props) => {
-  let { to, caption} = props
+  let { to, caption } = props
   return (
     <Route exact path={to} children={({match}) =>
       <li className={match ? "active" : ""} role="presentation"><Link to={to}>{caption}</Link></li>

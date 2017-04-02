@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { NavLink } from 'react-router-dom'
 import './AccountListPanel.css'
 
 class AccountListPanel extends Component {
@@ -12,9 +13,9 @@ class AccountListPanel extends Component {
         this.fetchAccountsData()
     }
 
-    // TODO: define a route for /accounts/ACCOUNT_ID
+    // TODO: get the currentAccount from the router accountId param
     render() {
-        let { accounts, currentAccount, onAccountSelected } = this.props
+        let { accounts } = this.props
         return (
             <div className="col-lg-3 col-md-6">
                 <div className="panel panel-default">
@@ -24,8 +25,10 @@ class AccountListPanel extends Component {
                         <ul className="nav nav-pills nav-stacked">
                             {accounts.map((account) => {
                                 return (
-                                    <li key={account.id} className={currentAccount === account.id ? "active" :""}>
-                                        <a onClick={()=>{onAccountSelected(account.id)}}>{account.name}</a>
+                                    <li key={account.id}>
+                                        <NavLink to={`/accounts/${account.id}`} activeClassName="active">
+                                        {account.name}
+                                        </NavLink>
                                     </li>
                                 )
                             })}
