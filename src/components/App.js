@@ -12,7 +12,7 @@ const App = ({history}) => {
         <Navigation />
         <Route path="/dashboard" component={Dashboard} />
         <Route exact path="/accounts" component={Accounts}/>
-        <Route path="/accounts/:accountid" component={Accounts}/>
+        <Route path="/accounts/:accountId" component={Accounts}/>
       </div>
     </ConnectedRouter>
   )

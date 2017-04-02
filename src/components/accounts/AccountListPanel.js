@@ -4,18 +4,13 @@ import './AccountListPanel.css'
 
 class AccountListPanel extends Component {
 
-    constructor(props) {
-        super(props)
-        this.fetchAccountsData = props.fetchAccountsData.bind(this)
-    }
-
     componentDidMount() {
-        this.fetchAccountsData()
+        let { fetchAccountsData } = this.props
+        fetchAccountsData.bind(this).call()
     }
 
-    // TODO: get the currentAccount from the router accountId param
     render() {
-        let { accounts } = this.props
+        let { accounts, match } = this.props
         return (
             <div className="col-lg-3 col-md-6">
                 <div className="panel panel-default">
@@ -25,7 +20,7 @@ class AccountListPanel extends Component {
                         <ul className="nav nav-pills nav-stacked">
                             {accounts.map((account) => {
                                 return (
-                                    <li key={account.id}>
+                                    <li key={account.id} className={match.params.accountId === account.id ? "active" : ""}>
                                         <NavLink to={`/accounts/${account.id}`} activeClassName="active">
                                         {account.name}
                                         </NavLink>

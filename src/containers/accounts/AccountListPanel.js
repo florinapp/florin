@@ -1,6 +1,7 @@
 import { connect } from 'react-redux'
 import AccountListPanel from '../../components/accounts/AccountListPanel'
 import { fetchAccountsData, selectAccount } from '../../actions'
+import { withRouter } from 'react-router'
 
 const mapStateToProps = ({ accounts }) => {
     accounts = accounts.accounts
@@ -22,4 +23,5 @@ const mapDispatchToProps = (dispatch) => {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(AccountListPanel)
+// withRouter makes the `match` attribute available to the component
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(AccountListPanel))
