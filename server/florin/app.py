@@ -48,7 +48,7 @@ def transform_account_model_to_response(account):
 @app.route('/api/accounts', methods=['GET'])
 def get_accounts():
     with db_session:
-        accounts = list(app.db.Account.select())
+        accounts = list(app.db.Account.select().order_by(app.db.Account.name.desc()))
 
     return flask.jsonify({
         'accounts': [account.to_dict() for account in accounts]
@@ -58,12 +58,13 @@ def get_accounts():
 @app.route('/api/accounts/<account_id>', methods=['GET'])
 def get_transactions(account_id):
     with db_session:
-        account = app.db.Account.select(lambda a: a.id == account_id)
+        Account, Transaction = app.db.Account, app.db.Transaction
+        account = Account.select(lambda a: a.id == account_id)
         if account.count() != 1:
             flask.abort(404)
 
         account = account.get()
-        transactions = list(app.db.Transaction.select(lambda t: t.account == account))
+        transactions = list(Transaction.select(lambda t: t.account == account).order_by(Transaction.date.desc()))
 
     return flask.jsonify({'transactions': [txn.to_dict() for txn in transactions]})
 

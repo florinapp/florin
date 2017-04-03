@@ -63,9 +63,10 @@ export const receiveTransactions = (json) => {
 }
 export const fetchTransactions = (accountId) => {
     return (dispatch) => {
-        if (accountId === null || accountId === undefined) {
-            return dispatch(receiveTransactions({transactions: []}))
-        }
+        // TODO: following doesn't work
+        // if (accountId === null || accountId === undefined) {
+        //     return dispatch(receiveTransactions({transactions: []}))
+        // }
         dispatch(requestTransactions(accountId))
         return fetch(`http://localhost:9000/api/accounts/${accountId}`)
             .then(response => response.json())

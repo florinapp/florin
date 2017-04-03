@@ -6,3 +6,5 @@ Client
 
 Server
 ======
+- [x] default sort of `/accounts` by account name
+- [x] default sort of transactions by date
