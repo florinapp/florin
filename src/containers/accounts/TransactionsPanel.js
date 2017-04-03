@@ -3,8 +3,12 @@ import TransactionsPanel from '../../components/accounts/TransactionsPanel'
 import { withRouter } from 'react-router'
 import { fetchTransactions } from '../../actions'
 
-const mapStateToProps = (state) => {
-    return state
+const mapStateToProps = ({accounts}) => {
+    const {currentAccountId, transactions} = accounts
+    return {
+        transactions,
+        currentAccountId
+    }
 }
 
 const mapDispatchToProps = (dispatch) => {

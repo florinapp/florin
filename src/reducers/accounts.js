@@ -1,4 +1,5 @@
 import { RECEIVE_ACCOUNTS_DATA, RECEIVE_TRANSACTIONS } from '../actions'
+import { matchPath } from 'react-router'
 
 const initState = {
     accounts: [],
@@ -18,6 +19,18 @@ const accounts = (state=initState, action) => {
                 ...state,
                 transactions: action.transactions
             }
+        case '@@router/LOCATION_CHANGE':
+            const {pathname} = action.payload
+            const match = matchPath(pathname, {
+                path: '/accounts/:accountId'
+            })
+            if (match) {
+                return {
+                    ...state,
+                    currentAccountId: match.params.accountId
+                }
+            }
+            return state
         default:
             return state
     }

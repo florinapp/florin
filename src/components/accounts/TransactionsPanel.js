@@ -6,11 +6,11 @@ const TransactionTable = ({transactions}) => {
             <table className="table table-striped table-bordered table-hover">
                 <thead>
                     <tr>
-                        <th>Transaction Date</th>
-                        <th>Payee </th>
-                        <th>Description </th>
-                        <th>Category </th>
-                        <th>Amount </th>
+                        <th width="10%">Transaction Date</th>
+                        <th>Payee</th>
+                        <th>Info</th>
+                        <th>Category</th>
+                        <th>Amount</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -21,7 +21,7 @@ const TransactionTable = ({transactions}) => {
                                 <tr key={transaction.id}>
                                     <td>{transaction.date}</td>
                                     <td>{transaction.payee}</td>
-                                    <td>{transaction.description}</td>
+                                    <td>{transaction.info}</td>
                                     <td>{transaction.category}</td>
                                     <td>{transaction.amount}</td>
                                 </tr>
@@ -34,18 +34,27 @@ const TransactionTable = ({transactions}) => {
 }
 
 class TransactionsPanel extends Component {
-    componentDidMount() {
-        let currentAccountId = this.props.match.params.accountId
-        let { fetchTransactions } = this.props
-        if (currentAccountId !== undefined) {
-            fetchTransactions(currentAccountId)
+    constructor(props) {
+        super(props)
+        this.currentAccountId = this.props.currentAccountId
+        this.fetchTransactions = this.props.fetchTransactions
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (this.currentAccountId === nextProps.currentAccountId) {
+            return
         }
+
+        this.currentAccountId = nextProps.currentAccountId
+        this.fetchTransactions(this.currentAccountId)
+    }
+
+    componentDidMount() {  // Triggers the initial fetch, subsequent fetches will be initiated by componentWillReceiveProps
+        this.fetchTransactions(this.currentAccountId)
     }
 
     render() {
-        console.log(this.props)
-        let { accounts } = this.props
-        let transactions = accounts.transactions
+        const {transactions} = this.props
         return (
             <div className="col-lg-9 col-md-6">
                 <div className="panel panel-default">
@@ -57,7 +66,8 @@ class TransactionsPanel extends Component {
                     <div className="panel-footer">
                         <div className="row">
                             <div className="col-md-12">
-                                <button className="btn btn-primary" type="button">New Snapshot</button>
+                                <button className="btn btn-primary" type="button">New Transaction</button>
+                                <button className="btn btn-default" type="button">Upload Transactions</button>
                             </div>
                         </div>
                     </div>
