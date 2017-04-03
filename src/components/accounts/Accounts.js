@@ -1,9 +1,9 @@
 import React from 'react'
 import AccountListPanel from '../../containers/accounts/AccountListPanel'
-import TransactionsPanel from './TransactionsPanel'
+import TransactionsPanel from '../../containers/accounts/TransactionsPanel'
 
 const Accounts = (props) => {
-    console.log(props)
+    console.log(props)  // TODO: need this?
     return (
         <div>
             <AccountListPanel />

@@ -1,8 +1,9 @@
-import { RECEIVE_ACCOUNTS_DATA, ACCOUNT_SELECTED } from '../actions'
+import { RECEIVE_ACCOUNTS_DATA, RECEIVE_TRANSACTIONS } from '../actions'
 
 const initState = {
-    currentAccount: null,
-    accounts: []
+    accounts: [],
+    currentAccountId: null,
+    transactions: []  // transactions in the current selected account
 }
 
 const accounts = (state=initState, action) => {
@@ -12,10 +13,10 @@ const accounts = (state=initState, action) => {
                 ...state,
                 accounts: action.accounts
             }
-        case ACCOUNT_SELECTED:
+        case RECEIVE_TRANSACTIONS:
             return {
                 ...state,
-                currentAccount: action.accountId
+                transactions: action.transactions
             }
         default:
             return state

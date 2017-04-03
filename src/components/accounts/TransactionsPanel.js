@@ -1,52 +1,70 @@
-import React from 'react'
+import React, { Component } from 'react'
 
-const TransactionsPanel = () => {
+const TransactionTable = ({transactions}) => {
     return (
-        <div className="col-lg-9 col-md-6">
-            <div className="panel panel-default">
-                <div className="panel-heading">
-                    <h3 className="panel-title">Transactions</h3></div>
-                <div className="panel-body">
-                    <div className="table-responsive">
-                        <table className="table table-striped table-bordered table-hover">
-                            <thead>
-                                <tr>
-                                    <th>Transaction Date</th>
-                                    <th>Payee </th>
-                                    <th>Description </th>
-                                    <th>Category </th>
-                                    <th>Amount </th>
+        <div className="table-responsive">
+            <table className="table table-striped table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>Transaction Date</th>
+                        <th>Payee </th>
+                        <th>Description </th>
+                        <th>Category </th>
+                        <th>Amount </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {
+                        (transactions === undefined || transactions.length === 0) ?
+                            <tr><td colSpan="5">No transactions</td></tr> :
+                            transactions.map((transaction) => (
+                                <tr key={transaction.id}>
+                                    <td>{transaction.date}</td>
+                                    <td>{transaction.payee}</td>
+                                    <td>{transaction.description}</td>
+                                    <td>{transaction.category}</td>
+                                    <td>{transaction.amount}</td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>2017-03-01 </td>
-                                    <td>Wal-mart CA</td>
-                                    <td>Vaughan ON CAN</td>
-                                    <td>Shopping::Other </td>
-                                    <td>$60.84 </td>
-                                </tr>
-                                <tr>
-                                    <td>2017-03-15 </td>
-                                    <td>Eft Tr</td>
-                                    <td>Online Payment</td>
-                                    <td>Income::Salary </td>
-                                    <td>$2957.09 </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div className="panel-footer">
-                    <div className="row">
-                        <div className="col-md-12">
-                            <button className="btn btn-primary" type="button">New Snapshot</button>
+                            ))
+                    }
+                </tbody>
+            </table>
+        </div>
+    )
+}
+
+class TransactionsPanel extends Component {
+    componentDidMount() {
+        let currentAccountId = this.props.match.params.accountId
+        let { fetchTransactions } = this.props
+        if (currentAccountId !== undefined) {
+            fetchTransactions(currentAccountId)
+        }
+    }
+
+    render() {
+        console.log(this.props)
+        let { accounts } = this.props
+        let transactions = accounts.transactions
+        return (
+            <div className="col-lg-9 col-md-6">
+                <div className="panel panel-default">
+                    <div className="panel-heading">
+                        <h3 className="panel-title">Transactions</h3></div>
+                    <div className="panel-body">
+                        <TransactionTable transactions={transactions} />
+                    </div >
+                    <div className="panel-footer">
+                        <div className="row">
+                            <div className="col-md-12">
+                                <button className="btn btn-primary" type="button">New Snapshot</button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    )
+        )
+    }
 }
 
 export default TransactionsPanel

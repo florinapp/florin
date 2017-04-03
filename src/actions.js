@@ -46,10 +46,26 @@ export const fetchAccountsData = () => {
     }
 }
 
-export const ACCOUNT_SELECTED = 'ACCOUNT_SELECTED'
-export const selectAccount = (accountId) => {
+export const REQUEST_TRANSACTIONS = 'REQUEST_TRANSACTIONS'
+export const requestTransactions = (accountId) => {
     return {
-        type: ACCOUNT_SELECTED,
-        accountId,
+        type: REQUEST_TRANSACTIONS,
+        accountId
+    }
+}
+export const RECEIVE_TRANSACTIONS = 'RECEIVE_TRANSACTIONS'
+export const receiveTransactions = (json) => {
+    return {
+        type: RECEIVE_TRANSACTIONS,
+        transactions: json.transactions,
+        receivedAt: Date.now()
+    }
+}
+export const fetchTransactions = (accountId) => {
+    return (dispatch) => {
+        dispatch(requestTransactions(accountId))
+        return fetch(`http://localhost:9000/api/accounts/${accountId}`)
+            .then(response => response.json())
+            .then(json => dispatch(receiveTransactions(json)))
     }
 }

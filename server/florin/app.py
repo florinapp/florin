@@ -1,6 +1,9 @@
 import flask
 import logging
+import datetime
+from decimal import Decimal
 from flask_cors import CORS
+from flask.json import JSONEncoder
 from pony.orm import db_session, desc
 from collections import defaultdict
 from . import database
@@ -9,8 +12,19 @@ from . import database
 logging.basicConfig()
 
 
+class MyJSONEncoder(JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, Decimal):
+            return str(obj)
+        if isinstance(obj, datetime.date):
+            return obj.strftime('%Y-%m-%d')
+
+        return super(MyJSONEncoder, self).default(obj)
+
+
 def create_app():
     app = flask.Flask(__name__)
+    app.json_encoder = MyJSONEncoder
     CORS(app)
     database.init(app)
     return app
@@ -37,8 +51,21 @@ def get_accounts():
         accounts = list(app.db.Account.select())
 
     return flask.jsonify({
-        'accounts': map(transform_account_model_to_response, accounts)
+        'accounts': [account.to_dict() for account in accounts]
     })
+
+
+@app.route('/api/accounts/<account_id>', methods=['GET'])
+def get_transactions(account_id):
+    with db_session:
+        account = app.db.Account.select(lambda a: a.id == account_id)
+        if account.count() != 1:
+            flask.abort(404)
+
+        account = account.get()
+        transactions = list(app.db.Transaction.select(lambda t: t.account == account))
+
+    return flask.jsonify({'transactions': [txn.to_dict() for txn in transactions]})
 
 
 @app.route('/api/charts/assets', methods=['GET'])
