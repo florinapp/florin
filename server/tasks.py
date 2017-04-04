@@ -2,6 +2,16 @@ from invoke import task
 
 
 @task
+def build(ctx):
+    ctx.run('docker build -t florin-server .', pty=True)
+
+
+@task
+def run_image(ctx):
+    ctx.run('docker run -p 9000:9000 florin-server')
+
+
+@task
 def clean(ctx):
     ctx.run('rm florin.sqlite')
 
