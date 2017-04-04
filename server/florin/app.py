@@ -57,6 +57,12 @@ def get_accounts():
 
 @app.route('/api/accounts/<account_id>', methods=['GET'])
 def get_transactions(account_id):
+    start_date = flask.request.args.get('startDate', '1970-01-01')
+    end_date = flask.request.args.get('endDate', '9999-12-31')
+
+    start_date = datetime.datetime.strptime(start_date, '%Y-%m-%d')
+    end_date = datetime.datetime.strptime(end_date, '%Y-%m-%d')
+
     with db_session:
         Account, Transaction = app.db.Account, app.db.Transaction
         account = Account.select(lambda a: a.id == account_id)
@@ -64,7 +70,10 @@ def get_transactions(account_id):
             flask.abort(404)
 
         account = account.get()
-        transactions = list(Transaction.select(lambda t: t.account == account).order_by(Transaction.date.desc()))
+
+        transactions = list(Transaction.select(lambda t: t.account == account
+                                               and t.date >= start_date and t.date <= end_date
+                                               ).order_by(Transaction.date.desc()))
 
     return flask.jsonify({'transactions': [txn.to_dict() for txn in transactions]})
 

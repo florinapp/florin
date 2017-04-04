@@ -61,13 +61,22 @@ class TransactionsPanel extends Component {
                     <div className="panel-heading">
                         <h3 className="panel-title">Transactions</h3></div>
                     <div className="panel-body">
+                        <div style={{padding: "10px"}}>
+                            <ul className="nav nav-pills">
+                                <li role="presentation"><a>This Month</a></li>
+                                <li role="presentation"><a>Last Month</a></li>
+                                <li role="presentation"><a>All Time</a></li>
+                            </ul>
+                        </div>
                         <TransactionTable transactions={transactions} />
                     </div >
                     <div className="panel-footer">
                         <div className="row">
                             <div className="col-md-12">
-                                <button className="btn btn-primary" type="button">New Transaction</button>
-                                <button className="btn btn-default" type="button">Upload Transactions</button>
+                                <div class="btn-group" role="group">
+                                    <button className="btn btn-primary" type="button">New Transaction</button>
+                                    <button className="btn btn-default" type="button">Upload Transactions</button>
+                                </div>
                             </div>
                         </div>
                     </div>
