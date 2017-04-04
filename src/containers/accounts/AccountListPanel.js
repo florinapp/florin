@@ -3,10 +3,11 @@ import AccountListPanel from '../../components/accounts/AccountListPanel'
 import { fetchAccountsData } from '../../actions'
 import { withRouter } from 'react-router'
 
-const mapStateToProps = ({ accounts }) => {
+const mapStateToProps = ({ accounts, currentAccountId }) => {
     accounts = accounts.accounts
     return {
-        accounts
+        accounts,
+        currentAccountId
     }
 }
 

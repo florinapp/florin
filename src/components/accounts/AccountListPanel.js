@@ -10,7 +10,7 @@ class AccountListPanel extends Component {
     }
 
     render() {
-        let { accounts, match, location } = this.props
+        let { accounts, match, location, currentAccountId } = this.props
         return (
             <div className="col-lg-3 col-md-6">
                 <div className="panel panel-default">
@@ -19,8 +19,9 @@ class AccountListPanel extends Component {
                     <div className="panel-body">
                         <ul className="nav nav-pills nav-stacked">
                             {accounts.map((account) => {
+                                const isActive = currentAccountId === account.id || match.params.accountId === account.id
                                 return (
-                                    <li key={account.id} className={match.params.accountId === account.id ? "active" : ""}>
+                                    <li key={account.id} className={isActive ? "active" : ""}>
                                         <NavLink to={`/accounts/${account.id}${location.search}`} activeClassName="active">
                                         {account.name}
                                         </NavLink>

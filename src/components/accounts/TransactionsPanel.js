@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { NavLink } from 'react-router-dom'
 import moment from 'moment'
+import './TransactionsPanel.css'
 
 const TransactionTable = ({transactions}) => {
     return (
@@ -21,7 +22,7 @@ const TransactionTable = ({transactions}) => {
                             <tr><td colSpan="5">No transactions</td></tr> :
                             transactions.map((transaction) => (
                                 <tr key={transaction.id}>
-                                    <td>{transaction.date}</td>
+                                    <td className="center">{transaction.date}</td>
                                     <td>{transaction.payee}</td>
                                     <td>{transaction.info}</td>
                                     <td>{transaction.category}</td>
@@ -43,7 +44,7 @@ const FilterPanel = ({currentAccountId, currentDateRange}) => {
     ]
 
     return (
-        <div style={{ padding: "10px" }}>
+        <div className="filter-panel">
             <ul className="nav nav-pills">
                 {presetFilters.map((filter) => (
                         <li key={filter.name} role="presentation" className={currentDateRange === filter.name ? "active" : ""}>
@@ -66,6 +67,7 @@ class TransactionsPanel extends Component {
     }
 
     buildRequestParams() {
+        const FORMAT = 'YYYY-MM-DD'
         if (this.currentDateRange === undefined) {
             return {}
         }
@@ -74,19 +76,19 @@ class TransactionsPanel extends Component {
         switch (this.currentDateRange) {
             case 'thisMonth':
                 return {
-                    startDate: now.startOf('month').format('YYYY-MM-DD'),
-                    endDate: now.endOf('month').format('YYYY-MM-DD')
+                    startDate: now.startOf('month').format(FORMAT),
+                    endDate: now.endOf('month').format(FORMAT)
                 }
             case 'lastMonth':
                 const lastMonth = moment(now - moment.duration(32, 'd'))
                 return {
-                    startDate: lastMonth.startOf('month').format('YYYY-MM-DD'),
-                    endDate: lastMonth.endOf('month').format('YYYY-MM-DD')
+                    startDate: lastMonth.startOf('month').format(FORMAT),
+                    endDate: lastMonth.endOf('month').format(FORMAT)
                 }
             case 'thisYear':
                 return {
-                    startDate: now.startOf('year').format('YYYY-MM-DD'),
-                    endDate: now.endOf('year').format('YYYY-MM-DD')
+                    startDate: now.startOf('year').format(FORMAT),
+                    endDate: now.endOf('year').format(FORMAT)
                 }
             default:
                 return {}
