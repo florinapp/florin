@@ -1,7 +1,7 @@
 import os
 import datetime
 from decimal import Decimal
-from pony.orm import Database, Optional, Required, PrimaryKey, Set
+from pony.orm import Database, Optional, Required, PrimaryKey, Set, sql_debug
 
 
 db = Database()
@@ -39,11 +39,9 @@ class Transaction(db.Entity):
     is_internal_transfer = Required(bool, default=False)
     checksum = Required(str, unique=True)
 
-    def to_json():
-        pass
-
 
 def init(app):
     app.db = db
     db.bind('sqlite', os.path.join(os.getcwd(), 'florin.sqlite'), create_db=True)
     db.generate_mapping(create_tables=True)
+    sql_debug(True)

@@ -1,4 +1,5 @@
 import fetch from 'isomorphic-fetch'
+import querystring from 'querystring'
 
 export const REQUEST_ASSETS_CHART_DATA = 'REQUEST_ASSETS_CHART_DATA'
 export const RECEIVE_ASSETS_CHART_DATA = 'RECEIVE_ASSETS_CHART_DATA'
@@ -61,14 +62,17 @@ export const receiveTransactions = (json) => {
         receivedAt: Date.now()
     }
 }
-export const fetchTransactions = (accountId) => {
+export const fetchTransactions = (accountId, params={}) => {
+    let url = `http://localhost:9000/api/accounts/${accountId}`
+    params = querystring.stringify(params)
+    url = `${url}?${params}`
     return (dispatch) => {
         // TODO: following doesn't work
         // if (accountId === null || accountId === undefined) {
         //     return dispatch(receiveTransactions({transactions: []}))
         // }
         dispatch(requestTransactions(accountId))
-        return fetch(`http://localhost:9000/api/accounts/${accountId}`)
+        return fetch(url)
             .then(response => response.json())
             .then(json => dispatch(receiveTransactions(json)))
     }

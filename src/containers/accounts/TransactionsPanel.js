@@ -4,18 +4,19 @@ import { withRouter } from 'react-router'
 import { fetchTransactions } from '../../actions'
 
 const mapStateToProps = ({accounts}) => {
-    const {currentAccountId, transactions} = accounts
+    const {currentAccountId, currentDateRange, transactions} = accounts
     return {
         transactions,
-        currentAccountId
+        currentAccountId,
+        currentDateRange
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        fetchTransactions: (accountId) => {
-            dispatch(fetchTransactions(accountId))
-        }
+        fetchTransactions: (accountId, params) => {
+            dispatch(fetchTransactions(accountId, params))
+        },
     }
 }
 

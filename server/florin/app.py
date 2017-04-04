@@ -9,7 +9,7 @@ from collections import defaultdict
 from . import database
 
 
-logging.basicConfig()
+logging.basicConfig(level='DEBUG')
 
 
 class MyJSONEncoder(JSONEncoder):
@@ -60,8 +60,8 @@ def get_transactions(account_id):
     start_date = flask.request.args.get('startDate', '1970-01-01')
     end_date = flask.request.args.get('endDate', '9999-12-31')
 
-    start_date = datetime.datetime.strptime(start_date, '%Y-%m-%d')
-    end_date = datetime.datetime.strptime(end_date, '%Y-%m-%d')
+    start_date = datetime.datetime.strptime(start_date, '%Y-%m-%d').date()
+    end_date = datetime.datetime.strptime(end_date, '%Y-%m-%d').date()
 
     with db_session:
         Account, Transaction = app.db.Account, app.db.Transaction

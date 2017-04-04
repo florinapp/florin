@@ -1,4 +1,6 @@
 import React, { Component } from 'react'
+import { NavLink } from 'react-router-dom'
+import moment from 'moment'
 
 const TransactionTable = ({transactions}) => {
     return (
@@ -33,47 +35,94 @@ const TransactionTable = ({transactions}) => {
     )
 }
 
+const FilterPanel = ({currentAccountId, currentDateRange}) => {
+    const presetFilters = [
+        {name: 'thisMonth', caption: 'This Month'},
+        {name: 'lastMonth', caption: 'Last Month'},
+        {name: 'thisYear', caption: 'This Year'}
+    ]
+
+    return (
+        <div style={{ padding: "10px" }}>
+            <ul className="nav nav-pills">
+                {presetFilters.map((filter) => (
+                        <li key={filter.name} role="presentation" className={currentDateRange === filter.name ? "active" : ""}>
+                            <NavLink to={`/accounts/${currentAccountId}?dateRange=${filter.name}`}>
+                                {filter.caption}
+                            </NavLink>
+                        </li>
+                ))}
+            </ul>
+        </div>
+    )
+}
+
 class TransactionsPanel extends Component {
     constructor(props) {
         super(props)
         this.currentAccountId = this.props.currentAccountId
+        this.currentDateRange = this.props.currentDateRange
         this.fetchTransactions = this.props.fetchTransactions
     }
 
+    buildRequestParams() {
+        if (this.currentDateRange === undefined) {
+            return {}
+        }
+
+        const now = moment(moment.now())
+        switch (this.currentDateRange) {
+            case 'thisMonth':
+                return {
+                    startDate: now.startOf('month').format('YYYY-MM-DD'),
+                    endDate: now.endOf('month').format('YYYY-MM-DD')
+                }
+            case 'lastMonth':
+                const lastMonth = moment(now - moment.duration(32, 'd'))
+                return {
+                    startDate: lastMonth.startOf('month').format('YYYY-MM-DD'),
+                    endDate: lastMonth.endOf('month').format('YYYY-MM-DD')
+                }
+            case 'thisYear':
+                return {
+                    startDate: now.startOf('year').format('YYYY-MM-DD'),
+                    endDate: now.endOf('year').format('YYYY-MM-DD')
+                }
+            default:
+                return {}
+        }
+    }
+
     componentWillReceiveProps(nextProps) {
-        if (this.currentAccountId === nextProps.currentAccountId) {
+        if (this.currentAccountId === nextProps.currentAccountId && this.currentDateRange === nextProps.currentDateRange) {
             return
         }
 
         this.currentAccountId = nextProps.currentAccountId
-        this.fetchTransactions(this.currentAccountId)
+        this.currentDateRange = nextProps.currentDateRange
+        this.fetchTransactions(this.currentAccountId, this.buildRequestParams())
     }
 
     componentDidMount() {  // Triggers the initial fetch, subsequent fetches will be initiated by componentWillReceiveProps
-        this.fetchTransactions(this.currentAccountId)
+        this.fetchTransactions(this.currentAccountId, this.buildRequestParams())
     }
 
     render() {
         const {transactions} = this.props
+        console.log(this.currentDateRange)
         return (
             <div className="col-lg-9 col-md-6">
                 <div className="panel panel-default">
                     <div className="panel-heading">
                         <h3 className="panel-title">Transactions</h3></div>
                     <div className="panel-body">
-                        <div style={{padding: "10px"}}>
-                            <ul className="nav nav-pills">
-                                <li role="presentation"><a>This Month</a></li>
-                                <li role="presentation"><a>Last Month</a></li>
-                                <li role="presentation"><a>All Time</a></li>
-                            </ul>
-                        </div>
+                        <FilterPanel {...this} />
                         <TransactionTable transactions={transactions} />
                     </div >
                     <div className="panel-footer">
                         <div className="row">
                             <div className="col-md-12">
-                                <div class="btn-group" role="group">
+                                <div className="btn-group" role="group">
                                     <button className="btn btn-primary" type="button">New Transaction</button>
                                     <button className="btn btn-default" type="button">Upload Transactions</button>
                                 </div>

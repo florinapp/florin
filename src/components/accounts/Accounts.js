@@ -3,7 +3,7 @@ import AccountListPanel from '../../containers/accounts/AccountListPanel'
 import TransactionsPanel from '../../containers/accounts/TransactionsPanel'
 
 const Accounts = (props) => {
-    console.log(props)  // TODO: need this?
+    console.log(props)
     return (
         <div>
             <AccountListPanel />

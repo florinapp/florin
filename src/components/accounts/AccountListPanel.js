@@ -10,7 +10,7 @@ class AccountListPanel extends Component {
     }
 
     render() {
-        let { accounts, match } = this.props
+        let { accounts, match, location } = this.props
         return (
             <div className="col-lg-3 col-md-6">
                 <div className="panel panel-default">
@@ -21,7 +21,7 @@ class AccountListPanel extends Component {
                             {accounts.map((account) => {
                                 return (
                                     <li key={account.id} className={match.params.accountId === account.id ? "active" : ""}>
-                                        <NavLink to={`/accounts/${account.id}`} activeClassName="active">
+                                        <NavLink to={`/accounts/${account.id}${location.search}`} activeClassName="active">
                                         {account.name}
                                         </NavLink>
                                     </li>

@@ -1,10 +1,16 @@
 import { RECEIVE_ACCOUNTS_DATA, RECEIVE_TRANSACTIONS } from '../actions'
+import querystring from 'querystring'
 import { matchPath } from 'react-router'
 
 const initState = {
     accounts: [],
     currentAccountId: null,
     transactions: []  // transactions in the current selected account
+}
+
+const getDateRangeFromSearch = (search) => {
+    let params = querystring.parse(search.slice(1, search.length))
+    return params.dateRange  // TODO: work with custom date range
 }
 
 const accounts = (state=initState, action) => {
@@ -20,14 +26,15 @@ const accounts = (state=initState, action) => {
                 transactions: action.transactions
             }
         case '@@router/LOCATION_CHANGE':
-            const {pathname} = action.payload
+            const {pathname, search} = action.payload
             const match = matchPath(pathname, {
                 path: '/accounts/:accountId'
             })
             if (match) {
                 return {
                     ...state,
-                    currentAccountId: match.params.accountId
+                    currentAccountId: match.params.accountId,
+                    currentDateRange: getDateRangeFromSearch(search)
                 }
             }
             return state
