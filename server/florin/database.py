@@ -42,6 +42,9 @@ class Transaction(db.Entity):
 
 def init(app):
     app.db = db
-    db.bind('sqlite', os.path.join(os.getcwd(), 'florin.sqlite'), create_db=True)
+    if 'DBFILE' not in os.environ:
+        raise AssertionError('Missing environment variable DBFILE')
+    dbfile = os.path.join(os.getcwd(), os.getenv('DBFILE'))
+    db.bind('sqlite', dbfile, create_db=True)
     db.generate_mapping(create_tables=True)
     sql_debug(True)
