@@ -8,7 +8,7 @@ def build(ctx):
 
 @task
 def run_image(ctx):
-    ctx.run('docker run -p 9000:9000 florin-server')
+    ctx.run('docker run -d -p 9000:9000 florin-server')
 
 
 @task
