@@ -1,26 +1,58 @@
 import React, { Component } from 'react'
-import { Modal, Button } from 'react-bootstrap'
+import { Modal, Button, Alert } from 'react-bootstrap'
 import { NavLink } from 'react-router-dom'
 import Dropzone from 'react-dropzone'
 import moment from 'moment'
 import './TransactionsPanel.css'
 
-const UploadTransactionsModalDialog = ({accountId, show, onClose, onUpload}) => {
-    return (
-        <Modal show={show}>
-            <Modal.Header>
-                <Modal.Title>Upload Transactions</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-                <Dropzone onDrop={onUpload}>
-                    <div>Drag and Drop your transaction file here</div>
-                </Dropzone>
-            </Modal.Body>
-            <Modal.Footer>
-                <Button onClick={onClose}>Close</Button>
-            </Modal.Footer>
-        </Modal>
-    )
+// TODO: This component is managing too much state
+// Consider migrate it to a container
+class UploadTransactionsModalDialog extends Component {
+    componentWillMount() {
+        this.setState({
+            uploadComplete: false,
+            totalImported: 0,
+            totalSkipped: 0
+        })
+    }
+
+    render() {
+        const { accountId, show, onClose, onUpload} = this.props
+        const { uploadComplete, totalImported, totalSkipped } = this.state
+        return (
+            <Modal show={show}>
+                <Modal.Header>
+                    <Modal.Title>Upload Transactions</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Alert bsStyle="info">
+                        <span>
+                            Total Transaction Imported: {totalImported}
+                        </span>
+                            <br/>
+                        <span>
+                            Total Transaction Skipped: {totalSkipped}
+                        </span>
+                    </Alert>
+                    <Dropzone onDrop={(files) => {
+                        onUpload(files, (err, res) => {
+                            const { totalImported, totalSkipped } = res.body
+                            this.setState({
+                                uploadComplete: true,
+                                totalImported,
+                                totalSkipped
+                            })
+                        })
+                    }}>
+                        <div>Drag and Drop your transaction file here</div>
+                    </Dropzone>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button onClick={onClose}>Close</Button>
+                </Modal.Footer>
+            </Modal>
+        )
+    }
 }
 
 const TransactionTable = ({transactions}) => {
@@ -162,10 +194,7 @@ class TransactionsPanel extends Component {
                     accountId={this.currentAccountId}
                     show={showModal}
                     onClose={() => this.setState({ showModal: false })}
-                    onUpload={(files) => uploadTransactionFile(currentAccountId, files, (err, res) => {
-                        console.log(err)
-                        console.log(res)
-                    })}
+                    onUpload={(files, callback) => uploadTransactionFile(currentAccountId, files, callback)}
                 />
             </div>
         )
