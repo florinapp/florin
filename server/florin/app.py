@@ -4,9 +4,10 @@ import datetime
 from decimal import Decimal
 from flask_cors import CORS
 from flask.json import JSONEncoder
-from pony.orm import db_session, desc
+from pony.orm import commit, db_session, desc, TransactionIntegrityError, CacheIndexError
 from collections import defaultdict
 from . import database
+from .importer import get_importer
 
 
 logging.basicConfig(level='DEBUG')
@@ -52,6 +53,53 @@ def get_accounts():
 
     return flask.jsonify({
         'accounts': [account.to_dict() for account in accounts]
+    })
+
+
+@app.route('/api/accounts/<account_id>/upload', methods=['POST'])
+def upload_transactions(account_id):
+    file_items = flask.request.files.items()
+    assert len(file_items) == 1
+    filename, file_storage = file_items[0]
+    importer = get_importer(filename)
+    if not importer:
+        flask.abort(flask.make_response(flask.jsonify({
+            'error': 'Unsupported file extension'
+        }), 400))
+
+    result = importer.import_from(file_storage)
+    total_imported, total_skipped = 0, 0
+
+    for t in result:
+        with db_session:
+            # THIS IS RIDICULOUS
+            # b/c a `commit()` is issued, the account fetched before
+            # is no longer in the session's cache. If I associate account with
+            # another transaction, I'm going to get:
+            #   TransactionError: An attempt to mix objects belonging to different transactions
+            # I need to do a commit() because I want duplicated transactions
+            # (unique checksum) to be detected and skipped, but I also want
+            # new transactions to be imported, but doing all in one transaction
+            # will rollback everything.
+            Account, Transaction = app.db.Account, app.db.Transaction
+            account = Account.select(lambda a: a.id == account_id)
+            if account.count() != 1:
+                flask.abort(404)
+            account = account.get()
+
+            common_attrs = dict(t.common_attrs)
+            common_attrs['account'] = account
+            try:
+                Transaction(**common_attrs)
+                commit()
+            except (TransactionIntegrityError, CacheIndexError) as e:
+                total_skipped += 1
+            else:
+                total_imported += 1
+
+    return flask.jsonify({
+        'totalImported': total_imported,
+        'totalSkipped': total_skipped
     })
 
 

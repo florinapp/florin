@@ -1,7 +1,27 @@
 import React, { Component } from 'react'
+import { Modal, Button } from 'react-bootstrap'
 import { NavLink } from 'react-router-dom'
+import Dropzone from 'react-dropzone'
 import moment from 'moment'
 import './TransactionsPanel.css'
+
+const UploadTransactionsModalDialog = ({accountId, show, onClose, onUpload}) => {
+    return (
+        <Modal show={show}>
+            <Modal.Header>
+                <Modal.Title>Upload Transactions</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <Dropzone onDrop={onUpload}>
+                    <div>Drag and Drop your transaction file here</div>
+                </Dropzone>
+            </Modal.Body>
+            <Modal.Footer>
+                <Button onClick={onClose}>Close</Button>
+            </Modal.Footer>
+        </Modal>
+    )
+}
 
 const TransactionTable = ({transactions}) => {
     return (
@@ -109,9 +129,14 @@ class TransactionsPanel extends Component {
         this.fetchTransactions(this.currentAccountId, this.buildRequestParams())
     }
 
+    componentWillMount() {
+        this.setState({showModal: false})
+    }
+
     render() {
-        const {transactions} = this.props
-        console.log(this.currentDateRange)
+        const {transactions, uploadTransactionFile} = this.props
+        const {showModal} = this.state
+        const {currentAccountId} = this
         return (
             <div className="col-lg-9 col-md-6">
                 <div className="panel panel-default">
@@ -125,13 +150,23 @@ class TransactionsPanel extends Component {
                         <div className="row">
                             <div className="col-md-12">
                                 <div className="btn-group" role="group">
-                                    <button className="btn btn-primary" type="button">New Transaction</button>
-                                    <button className="btn btn-default" type="button">Upload Transactions</button>
+                                    <Button bsStyle="primary" onClick={
+                                        () => {this.setState({showModal: true})}
+                                    }>Upload Transactions</Button>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                <UploadTransactionsModalDialog
+                    accountId={this.currentAccountId}
+                    show={showModal}
+                    onClose={() => this.setState({ showModal: false })}
+                    onUpload={(files) => uploadTransactionFile(currentAccountId, files, (err, res) => {
+                        console.log(err)
+                        console.log(res)
+                    })}
+                />
             </div>
         )
     }

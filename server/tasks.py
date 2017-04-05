@@ -8,7 +8,7 @@ def build(ctx):
 
 @task
 def run_image(ctx):
-    ctx.run('docker run -d -p 9000:9000 florin-server')
+    ctx.run('docker run -d -v $(pwd)/florin.sqlite:/app/florin.sqlite -p 9000:9000 florin-server')
 
 
 @task
@@ -18,5 +18,6 @@ def clean(ctx):
 
 @task
 def run(ctx):
-    ctx.run('gunicorn --access-logfile=- --error-logfile=- --timeout=9999 -b 0.0.0.0:9000 --reload florin.app:app',
+    ctx.run('DBFILE=florin.sqlite '
+            'gunicorn --access-logfile=- --error-logfile=- --timeout=9999 -b 0.0.0.0:9000 --reload florin.app:app',
             pty=True)
