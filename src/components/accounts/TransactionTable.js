@@ -1,5 +1,9 @@
 import React from 'react'
 
+const Category = ({category}) => {
+    return <span>{category}</span>
+}
+
 const TransactionTable = ({ transactions }) => {
     return (
         <div className="table-responsive">
@@ -22,7 +26,7 @@ const TransactionTable = ({ transactions }) => {
                                     <td className="center">{transaction.date}</td>
                                     <td>{transaction.payee}</td>
                                     <td>{transaction.info}</td>
-                                    <td>{transaction.category}</td>
+                                    <td><Category category={transaction.category} /></td>
                                     <td>{transaction.amount}</td>
                                 </tr>
                             ))

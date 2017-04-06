@@ -40,6 +40,15 @@ class Transaction(db.Entity):
     checksum = Required(str, unique=True)
 
 
+class Category(db.Entity):
+    _table_ = 'categories'
+
+    id = PrimaryKey(int)
+    name = Required(str)
+    parent_id = Optional(int)
+    type = Required(str)
+
+
 def init(app):
     app.db = db
     if 'DBFILE' not in os.environ:

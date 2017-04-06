@@ -17,7 +17,8 @@ const FilterPanel = ({currentAccountId, currentDateRange}) => {
         <div className="filter-panel">
             <ul className="nav nav-pills">
                 {presetFilters.map((filter) => (
-                        <li key={filter.name} role="presentation" className={currentDateRange === filter.name ? "active" : ""}>
+                        <li key={filter.name} role="presentation"
+                            className={currentDateRange === filter.name ? "active" : ""}>
                             <NavLink to={`/accounts/${currentAccountId}?dateRange=${filter.name}`}>
                                 {filter.caption}
                             </NavLink>
