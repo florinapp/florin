@@ -5,7 +5,8 @@ import { matchPath } from 'react-router'
 const initState = {
     accounts: [],
     currentAccountId: "_all",
-    transactions: []  // transactions in the current selected account
+    transactions: [],  // transactions in the current selected account
+    currentDateRange: 'thisMonth'
 }
 
 const getDateRangeFromSearch = (search) => {
