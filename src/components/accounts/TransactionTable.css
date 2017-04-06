@@ -1,0 +1,13 @@
+td.transaction-table-cell {
+    text-align: center;
+    vertical-align: middle !important;
+    cursor: pointer;
+}
+
+td.transaction-table-cell-align-left {
+    text-align: left;
+}
+
+td.transaction-table-cell-align-right {
+    text-align: right;
+}

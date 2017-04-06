@@ -1,12 +1,21 @@
 import React from 'react'
+import Select from 'react-select'
+import './TransactionTable.css'
+import '../../../node_modules/react-select/dist/react-select.min.css'
+
+
+const options = [
+    {value: 'TBD', label: 'TBD'},
+    {value: 1, label: 'Auto'},
+]
 
 const Category = ({category}) => {
-    return <span>{category}</span>
+    return <Select options={options} value={category}/>
 }
 
 const TransactionTable = ({ transactions }) => {
     return (
-        <div className="table-responsive">
+        <div className="table-responsive transaction-table">
             <table className="table table-striped table-bordered table-hover">
                 <thead>
                     <tr>
@@ -23,11 +32,11 @@ const TransactionTable = ({ transactions }) => {
                             <tr><td colSpan="5">No transactions</td></tr> :
                             transactions.map((transaction) => (
                                 <tr key={transaction.id}>
-                                    <td className="center">{transaction.date}</td>
-                                    <td>{transaction.payee}</td>
-                                    <td>{transaction.info}</td>
-                                    <td><Category category={transaction.category} /></td>
-                                    <td>{transaction.amount}</td>
+                                    <td className="transaction-table-cell">{transaction.date}</td>
+                                    <td className="transaction-table-cell transaction-table-cell-align-left">{transaction.payee}</td>
+                                    <td className="transaction-table-cell transaction-table-cell-align-left">{transaction.info}</td>
+                                    <td className="transaction-table-cell transaction-table-cell-align-left"><Category category={transaction.category} /></td>
+                                    <td className="transaction-table-cell transaction-table-cell-align-right">{transaction.amount}</td>
                                 </tr>
                             ))
                     }
