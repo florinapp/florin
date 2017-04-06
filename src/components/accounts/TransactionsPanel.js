@@ -1,92 +1,10 @@
 import React, { Component } from 'react'
-import { Modal, Button, Alert } from 'react-bootstrap'
+import { Button } from 'react-bootstrap'
 import { NavLink } from 'react-router-dom'
-import Dropzone from 'react-dropzone'
 import moment from 'moment'
+import TransactionTable from './TransactionTable'
+import UploadTransactionsModal from './UploadTransactionsModal'
 import './TransactionsPanel.css'
-
-// TODO: This component is managing too much state
-// Consider migrate it to a container
-class UploadTransactionsModalDialog extends Component {
-    componentWillMount() {
-        this.setState({
-            uploadComplete: false,
-            totalImported: 0,
-            totalSkipped: 0
-        })
-    }
-
-    render() {
-        const { accountId, show, onClose, onUpload} = this.props
-        const { uploadComplete, totalImported, totalSkipped } = this.state
-        return (
-            <Modal show={show}>
-                <Modal.Header>
-                    <Modal.Title>Upload Transactions</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <Alert bsStyle="info">
-                        <span>
-                            Total Transaction Imported: {totalImported}
-                        </span>
-                            <br/>
-                        <span>
-                            Total Transaction Skipped: {totalSkipped}
-                        </span>
-                    </Alert>
-                    <Dropzone onDrop={(files) => {
-                        onUpload(files, (err, res) => {
-                            const { totalImported, totalSkipped } = res.body
-                            this.setState({
-                                uploadComplete: true,
-                                totalImported,
-                                totalSkipped
-                            })
-                        })
-                    }}>
-                        <div>Drag and Drop your transaction file here</div>
-                    </Dropzone>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button onClick={onClose}>Close</Button>
-                </Modal.Footer>
-            </Modal>
-        )
-    }
-}
-
-const TransactionTable = ({transactions}) => {
-    return (
-        <div className="table-responsive">
-            <table className="table table-striped table-bordered table-hover">
-                <thead>
-                    <tr>
-                        <th width="10%">Transaction Date</th>
-                        <th>Payee</th>
-                        <th>Info</th>
-                        <th>Category</th>
-                        <th>Amount</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {
-                        (transactions === undefined || transactions.length === 0) ?
-                            <tr><td colSpan="5">No transactions</td></tr> :
-                            transactions.map((transaction) => (
-                                <tr key={transaction.id}>
-                                    <td className="center">{transaction.date}</td>
-                                    <td>{transaction.payee}</td>
-                                    <td>{transaction.info}</td>
-                                    <td>{transaction.category}</td>
-                                    <td>{transaction.amount}</td>
-                                </tr>
-                            ))
-                    }
-                </tbody>
-            </table>
-        </div>
-    )
-}
 
 const FilterPanel = ({currentAccountId, currentDateRange}) => {
     const presetFilters = [
@@ -190,7 +108,7 @@ class TransactionsPanel extends Component {
                         </div>
                     </div>
                 </div>
-                <UploadTransactionsModalDialog
+                <UploadTransactionsModal
                     accountId={this.currentAccountId}
                     show={showModal}
                     onClose={() => this.setState({ showModal: false })}
