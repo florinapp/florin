@@ -4,7 +4,7 @@ import { matchPath } from 'react-router'
 
 const initState = {
     accounts: [],
-    currentAccountId: null,
+    currentAccountId: "_all",
     transactions: []  // transactions in the current selected account
 }
 

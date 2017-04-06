@@ -92,7 +92,7 @@ def upload_transactions(account_id):
             try:
                 Transaction(**common_attrs)
                 commit()
-            except (TransactionIntegrityError, CacheIndexError) as e:
+            except (TransactionIntegrityError, CacheIndexError):
                 total_skipped += 1
             else:
                 total_imported += 1
@@ -113,15 +113,20 @@ def get_transactions(account_id):
 
     with db_session:
         Account, Transaction = app.db.Account, app.db.Transaction
-        account = Account.select(lambda a: a.id == account_id)
-        if account.count() != 1:
-            flask.abort(404)
+        if account_id == '_all':
+            transactions = list(Transaction.select(
+                lambda t: t.date >= start_date and t.date <= end_date
+            ).order_by(Transaction.date.desc()))
+        else:
+            account = Account.select(lambda a: a.id == account_id)
+            if account.count() != 1:
+                flask.abort(404)
 
-        account = account.get()
+            account = account.get()
 
-        transactions = list(Transaction.select(lambda t: t.account == account
-                                               and t.date >= start_date and t.date <= end_date
-                                               ).order_by(Transaction.date.desc()))
+            transactions = list(Transaction.select(lambda t: t.account == account
+                                                   and t.date >= start_date and t.date <= end_date
+                                                   ).order_by(Transaction.date.desc()))
 
     return flask.jsonify({'transactions': [txn.to_dict() for txn in transactions]})
 
