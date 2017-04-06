@@ -4,7 +4,7 @@ import datetime
 from decimal import Decimal
 from flask_cors import CORS
 from flask.json import JSONEncoder
-from pony.orm import commit, db_session, desc, TransactionIntegrityError, CacheIndexError
+from pony.orm import commit, db_session, TransactionIntegrityError, CacheIndexError
 from collections import defaultdict
 from . import database
 from .importer import get_importer
@@ -34,16 +34,17 @@ def create_app():
 app = create_app()
 
 
-def transform_account_model_to_response(account):
-    AccountSnapshot = app.db.AccountSnapshot
-    with db_session:
-        latest_snapshot = account.snapshots.select().order_by(desc(AccountSnapshot.date))[:1]
-    return {
-        'id': account.id,
-        'name': account.name,
-        'type': account.type,
-        'currentValue': None if len(latest_snapshot) == 0 else str(latest_snapshot[0].value),
-    }
+# TODO: remove
+# def transform_account_model_to_response(account):
+#     AccountSnapshot = app.db.AccountSnapshot
+#     with db_session:
+#         latest_snapshot = account.snapshots.select().order_by(desc(AccountSnapshot.date))[:1]
+#     return {
+#         'id': account.id,
+#         'name': account.name,
+#         'type': account.type,
+#         'currentValue': None if len(latest_snapshot) == 0 else str(latest_snapshot[0].value),
+#     }
 
 
 @app.route('/api/accounts', methods=['GET'])
@@ -53,6 +54,20 @@ def get_accounts():
 
     return flask.jsonify({
         'accounts': [account.to_dict() for account in accounts]
+    })
+
+
+@app.route('/api/categories', methods=['GET'])
+def get_categories():
+    with db_session:
+        categories = list(app.db.Category.select())
+
+    flat_categories = [category.to_dict() for category in categories]
+    top_level_categories = [c for c in flat_categories if c['parent_id'] is None]
+    for category in top_level_categories:
+        category['subcategories'] = [c for c in flat_categories if c['parent_id'] == category['id']]
+    return flask.jsonify({
+        'categories': top_level_categories
     })
 
 
