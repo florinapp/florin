@@ -24,7 +24,9 @@ const TransactionTable = ({ transactions }) => {
                                     <td className="transaction-table-cell">{transaction.date}</td>
                                     <td className="transaction-table-cell transaction-table-cell-align-left">{transaction.payee}</td>
                                     <td className="transaction-table-cell transaction-table-cell-align-left">{transaction.info}</td>
-                                    <td className="transaction-table-cell transaction-table-cell-align-left"><CategorySelect category={transaction.category} /></td>
+                                    <td className="transaction-table-cell transaction-table-cell-align-left">
+                                        <CategorySelect transactionId={transaction.id} categoryId={transaction.category_id} />
+                                    </td>
                                     <td className="transaction-table-cell transaction-table-cell-align-right">{transaction.amount}</td>
                                 </tr>
                             ))

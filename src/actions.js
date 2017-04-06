@@ -1,6 +1,8 @@
 import fetch from 'isomorphic-fetch'
 import querystring from 'querystring'
 
+// ----------------------------------------------------------------------------
+// Fetch assets chart data
 export const REQUEST_ASSETS_CHART_DATA = 'REQUEST_ASSETS_CHART_DATA'
 export const RECEIVE_ASSETS_CHART_DATA = 'RECEIVE_ASSETS_CHART_DATA'
 export const requestAssetsChartData = () => {
@@ -24,6 +26,8 @@ export const fetchAssetsChartData = () => {
     }
 }
 
+// ----------------------------------------------------------------------------
+// Fetch account data
 export const REQUEST_ACCOUNTS_DATA = 'REQUEST_ACCOUNTS_DATA'
 export const RECEIVE_ACCOUNTS_DATA = 'RECEIVE_ACCOUNTS_DATA'
 export const requestAccountsData = () => {
@@ -47,6 +51,8 @@ export const fetchAccountsData = () => {
     }
 }
 
+// ----------------------------------------------------------------------------
+// Fetch transactions
 export const REQUEST_TRANSACTIONS = 'REQUEST_TRANSACTIONS'
 export const requestTransactions = (accountId) => {
     return {
@@ -78,6 +84,8 @@ export const fetchTransactions = (accountId, params={}) => {
     }
 }
 
+// ----------------------------------------------------------------------------
+// Fetch categories
 export const REQUEST_CATEGORIES = 'REQUEST_CATEGORIES'
 export const RECEIVE_CATEGORIES = 'RECEIVE_CATEGORIES'
 export const requestCategories = () => {
@@ -98,5 +106,39 @@ export const fetchCategories = () => {
         return fetch(`http://localhost:9000/api/categories`)
             .then(response => response.json())
             .then(json => dispatch(receiveCategories(json)))
+    }
+}
+
+// ----------------------------------------------------------------------------
+// Update transaction
+export const REQUEST_UPDATE_TRANSACTION = 'REQUEST_UPDATE_TRANSACTION'
+export const UPDATE_TRANSACTION_SUCCEEDED = 'UPDATE_TRANSACTION_SUCCEEDED'
+export const requestUpdateTransaction = (transactionId, transactionData) => {
+    return {
+        type: REQUEST_UPDATE_TRANSACTION,
+        transactionId,
+        transactionData
+    }
+}
+export const updateTransactionSucceeded = (json) => {
+    return {
+        type: UPDATE_TRANSACTION_SUCCEEDED,
+        receivedAt: Date.now()
+    }
+}
+
+export const updateTransaction = (transactionId, transactionData) => {
+    return (dispatch) => {
+        dispatch(requestUpdateTransaction(transactionId, transactionData))
+        let headers = new Headers()
+        headers.set("Content-Type", "application/json")
+        const options = {
+            method: 'POST',
+            headers: headers,
+            body: {}
+        }
+        return fetch(`http://localhost:9000/api/transactions/${transactionId}`, options)
+            .then(response => response.json())
+            .then(json => dispatch(updateTransactionSucceeded(json)))
     }
 }

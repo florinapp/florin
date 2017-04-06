@@ -14,10 +14,11 @@ const generateCategoryOptions = (categories) => {
     return categoryOptions
 }
 
-const CategorySelect = ({category, categories}) => {
-    console.log(category)
-    console.log(categories)
-    return <Select options={generateCategoryOptions(categories)} value={category}/>
+const CategorySelect = ({transactionId, categoryId, categories, onChange}) => {
+    return <Select options={generateCategoryOptions(categories)}
+                   value={categoryId}
+                   onChange={(val) => {onChange(transactionId, val)}}
+                   clearable={false} />
 }
 
 export default CategorySelect
