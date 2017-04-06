@@ -77,3 +77,26 @@ export const fetchTransactions = (accountId, params={}) => {
             .then(json => dispatch(receiveTransactions(json)))
     }
 }
+
+export const REQUEST_CATEGORIES = 'REQUEST_CATEGORIES'
+export const RECEIVE_CATEGORIES = 'RECEIVE_CATEGORIES'
+export const requestCategories = () => {
+    return {
+        type: REQUEST_CATEGORIES,
+    }
+}
+export const receiveCategories = (json) => {
+    return {
+        type: RECEIVE_CATEGORIES,
+        categories: json.categories,
+        receivedAt: Date.now()
+    }
+}
+export const fetchCategories = () => {
+    return (dispatch) => {
+        dispatch(requestCategories())
+        return fetch(`http://localhost:9000/api/categories`)
+            .then(response => response.json())
+            .then(json => dispatch(receiveCategories(json)))
+    }
+}

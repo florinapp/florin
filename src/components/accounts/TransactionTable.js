@@ -1,17 +1,6 @@
 import React from 'react'
-import Select from 'react-select'
 import './TransactionTable.css'
-import '../../../node_modules/react-select/dist/react-select.min.css'
-
-
-const options = [
-    {value: 'TBD', label: 'TBD'},
-    {value: 1, label: 'Auto'},
-]
-
-const Category = ({category}) => {
-    return <Select options={options} value={category}/>
-}
+import CategorySelect from '../../containers/accounts/CategorySelect'
 
 const TransactionTable = ({ transactions }) => {
     return (
@@ -22,7 +11,7 @@ const TransactionTable = ({ transactions }) => {
                         <th width="10%">Transaction Date</th>
                         <th>Payee</th>
                         <th>Info</th>
-                        <th>Category</th>
+                        <th width="25%">Category</th>
                         <th>Amount</th>
                     </tr>
                 </thead>
@@ -35,7 +24,7 @@ const TransactionTable = ({ transactions }) => {
                                     <td className="transaction-table-cell">{transaction.date}</td>
                                     <td className="transaction-table-cell transaction-table-cell-align-left">{transaction.payee}</td>
                                     <td className="transaction-table-cell transaction-table-cell-align-left">{transaction.info}</td>
-                                    <td className="transaction-table-cell transaction-table-cell-align-left"><Category category={transaction.category} /></td>
+                                    <td className="transaction-table-cell transaction-table-cell-align-left"><CategorySelect category={transaction.category} /></td>
                                     <td className="transaction-table-cell transaction-table-cell-align-right">{transaction.amount}</td>
                                 </tr>
                             ))

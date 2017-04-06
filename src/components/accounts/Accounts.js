@@ -1,15 +1,22 @@
-import React from 'react'
+import React, { Component } from 'react'
 import AccountListPanel from '../../containers/accounts/AccountListPanel'
 import TransactionsPanel from '../../containers/accounts/TransactionsPanel'
 
-const Accounts = (props) => {
-    console.log(props)
-    return (
-        <div>
-            <AccountListPanel />
-            <TransactionsPanel />
-        </div>
-    )
+class Accounts extends Component {
+
+    componentDidMount() {
+        const {onLoad} = this.props
+        onLoad.bind(this).call()
+    }
+
+    render() {
+        return (
+            <div>
+                <AccountListPanel />
+                <TransactionsPanel />
+            </div>
+        )
+    }
 }
 
 export default Accounts

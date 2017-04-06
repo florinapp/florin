@@ -3,7 +3,7 @@ import Navigation from './Navigation'
 import { Route } from 'react-router-dom'
 import { ConnectedRouter }  from 'react-router-redux'
 import Dashboard from '../containers/dashboard/Dashboard'
-import Accounts from './accounts/Accounts'
+import Accounts from '../containers/accounts/Accounts'
 
 const App = ({history}) => {
   return (
