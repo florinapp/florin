@@ -24,6 +24,15 @@ const FilterPanel = ({currentAccountId, currentDateRange}) => {
                             </NavLink>
                         </li>
                 ))}
+                <li>
+                    <hr />
+                </li>
+                <li>
+                    <NavLink to="#">Uncategorized</NavLink>
+                </li>
+                <li>
+                    <NavLink to="#">Excluded</NavLink>
+                </li>
             </ul>
         </div>
     )
