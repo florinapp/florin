@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Badge } from 'react-bootstrap'
 import { NavLink } from 'react-router-dom'
 import './AccountListPanel.css'
 
@@ -16,7 +17,8 @@ class AccountListPanel extends Component {
             <div className="col-lg-3 col-md-6">
                 <div className="panel panel-default">
                     <div className="panel-heading">
-                        <h3 className="panel-title">Accounts</h3></div>
+                        <h3 className="panel-title">Accounts</h3>
+                    </div>
                     <div className="panel-body">
                         <ul className="nav nav-pills nav-stacked">
                             <li className={currentAccountId === undefined || currentAccountId === "_all" ? "active" : ""}>

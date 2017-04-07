@@ -21,13 +21,23 @@ const TransactionTable = ({ transactions }) => {
                             <tr><td colSpan="5">No transactions</td></tr> :
                             transactions.map((transaction) => (
                                 <tr key={transaction.id}>
-                                    <td className="transaction-table-cell">{transaction.date}</td>
-                                    <td className="transaction-table-cell transaction-table-cell-align-left">{transaction.payee}</td>
-                                    <td className="transaction-table-cell transaction-table-cell-align-left">{transaction.info}</td>
+                                    <td className="transaction-table-cell">
+                                        {transaction.date}
+                                    </td>
+                                    <td className="transaction-table-cell transaction-table-cell-align-left">
+                                        {transaction.payee}
+                                    </td>
+                                    <td className="transaction-table-cell transaction-table-cell-align-left">
+                                        {transaction.info}
+                                    </td>
                                     <td className="transaction-table-cell transaction-table-cell-align-left">
                                         <CategorySelect transactionId={transaction.id} categoryId={transaction.category_id} />
                                     </td>
-                                    <td className="transaction-table-cell transaction-table-cell-align-right">{transaction.amount}</td>
+                                    <td className="transaction-table-cell transaction-table-cell-align-right">
+                                        <span className={transaction.amount < 0 ? 'debit' : 'credit'}>
+                                            {transaction.amount}
+                                        </span>
+                                    </td>
                                 </tr>
                             ))
                     }

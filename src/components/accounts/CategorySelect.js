@@ -18,7 +18,9 @@ const CategorySelect = ({transactionId, categoryId, categories, onChange}) => {
     return <Select options={generateCategoryOptions(categories)}
                    value={categoryId}
                    onChange={(val) => {onChange(transactionId, val)}}
-                   clearable={false} />
+                   clearable={false}
+                   autosize={false}
+           />
 }
 
 export default CategorySelect

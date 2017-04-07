@@ -11,3 +11,11 @@ td.transaction-table-cell-align-left {
 td.transaction-table-cell-align-right {
     text-align: right;
 }
+
+span.debit {
+    color: red;
+}
+
+span.credit {
+    color: green;
+}

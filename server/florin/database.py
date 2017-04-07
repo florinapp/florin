@@ -14,13 +14,7 @@ class Account(db.Entity):
     institution = Required(str)
     name = Required(str)
     type = Required(str)
-    # snapshots = Set('AccountSnapshot')
     transactions = Set('Transaction')
-
-# class AccountSnapshot(db.Entity):
-#     account = Required(Account)
-#     value = Required(Decimal)
-#     date = Required(datetime.date)
 
 
 class Transaction(db.Entity):
