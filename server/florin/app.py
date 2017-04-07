@@ -146,6 +146,25 @@ def get_transactions(account_id):
     return flask.jsonify({'transactions': [txn.to_dict() for txn in transactions]})
 
 
+@app.route('/api/transactions/<transaction_id>', methods=['POST'])
+def update_transaction(transaction_id):
+    Transaction = app.db.Transaction
+
+    with db_session:
+        transaction = Transaction.select(lambda t: t.id == transaction_id)
+        if transaction.count() != 1:
+            flask.abort(404)
+
+        transaction = transaction.get()
+        request = flask.request.json
+        for key, value in request.items():
+            setattr(transaction, key, value)
+        commit()
+
+    return flask.jsonify({'transactions': [transaction.to_dict()]})
+
+
+
 @app.route('/api/charts/assets', methods=['GET'])
 def get_asset_chart_data():
     with db_session:

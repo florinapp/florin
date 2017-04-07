@@ -123,6 +123,7 @@ export const requestUpdateTransaction = (transactionId, transactionData) => {
 export const updateTransactionSucceeded = (json) => {
     return {
         type: UPDATE_TRANSACTION_SUCCEEDED,
+        transaction: json.transactions[0],
         receivedAt: Date.now()
     }
 }
@@ -135,7 +136,7 @@ export const updateTransaction = (transactionId, transactionData) => {
         const options = {
             method: 'POST',
             headers: headers,
-            body: {}
+            body: JSON.stringify(transactionData)
         }
         return fetch(`http://localhost:9000/api/transactions/${transactionId}`, options)
             .then(response => response.json())

@@ -1,4 +1,4 @@
-import { RECEIVE_ACCOUNTS_DATA, RECEIVE_TRANSACTIONS } from '../actions'
+import { RECEIVE_ACCOUNTS_DATA, RECEIVE_TRANSACTIONS, UPDATE_TRANSACTION_SUCCEEDED } from '../actions'
 import querystring from 'querystring'
 import { matchPath } from 'react-router'
 
@@ -39,6 +39,19 @@ const accounts = (state=initState, action) => {
                 }
             }
             return state
+        case UPDATE_TRANSACTION_SUCCEEDED:
+            const { transactions } = state
+            const theTransaction = action.transaction
+            const updatedTransactions = transactions.map((transaction) => {
+                if (transaction.id !== theTransaction.id) {
+                    return transaction
+                }
+                return theTransaction
+            })
+            return {
+                ...state,
+                transactions: updatedTransactions
+            }
         default:
             return state
     }

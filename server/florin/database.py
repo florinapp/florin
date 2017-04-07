@@ -17,7 +17,6 @@ class Account(db.Entity):
     # snapshots = Set('AccountSnapshot')
     transactions = Set('Transaction')
 
-
 # class AccountSnapshot(db.Entity):
 #     account = Required(Account)
 #     value = Required(Decimal)
