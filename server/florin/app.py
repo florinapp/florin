@@ -165,6 +165,22 @@ def update_transaction(transaction_id):
 
 
 
+@app.route('/api/transactions/<transaction_id>', methods=['DELETE'])
+def delete_transaction(transaction_id):
+    Transaction = app.db.Transaction
+
+    with db_session:
+        transaction = Transaction.select(lambda t: t.id == transaction_id)
+        if transaction.count() != 1:
+            flask.abort(404)
+
+        transaction = transaction.get()
+        transaction.delete()
+        commit()
+
+    return flask.jsonify({})
+
+
 @app.route('/api/charts/assets', methods=['GET'])
 def get_asset_chart_data():
     with db_session:

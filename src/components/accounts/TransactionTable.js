@@ -45,7 +45,7 @@ const TransactionTable = ({ transactions, onDeleteClicked }) => {
                                         <ButtonGroup>
                                             <OverlayTrigger placement="top" overlay={<Tooltip id="tooltip">Delete Transaction</Tooltip>}>
                                                 <Button bsSize="xsmall" onClick={() => onDeleteClicked(transaction.id)}>
-                                                    <i className="glyphicon glyphicon-remove"></i>
+                                                    Delete
                                                 </Button>
                                             </OverlayTrigger>
                                         </ButtonGroup>

@@ -1,5 +1,6 @@
 import { connect } from 'react-redux'
 import TransactionTable from '../../components/accounts/TransactionTable'
+import { deleteTransaction } from '../../actions'
 
 const mapStateToProps = (state) => {
     const { transactions } = state.accounts
@@ -11,7 +12,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         onDeleteClicked: (transactionId) => {
-            console.log('deleting ' + transactionId)
+            dispatch(deleteTransaction(transactionId))
         }
     }
 }
