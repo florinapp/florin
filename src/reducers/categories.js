@@ -1,4 +1,4 @@
-import { RECEIVE_CATEGORIES, REQUEST_CATEGORIES } from '../actions'
+import { RECEIVE_CATEGORIES } from '../actions'
 
 const initState = []
 

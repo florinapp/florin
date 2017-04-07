@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import { Badge } from 'react-bootstrap'
 import { NavLink } from 'react-router-dom'
 import './AccountListPanel.css'
 

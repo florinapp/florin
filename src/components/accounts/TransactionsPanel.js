@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Button } from 'react-bootstrap'
 import { NavLink } from 'react-router-dom'
 import moment from 'moment'
-import TransactionTable from './TransactionTable'
+import TransactionTable from '../../containers/accounts/TransactionTable'
 import UploadTransactionsModal from './UploadTransactionsModal'
 import './TransactionsPanel.css'
 
@@ -85,7 +85,7 @@ class TransactionsPanel extends Component {
     }
 
     render() {
-        const {transactions, uploadTransactionFile} = this.props
+        const {uploadTransactionFile} = this.props
         const {showModal} = this.state
         const {currentAccountId} = this
         return (
@@ -95,7 +95,7 @@ class TransactionsPanel extends Component {
                         <h3 className="panel-title">Transactions</h3></div>
                     <div className="panel-body">
                         <FilterPanel {...this} />
-                        <TransactionTable transactions={transactions} />
+                        <TransactionTable />
                     </div >
                     <div className="panel-footer">
                         <div className="row">

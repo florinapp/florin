@@ -15,7 +15,7 @@ class UploadTransactionsModalDialog extends Component {
 
     render() {
         const { show, onClose, onUpload} = this.props
-        const { uploadComplete, totalImported, totalSkipped } = this.state
+        const { totalImported, totalSkipped } = this.state
         return (
             <Modal show={show}>
                 <Modal.Header>

@@ -1,8 +1,10 @@
 import React from 'react'
+import { Button, ButtonGroup, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import './TransactionTable.css'
 import CategorySelect from '../../containers/accounts/CategorySelect'
 
-const TransactionTable = ({ transactions }) => {
+const TransactionTable = ({ transactions, onDeleteClicked }) => {
+
     return (
         <div className="table-responsive transaction-table">
             <table className="table table-striped table-bordered table-hover">
@@ -13,12 +15,13 @@ const TransactionTable = ({ transactions }) => {
                         <th>Info</th>
                         <th width="25%">Category</th>
                         <th>Amount</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
                     {
                         (transactions === undefined || transactions.length === 0) ?
-                            <tr><td colSpan="5">No transactions</td></tr> :
+                            <tr><td colSpan="6">No transactions</td></tr> :
                             transactions.map((transaction) => (
                                 <tr key={transaction.id}>
                                     <td className="transaction-table-cell">
@@ -37,6 +40,15 @@ const TransactionTable = ({ transactions }) => {
                                         <span className={transaction.amount < 0 ? 'debit' : 'credit'}>
                                             {transaction.amount}
                                         </span>
+                                    </td>
+                                    <td className="transaction-table-cell">
+                                        <ButtonGroup>
+                                            <OverlayTrigger placement="top" overlay={<Tooltip id="tooltip">Delete Transaction</Tooltip>}>
+                                                <Button bsSize="xsmall" onClick={() => onDeleteClicked(transaction.id)}>
+                                                    <i className="glyphicon glyphicon-remove"></i>
+                                                </Button>
+                                            </OverlayTrigger>
+                                        </ButtonGroup>
                                     </td>
                                 </tr>
                             ))

@@ -143,3 +143,33 @@ export const updateTransaction = (transactionId, transactionData) => {
             .then(json => dispatch(updateTransactionSucceeded(json)))
     }
 }
+
+// ----------------------------------------------------------------------------
+// Delete transaction
+export const REQUEST_DELETE_TRANSACTION = 'REQUEST_DELETE_TRANSACTION '
+export const DELETE_TRANSACTION_SUCCEEDED = 'DELETE_TRANSACTION_SUCCEEDED'
+export const requestDeleteTransaction = (transactionId) => {
+    return {
+        type: REQUEST_DELETE_TRANSACTION,
+        transactionId
+    }
+}
+
+export const deleteTransactionSucceeded = (transactionId) => {
+    return {
+        type: DELETE_TRANSACTION_SUCCEEDED,
+        transactionId
+    }
+}
+
+export const deleteTransaction = (transactionId) => {
+    return (dispatch) => {
+        dispatch(requestDeleteTransaction(transactionId))
+        const options = {
+            method: 'DELETE',
+        }
+        return fetch(`http://localhost:9000/api/transactions/${transactionId}`, options)
+            .then(response => response.json())
+            .then(json => dispatch(deleteTransactionSucceeded(transactionId)))
+    }
+}
