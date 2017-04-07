@@ -126,11 +126,15 @@ def get_transactions(account_id):
     start_date = datetime.datetime.strptime(start_date, '%Y-%m-%d').date()
     end_date = datetime.datetime.strptime(end_date, '%Y-%m-%d').date()
 
+    include_internal_transfer = flask.request.args.get('includeInternalTransfer', False)
+
     with db_session:
         Account, Transaction = app.db.Account, app.db.Transaction
         if account_id == '_all':
             transactions = list(Transaction.select(
-                lambda t: t.date >= start_date and t.date <= end_date
+                lambda t: t.date >= start_date
+                and t.date <= end_date
+                and t.is_internal_transfer == include_internal_transfer
             ).order_by(Transaction.date.desc()))
         else:
             account = Account.select(lambda a: a.id == account_id)
@@ -139,9 +143,11 @@ def get_transactions(account_id):
 
             account = account.get()
 
-            transactions = list(Transaction.select(lambda t: t.account == account
-                                                   and t.date >= start_date and t.date <= end_date
-                                                   ).order_by(Transaction.date.desc()))
+            transactions = list(Transaction.select(
+                lambda t: t.account == account
+                and t.date >= start_date and t.date <= end_date
+                and t.is_internal_transfer == include_internal_transfer
+            ).order_by(Transaction.date.desc()))
 
     return flask.jsonify({'transactions': [txn.to_dict() for txn in transactions]})
 

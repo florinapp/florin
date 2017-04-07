@@ -3,19 +3,29 @@ import { Button, ButtonGroup, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import './TransactionTable.css'
 import CategorySelect from '../../containers/accounts/CategorySelect'
 
-const TransactionTable = ({ transactions, onDeleteClicked }) => {
+const ButtonWithTooltip = ({buttonStyle, tooltip, onClick, children}) => {
+    return (
+        <OverlayTrigger placement="top" overlay={<Tooltip id="tooltip">{tooltip}</Tooltip>}>
+            <Button bsStyle={buttonStyle} bsSize="xsmall" onClick={onClick}>
+                {children}
+            </Button>
+        </OverlayTrigger>
+    )
+}
+
+const TransactionTable = ({ transactions, onDeleteClicked, onExcludeClicked }) => {
 
     return (
         <div className="table-responsive transaction-table">
             <table className="table table-striped table-bordered table-hover">
                 <thead>
                     <tr>
-                        <th width="10%">Transaction Date</th>
+                        <th width="5%">Date</th>
                         <th>Payee</th>
                         <th>Info</th>
                         <th width="25%">Category</th>
                         <th>Amount</th>
-                        <th></th>
+                        <th width="12%"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -41,13 +51,18 @@ const TransactionTable = ({ transactions, onDeleteClicked }) => {
                                             {transaction.amount}
                                         </span>
                                     </td>
-                                    <td className="transaction-table-cell">
+                                    <td className="transaction-table-cell transaction-table-cell-align-left">
                                         <ButtonGroup>
-                                            <OverlayTrigger placement="top" overlay={<Tooltip id="tooltip">Delete Transaction</Tooltip>}>
-                                                <Button bsSize="xsmall" onClick={() => onDeleteClicked(transaction.id)}>
-                                                    Delete
-                                                </Button>
-                                            </OverlayTrigger>
+                                            <ButtonWithTooltip buttonStyle="primary" tooltip="Delete the transaction"
+                                                               onClick={() => { onDeleteClicked(transaction.id) }}>
+                                                Delete
+                                            </ButtonWithTooltip>
+
+                                            <ButtonWithTooltip buttonStyle="default" tooltip="Exclude the transaction"
+                                                               onClick={() => { onExcludeClicked(transaction.id) }}>
+                                                Exclude
+                                            </ButtonWithTooltip>
+
                                         </ButtonGroup>
                                     </td>
                                 </tr>

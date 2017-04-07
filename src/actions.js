@@ -173,3 +173,39 @@ export const deleteTransaction = (transactionId) => {
             .then(json => dispatch(deleteTransactionSucceeded(transactionId)))
     }
 }
+
+// ----------------------------------------------------------------------------
+// Exclude transaction
+export const REQUEST_EXCLUDE_TRANSACTION = 'REQUEST_DELETE_TRANSACTION '
+export const EXCLUDE_TRANSACTION_SUCCEEDED = 'DELETE_TRANSACTION_SUCCEEDED'
+export const requestExcludeTransaction = (transactionId) => {
+    return {
+        type: REQUEST_EXCLUDE_TRANSACTION,
+        transactionId
+    }
+}
+
+export const excludeTransactionSucceeded = (transactionId) => {
+    return {
+        type: EXCLUDE_TRANSACTION_SUCCEEDED,
+        transactionId
+    }
+}
+
+export const excludeTransaction = (transactionId) => {
+    return (dispatch) => {
+        dispatch(requestExcludeTransaction(transactionId))
+        let headers = new Headers()
+        headers.set("Content-Type", "application/json")
+        const options = {
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify({
+                is_internal_transfer: true
+            })
+        }
+        return fetch(`http://localhost:9000/api/transactions/${transactionId}`, options)
+            .then(response => response.json())
+            .then(json => dispatch(excludeTransactionSucceeded(transactionId)))
+    }
+}

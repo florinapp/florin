@@ -1,4 +1,10 @@
-import { RECEIVE_ACCOUNTS_DATA, RECEIVE_TRANSACTIONS, UPDATE_TRANSACTION_SUCCEEDED, DELETE_TRANSACTION_SUCCEEDED } from '../actions'
+import {
+    RECEIVE_ACCOUNTS_DATA,
+    RECEIVE_TRANSACTIONS,
+    UPDATE_TRANSACTION_SUCCEEDED,
+    DELETE_TRANSACTION_SUCCEEDED,
+    EXCLUDE_TRANSACTION_SUCCEEDED
+} from '../actions'
 import querystring from 'querystring'
 import { matchPath } from 'react-router'
 
@@ -53,7 +59,16 @@ const accounts = (state=initState, action) => {
                 transactions: updatedTransactions
             }
         case DELETE_TRANSACTION_SUCCEEDED:
-            const { transactionId } = action
+            let { transactionId } = action
+            transactions = state.transactions
+            return {
+                ...state,
+                transactions: transactions.filter((transaction) => {
+                    return transaction.id !== transactionId
+                })
+            }
+        case EXCLUDE_TRANSACTION_SUCCEEDED:
+            transactionId = action.transactionId
             transactions = state.transactions
             return {
                 ...state,
