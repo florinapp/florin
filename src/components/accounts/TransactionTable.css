@@ -1,3 +1,8 @@
+.transaction-table {
+    min-height: 400px;
+    overflow: hidden;
+}
+
 td.transaction-table-cell {
     text-align: center;
     vertical-align: middle !important;

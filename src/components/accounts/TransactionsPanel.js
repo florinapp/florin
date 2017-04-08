@@ -97,7 +97,7 @@ class TransactionsPanel extends Component {
                 <div className="panel panel-default">
                     <div className="panel-heading">
                         <h3 className="panel-title">Transactions</h3></div>
-                    <div className="panel-body">
+                    <div className="panel-body transaction-panel">
                         <FilterPanel {...this} />
                         <TransactionTable />
                     </div >

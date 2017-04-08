@@ -5,3 +5,7 @@
 .filter-panel li {
     padding: 5px 0;
 }
+
+.transaction-panel {
+    min-height: 500px;
+}
