@@ -209,3 +209,28 @@ export const excludeTransaction = (transactionId) => {
             .then(json => dispatch(excludeTransactionSucceeded(transactionId)))
     }
 }
+
+// ----------------------------------------------------------------------------
+// Fetch Category Summary
+export const REQUEST_CATEGORY_SUMMARY = 'REQUEST_CATEGORY_SUMMARY'
+export const RECEIVE_CATEGORY_SUMMARY = 'RECEIVE_CATEGORY_SUMMARY'
+export const requestCategorySummary = () => {
+    return {
+        type: REQUEST_CATEGORY_SUMMARY,
+    }
+}
+export const receiveCategorySummary = (json) => {
+    return {
+        type: RECEIVE_CATEGORY_SUMMARY,
+        categorySummary: json.categorySummary,
+        receivedAt: Date.now()
+    }
+}
+export const fetchCategorySummary = (accountId) => {
+    return (dispatch) => {
+        dispatch(requestCategorySummary())
+        return fetch(`http://localhost:9000/api/accounts/${accountId}/categorySummary`)
+            .then(response => response.json())
+            .then(json => dispatch(receiveCategorySummary(json)))
+    }
+}

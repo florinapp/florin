@@ -12,12 +12,12 @@ const initState = {
     accounts: [],
     currentAccountId: "_all",
     transactions: [],  // transactions in the current selected account
-    // currentDateRange: 'thisMonth'
     filter: {
         currentDateRange: 'thisMonth',
         includeExcluded: false,
         onlyUncategorized: false
-    }
+    },
+    categorySummary: []
 }
 
 const accounts = (state=initState, action) => {

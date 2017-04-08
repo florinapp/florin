@@ -48,7 +48,7 @@ const SpecialFilterPanel = ({ currentAccountId, filter }) => {
         <ul className="nav nav-pills">
             <li role="presentation" className={toBool(filter.onlyUncategorized) ? "active" : ""}>
                 <NavLink to={`/accounts/${currentAccountId}?${q(filter, { onlyUncategorized: !(toBool(filter.onlyUncategorized)) })}`}>
-                    Show Only Uncategorized
+                    Only Show Uncategorized
                 </NavLink>
             </li>
             <li role="presentation" className={toBool(filter.includeExcluded) ? "active" : ""}>

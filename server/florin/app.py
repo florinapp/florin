@@ -1,6 +1,7 @@
 import flask
 import logging
 import datetime
+import operator
 from asbool import asbool
 from decimal import Decimal
 from flask_cors import CORS
@@ -15,6 +16,20 @@ logging.basicConfig(level='DEBUG')
 
 
 TBD_CATEGORY_ID = 65535
+
+
+ALL_ACCOUNTS = object()
+
+
+def get_account_by_id(account_id):
+    if account_id == '_all':
+        return ALL_ACCOUNTS
+
+    account = app.db.Account.select(lambda a: a.id == account_id)
+    if account.count() != 1:
+        flask.abort(404)
+
+    return account.get()
 
 
 class MyJSONEncoder(JSONEncoder):
@@ -36,19 +51,6 @@ def create_app():
 
 
 app = create_app()
-
-
-# TODO: remove
-# def transform_account_model_to_response(account):
-#     AccountSnapshot = app.db.AccountSnapshot
-#     with db_session:
-#         latest_snapshot = account.snapshots.select().order_by(desc(AccountSnapshot.date))[:1]
-#     return {
-#         'id': account.id,
-#         'name': account.name,
-#         'type': account.type,
-#         'currentValue': None if len(latest_snapshot) == 0 else str(latest_snapshot[0].value),
-#     }
 
 
 @app.route('/api/accounts', methods=['GET'])
@@ -100,11 +102,13 @@ def upload_transactions(account_id):
             # (unique checksum) to be detected and skipped, but I also want
             # new transactions to be imported, but doing all in one transaction
             # will rollback everything.
-            Account, Transaction = app.db.Account, app.db.Transaction
-            account = Account.select(lambda a: a.id == account_id)
-            if account.count() != 1:
-                flask.abort(404)
-            account = account.get()
+            account = get_account_by_id(account_id)
+
+            # Account, Transaction = app.db.Account, app.db.Transaction
+            # account = Account.select(lambda a: a.id == account_id)
+            # if account.count() != 1:
+            #     flask.abort(404)
+            # account = account.get()
 
             common_attrs = dict(t.common_attrs)
             common_attrs['account'] = account
@@ -123,6 +127,7 @@ def upload_transactions(account_id):
 
 
 @app.route('/api/accounts/<account_id>', methods=['GET'])
+@db_session
 def get_transactions(account_id):
     start_date = flask.request.args.get('startDate', '1970-01-01')
     end_date = flask.request.args.get('endDate', '9999-12-31')
@@ -134,32 +139,56 @@ def get_transactions(account_id):
 
     only_uncategorized = asbool(flask.request.args.get('onlyUncategorized', 'false'))
 
-    with db_session:
-        Account, Transaction = app.db.Account, app.db.Transaction
+    Account, Transaction = app.db.Account, app.db.Transaction
 
-        query = Transaction.select(
-            lambda t: t.date >= start_date
-            and t.date <= end_date
-        )
+    query = Transaction.select(
+        lambda t: t.date >= start_date
+        and t.date <= end_date
+    )
 
-        if not include_excluded:
-            query = query.filter(lambda t: t.is_internal_transfer == False)
+    if not include_excluded:
+        query = query.filter(lambda t: t.is_internal_transfer == False)
 
-        if only_uncategorized:
-            query = query.filter(lambda t: t.category_id == TBD_CATEGORY_ID)
+    if only_uncategorized:
+        query = query.filter(lambda t: t.category_id == TBD_CATEGORY_ID)
 
-        if account_id != '_all':
-            account = Account.select(lambda a: a.id == account_id)
-            if account.count() != 1:
-                flask.abort(404)
+    account = get_account_by_id(account_id)
+    if account is not ALL_ACCOUNTS:
+        query = query.filter(lambda t: t.account == account)
 
-            account = account.get()
-            query = query.filter(lambda t: t.account == account)
-
-        query = query.order_by(Transaction.date.desc())
-        transactions = query[:]
+    query = query.order_by(Transaction.date.desc())
+    transactions = query[:]
 
     return flask.jsonify({'transactions': [txn.to_dict() for txn in transactions]})
+
+
+@app.route('/api/accounts/<account_id>/categorySummary', methods=['GET'])
+@db_session
+def get_account_summary(account_id):
+    account = get_account_by_id(account_id)
+    categories = {c.id: c.name for c in app.db.Category.select()[:]}
+    result = app.db.select(
+        'SELECT categories.id as id, categories.parent_id as parent_id, SUM(transactions.amount) as amount '
+        'FROM categories INNER JOIN transactions '
+        'WHERE categories.id = transactions.category_id AND transactions.is_internal_transfer = 0 '
+        'GROUP BY categories.id')
+
+    aggregated_result = defaultdict(lambda: Decimal('0'))
+    for category_id, category_parent_id, sum_amount in result:
+        if category_parent_id is None:
+            aggregated_result[category_id] += Decimal(str(sum_amount))
+        else:
+            aggregated_result[category_parent_id] += Decimal(str(sum_amount))
+
+    category_summary = [
+        {
+            'category_id': category_id,
+            'category_name': categories[category_id],
+            'amount': amount
+        } for (category_id, amount) in sorted(aggregated_result.items(), key=operator.itemgetter(1))
+    ]
+
+    return flask.jsonify({'categorySummary': category_summary})
 
 
 @app.route('/api/transactions/<transaction_id>', methods=['POST'])
