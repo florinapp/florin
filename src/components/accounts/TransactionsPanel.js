@@ -39,7 +39,7 @@ const buildDateRangeRequestParams = (filter) => {
 const buildRequestParams = (filter) => {
     const builders = [
         buildDateRangeRequestParams,
-        ({ includeUncategorized }) => ({ includeUncategorized }),
+        ({ onlyUncategorized }) => ({ onlyUncategorized }),
         ({ includeExcluded }) => ({ includeExcluded })
     ]
     let params = builders.reduce((params, fn) => (
@@ -61,7 +61,16 @@ class TransactionsPanel extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (this.currentAccountId === nextProps.currentAccountId && this.filter.currentDateRange === nextProps.filter.currentDateRange) {
+        const hasAccountIdChanged = () => (
+            this.currentAccountId !== nextProps.currentAccountId
+        )
+
+        const hasFilterChanged = () => {
+            // TODO: is there a better way to test two objects are equal?
+            return JSON.stringify(this.filter) !== JSON.stringify(nextProps.filter)
+        }
+
+        if (!hasAccountIdChanged() && !hasFilterChanged()) {
             return
         }
 

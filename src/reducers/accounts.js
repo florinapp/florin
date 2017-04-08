@@ -16,7 +16,7 @@ const initState = {
     filter: {
         currentDateRange: 'thisMonth',
         includeExcluded: false,
-        includeUncategorized: false
+        onlyUncategorized: false
     }
 }
 
@@ -45,7 +45,7 @@ const accounts = (state=initState, action) => {
                     currentAccountId: match.params.accountId,
                     filter: {
                         currentDateRange: queryParams.currentDateRange || 'thisMonth',
-                        includeUncategorized: queryParams.includeUncategorized || false,
+                        onlyUncategorized: queryParams.onlyUncategorized || false,
                         includeExcluded: queryParams.includeExcluded || false
                     }
                 }

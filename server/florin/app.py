@@ -1,6 +1,7 @@
 import flask
 import logging
 import datetime
+from asbool import asbool
 from decimal import Decimal
 from flask_cors import CORS
 from flask.json import JSONEncoder
@@ -11,6 +12,9 @@ from .importer import get_importer
 
 
 logging.basicConfig(level='DEBUG')
+
+
+TBD_CATEGORY_ID = 65535
 
 
 class MyJSONEncoder(JSONEncoder):
@@ -126,28 +130,34 @@ def get_transactions(account_id):
     start_date = datetime.datetime.strptime(start_date, '%Y-%m-%d').date()
     end_date = datetime.datetime.strptime(end_date, '%Y-%m-%d').date()
 
-    include_internal_transfer = flask.request.args.get('includeInternalTransfer', False)
+    include_excluded = asbool(flask.request.args.get('includeExcluded', 'false'))
+
+    only_uncategorized = asbool(flask.request.args.get('onlyUncategorized', 'false'))
 
     with db_session:
         Account, Transaction = app.db.Account, app.db.Transaction
-        if account_id == '_all':
-            transactions = list(Transaction.select(
-                lambda t: t.date >= start_date
-                and t.date <= end_date
-                and t.is_internal_transfer == include_internal_transfer
-            ).order_by(Transaction.date.desc()))
-        else:
+
+        query = Transaction.select(
+            lambda t: t.date >= start_date
+            and t.date <= end_date
+        )
+
+        if not include_excluded:
+            query = query.filter(lambda t: t.is_internal_transfer == False)
+
+        if only_uncategorized:
+            query = query.filter(lambda t: t.category_id == TBD_CATEGORY_ID)
+
+        if account_id != '_all':
             account = Account.select(lambda a: a.id == account_id)
             if account.count() != 1:
                 flask.abort(404)
 
             account = account.get()
+            query = query.filter(lambda t: t.account == account)
 
-            transactions = list(Transaction.select(
-                lambda t: t.account == account
-                and t.date >= start_date and t.date <= end_date
-                and t.is_internal_transfer == include_internal_transfer
-            ).order_by(Transaction.date.desc()))
+        query = query.order_by(Transaction.date.desc())
+        transactions = query[:]
 
     return flask.jsonify({'transactions': [txn.to_dict() for txn in transactions]})
 

@@ -38,12 +38,9 @@ const FilterPanel = ({currentAccountId, filter}) => {
                             </NavLink>
                         </li>
                 ))}
-                <li>
-                    <hr />
-                </li>
-                <li role="presentation" className={toBool(filter.includeUncategorized) ? "active" : ""}>
-                    <NavLink to={`/accounts/${currentAccountId}?${q(filter, {includeUncategorized: !(toBool(filter.includeUncategorized))})}`}>
-                        Uncategorized
+                <li key="onlyUncategorized" role="presentation" className={toBool(filter.onlyUncategorized) ? "active" : ""}>
+                    <NavLink to={`/accounts/${currentAccountId}?${q(filter, {onlyUncategorized: !(toBool(filter.onlyUncategorized))})}`}>
+                        Show Only Uncategorized
                     </NavLink>
                 </li>
                 <li>
