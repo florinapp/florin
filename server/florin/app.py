@@ -167,6 +167,7 @@ def get_transactions(account_id):
 def get_account_summary(account_id):
     account = get_account_by_id(account_id)
     categories = {c.id: c.name for c in app.db.Category.select()[:]}
+
     result = app.db.select(
         'SELECT categories.id as id, categories.parent_id as parent_id, SUM(transactions.amount) as amount '
         'FROM categories INNER JOIN transactions '

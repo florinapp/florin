@@ -3,7 +3,13 @@ import { Table } from 'react-bootstrap'
 
 class CategoryChartPanel extends Component {
     componentWillMount() {
+        const { fetchCategorySummary, currentAccountId } = this.props
+        fetchCategorySummary(currentAccountId)
+    }
 
+    componentWillReceiveProps() {
+        const { fetchCategorySummary, currentAccountId } = this.props
+        fetchCategorySummary(currentAccountId)
     }
 
     render() {
@@ -25,8 +31,8 @@ class CategoryChartPanel extends Component {
                             <tbody>
                                 {categorySummary.map((category) => {
                                     return (
-                                        <tr key={category.name}>
-                                            <td>{category.name}</td>
+                                        <tr key={category.category_name}>
+                                            <td>{category.category_name}</td>
                                             <td>{category.amount}</td>
                                         </tr>
                                     )

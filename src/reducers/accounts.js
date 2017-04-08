@@ -3,7 +3,8 @@ import {
     RECEIVE_TRANSACTIONS,
     UPDATE_TRANSACTION_SUCCEEDED,
     DELETE_TRANSACTION_SUCCEEDED,
-    EXCLUDE_TRANSACTION_SUCCEEDED
+    EXCLUDE_TRANSACTION_SUCCEEDED,
+    RECEIVE_CATEGORY_SUMMARY,
 } from '../actions'
 import querystring from 'querystring'
 import { matchPath } from 'react-router'
@@ -81,6 +82,12 @@ const accounts = (state=initState, action) => {
                 transactions: transactions.filter((transaction) => {
                     return transaction.id !== transactionId
                 })
+            }
+        case RECEIVE_CATEGORY_SUMMARY:
+            const { categorySummary } = action
+            return {
+                ...state,
+                categorySummary
             }
         default:
             return state

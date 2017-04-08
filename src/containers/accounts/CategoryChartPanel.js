@@ -1,5 +1,6 @@
 import { connect } from 'react-redux'
 import CategoryChartPanel from '../../components/accounts/CategoryChartPanel'
+import { fetchCategorySummary } from '../../actions'
 
 const mapStateToProps = ({ accounts }) => {
     const { currentAccountId, filter, categorySummary } = accounts
@@ -13,7 +14,7 @@ const mapStateToProps = ({ accounts }) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         fetchCategorySummary: (accountId/*, filter*/) => {
-
+            dispatch(fetchCategorySummary(accountId))
         }
     }
 }

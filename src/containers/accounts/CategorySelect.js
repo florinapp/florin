@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import CategorySelect from '../../components/accounts/CategorySelect'
-import { updateTransaction } from '../../actions'
+import { updateTransaction, fetchCategorySummary } from '../../actions'
 
 const mapStateToProps = (state) => {
     const { categories } = state
@@ -17,6 +17,7 @@ const mapDispatchToProps = (dispatch) => {
                 category_id: newCategoryId
             }
             dispatch(updateTransaction(transactionId, transactionData))
+            dispatch(fetchCategorySummary("_all"))
         }
     }
 }
