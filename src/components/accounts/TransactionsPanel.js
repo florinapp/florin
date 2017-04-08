@@ -75,7 +75,6 @@ class TransactionsPanel extends Component {
         }
 
         this.currentAccountId = nextProps.currentAccountId
-        // this.filter.currentDateRange = nextProps.filter.currentDateRange
         this.filter = nextProps.filter
         this.fetchTransactions(this.currentAccountId, buildRequestParams(this.filter))
     }

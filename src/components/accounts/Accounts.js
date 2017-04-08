@@ -12,7 +12,16 @@ class Accounts extends Component {
     render() {
         return (
             <div>
-                <AccountListPanel />
+                <div className="col-lg-3 col-md-6">
+                    <AccountListPanel />
+                    <div className="panel panel-default">
+                        <div className="panel-heading">
+                            <h3 className="panel-title">Category Stats</h3>
+                        </div>
+                        <div className="panel-body">
+                        </div>
+                    </div>
+                </div>
                 <TransactionsPanel />
             </div>
         )
