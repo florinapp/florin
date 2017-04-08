@@ -1,92 +1,78 @@
 import React, { Component } from 'react'
 import { Button } from 'react-bootstrap'
-import { NavLink } from 'react-router-dom'
 import moment from 'moment'
 import TransactionTable from '../../containers/accounts/TransactionTable'
+import FilterPanel from '../../containers/accounts/FilterPanel'
 import UploadTransactionsModal from './UploadTransactionsModal'
 import './TransactionsPanel.css'
 
-const FilterPanel = ({currentAccountId, currentDateRange}) => {
-    const presetFilters = [
-        {name: 'thisMonth', caption: 'This Month'},
-        {name: 'lastMonth', caption: 'Last Month'},
-        {name: 'thisYear', caption: 'This Year'}
-    ]
+const buildDateRangeRequestParams = (filter) => {
+    let { currentDateRange } = filter
+    const FORMAT = 'YYYY-MM-DD'
+    if (currentDateRange === undefined) {
+        return {}
+    }
 
-    return (
-        <div className="filter-panel">
-            <ul className="nav nav-pills">
-                {presetFilters.map((filter) => (
-                        <li key={filter.name} role="presentation"
-                            className={currentDateRange === filter.name ? "active" : ""}>
-                            <NavLink to={`/accounts/${currentAccountId}?dateRange=${filter.name}`}>
-                                {filter.caption}
-                            </NavLink>
-                        </li>
-                ))}
-                <li>
-                    <hr />
-                </li>
-                <li>
-                    <NavLink to="#">Uncategorized</NavLink>
-                </li>
-                <li>
-                    <NavLink to="#">Excluded</NavLink>
-                </li>
-            </ul>
-        </div>
-    )
+    const now = moment(moment.now())
+    switch (currentDateRange) {
+        case 'thisMonth':
+            return {
+                startDate: now.startOf('month').format(FORMAT),
+                endDate: now.endOf('month').format(FORMAT)
+            }
+        case 'lastMonth':
+            const lastMonth = moment(now - moment.duration(32, 'd'))
+            return {
+                startDate: lastMonth.startOf('month').format(FORMAT),
+                endDate: lastMonth.endOf('month').format(FORMAT)
+            }
+        case 'thisYear':
+            return {
+                startDate: now.startOf('year').format(FORMAT),
+                endDate: now.endOf('year').format(FORMAT)
+            }
+        default:
+            return {}
+    }
+}
+
+const buildRequestParams = (filter) => {
+    const builders = [
+        buildDateRangeRequestParams,
+        ({ includeUncategorized }) => ({ includeUncategorized }),
+        ({ includeExcluded }) => ({ includeExcluded })
+    ]
+    let params = builders.reduce((params, fn) => (
+        {
+            ...params,
+            ...fn(params)
+        }
+    ), filter)
+    console.log(params)
+    return params
 }
 
 class TransactionsPanel extends Component {
     constructor(props) {
         super(props)
+        this.filter = this.props.filter
         this.currentAccountId = this.props.currentAccountId
-        this.currentDateRange = this.props.currentDateRange
         this.fetchTransactions = this.props.fetchTransactions
     }
 
-    buildRequestParams() {
-        const FORMAT = 'YYYY-MM-DD'
-        if (this.currentDateRange === undefined) {
-            return {}
-        }
-
-        const now = moment(moment.now())
-        switch (this.currentDateRange) {
-            case 'thisMonth':
-                return {
-                    startDate: now.startOf('month').format(FORMAT),
-                    endDate: now.endOf('month').format(FORMAT)
-                }
-            case 'lastMonth':
-                const lastMonth = moment(now - moment.duration(32, 'd'))
-                return {
-                    startDate: lastMonth.startOf('month').format(FORMAT),
-                    endDate: lastMonth.endOf('month').format(FORMAT)
-                }
-            case 'thisYear':
-                return {
-                    startDate: now.startOf('year').format(FORMAT),
-                    endDate: now.endOf('year').format(FORMAT)
-                }
-            default:
-                return {}
-        }
-    }
-
     componentWillReceiveProps(nextProps) {
-        if (this.currentAccountId === nextProps.currentAccountId && this.currentDateRange === nextProps.currentDateRange) {
+        if (this.currentAccountId === nextProps.currentAccountId && this.filter.currentDateRange === nextProps.filter.currentDateRange) {
             return
         }
 
         this.currentAccountId = nextProps.currentAccountId
-        this.currentDateRange = nextProps.currentDateRange
-        this.fetchTransactions(this.currentAccountId, this.buildRequestParams())
+        // this.filter.currentDateRange = nextProps.filter.currentDateRange
+        this.filter = nextProps.filter
+        this.fetchTransactions(this.currentAccountId, buildRequestParams(this.filter))
     }
 
     componentDidMount() {  // Triggers the initial fetch, subsequent fetches will be initiated by componentWillReceiveProps
-        this.fetchTransactions(this.currentAccountId, this.buildRequestParams())
+        this.fetchTransactions(this.currentAccountId, buildRequestParams(this.filter))
     }
 
     componentWillMount() {

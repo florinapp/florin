@@ -12,12 +12,12 @@ const initState = {
     accounts: [],
     currentAccountId: "_all",
     transactions: [],  // transactions in the current selected account
-    currentDateRange: 'thisMonth'
-}
-
-const getDateRangeFromSearch = (search) => {
-    let params = querystring.parse(search.slice(1, search.length))
-    return params.dateRange  // TODO: work with custom date range
+    // currentDateRange: 'thisMonth'
+    filter: {
+        currentDateRange: 'thisMonth',
+        includeExcluded: false,
+        includeUncategorized: false
+    }
 }
 
 const accounts = (state=initState, action) => {
@@ -38,10 +38,16 @@ const accounts = (state=initState, action) => {
                 path: '/accounts/:accountId'
             })
             if (match) {
+                console.log(match)
+                let queryParams = querystring.parse(search.slice(1, search.length))
                 return {
                     ...state,
                     currentAccountId: match.params.accountId,
-                    currentDateRange: getDateRangeFromSearch(search)
+                    filter: {
+                        currentDateRange: queryParams.currentDateRange || 'thisMonth',
+                        includeUncategorized: queryParams.includeUncategorized || false,
+                        includeExcluded: queryParams.includeExcluded || false
+                    }
                 }
             }
             return state

@@ -6,11 +6,11 @@ import request from 'superagent'  // TODO: use isomorphic-fetch
 
 
 const mapStateToProps = ({accounts}) => {
-    const {currentAccountId, currentDateRange, transactions} = accounts
+    const {currentAccountId, filter, transactions} = accounts
     return {
         transactions,
         currentAccountId,
-        currentDateRange
+        filter
     }
 }
 
