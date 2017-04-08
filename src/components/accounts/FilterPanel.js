@@ -38,6 +38,8 @@ const FilterPanel = ({currentAccountId, filter}) => {
                             </NavLink>
                         </li>
                 ))}
+            </ul>
+            <ul className="nav nav-pills">
                 <li key="onlyUncategorized" role="presentation" className={toBool(filter.onlyUncategorized) ? "active" : ""}>
                     <NavLink to={`/accounts/${currentAccountId}?${q(filter, {onlyUncategorized: !(toBool(filter.onlyUncategorized))})}`}>
                         Show Only Uncategorized
@@ -47,6 +49,7 @@ const FilterPanel = ({currentAccountId, filter}) => {
                     <NavLink to="#">Show Excluded</NavLink>
                 </li>
             </ul>
+            <hr />
         </div>
     )
 }
