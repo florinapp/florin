@@ -4,19 +4,20 @@ import accounting from 'accounting'
 
 class CategorySummaryPanel extends Component {
     componentWillMount() {
-        const { fetchCategorySummary, currentAccountId } = this.props
-        fetchCategorySummary(currentAccountId)
+        const { fetchCategorySummary, currentAccountId, filter } = this.props
+        fetchCategorySummary(currentAccountId, filter)
     }
 
     render() {
-        const { categorySummary, fetchCategorySummary } = this.props
+        const { categorySummary, fetchCategorySummary, filter } = this.props
+        const { currentDateRange } = filter
         return (
             <div className="panel panel-default">
                 <div className="panel-heading">
-                    <span className="panel-title">Category Summary</span>
+                    <span className="panel-title">Category Summary ({currentDateRange})</span>
                     <div className="pull-right">
                         <button type="button" className="btn btn-primary btn-xs"
-                                onClick={()=>fetchCategorySummary("_all")}>
+                                onClick={()=>fetchCategorySummary("_all", filter)}>
                             <span className="glyphicon glyphicon-refresh"></span>
                         </button>
                     </div>

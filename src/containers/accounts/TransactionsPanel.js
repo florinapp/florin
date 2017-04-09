@@ -17,8 +17,8 @@ const mapStateToProps = ({accounts}) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        fetchTransactions: (accountId, params) => {
-            dispatch(fetchTransactions(accountId, params))
+        fetchTransactions: (accountId, filter, pagination) => {
+            dispatch(fetchTransactions(accountId, filter, pagination))
         },
         uploadTransactionFile: (accountId, files, callback) => {
             const req = request.post(`http://localhost:9000/api/accounts/${accountId}/upload`)

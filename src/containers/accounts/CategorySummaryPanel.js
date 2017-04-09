@@ -13,8 +13,8 @@ const mapStateToProps = ({ accounts }) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        fetchCategorySummary: (accountId/*, filter*/) => {
-            dispatch(fetchCategorySummary(accountId))
+        fetchCategorySummary: (accountId, filter={}) => {
+            dispatch(fetchCategorySummary(accountId, filter))
         }
     }
 }
