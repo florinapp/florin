@@ -14,7 +14,7 @@ class Account(db.Entity):
     institution = Required(str)
     name = Required(str)
     type = Required(str)
-    transactions = Set('Transaction')
+    # transactions = Set('Transaction')
 
 
 class Transaction(db.Entity):
@@ -28,8 +28,7 @@ class Transaction(db.Entity):
     category_id = Required(int)
     tags = Optional(str)
     transaction_type = Required(str)
-    account = Required(Account)
-    # is_internal_transfer = Required(bool, default=False)
+    account = Required(str)
     checksum = Required(str, unique=True)
 
 

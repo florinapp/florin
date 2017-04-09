@@ -117,18 +117,16 @@ def upload_transactions(account_id):
             # will rollback everything.
             account = get_account_by_id(account_id)
 
-            # Account, Transaction = app.db.Account, app.db.Transaction
-            # account = Account.select(lambda a: a.id == account_id)
-            # if account.count() != 1:
-            #     flask.abort(404)
-            # account = account.get()
+            Transaction = app.db.Transaction
 
             common_attrs = dict(t.common_attrs)
-            common_attrs['account'] = account
+            common_attrs['account'] = account.id
+            common_attrs['category_id'] = TBD_CATEGORY_ID
             try:
                 Transaction(**common_attrs)
                 commit()
-            except (TransactionIntegrityError, CacheIndexError):
+            except (TransactionIntegrityError, CacheIndexError) as e:
+                print(str(e))
                 total_skipped += 1
             else:
                 total_imported += 1
@@ -167,10 +165,10 @@ def get_transactions(account_id):
 
     account = get_account_by_id(account_id)
     if account is not ALL_ACCOUNTS:
-        query = query.filter(lambda t: t.account == account)
+        query = query.filter(lambda t: t.account == account.id)
 
     total = query.count()
-    query = query.order_by(Transaction.date.desc()).limit(per_page, offset=(page - 1) * per_page + 1)
+    query = query.order_by(Transaction.date.desc()).limit(per_page, offset=(page - 1) * per_page)
     transactions = query[:]
 
     return flask.jsonify({

@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import TransactionTable from '../../components/accounts/TransactionTable'
-import { deleteTransaction, flagAsInternalTransfer } from '../../actions'
+import { deleteTransaction, flagAsInternalTransaction } from '../../actions'
 
 const mapStateToProps = (state) => {
     const { transactions } = state.accounts
@@ -15,7 +15,7 @@ const mapDispatchToProps = (dispatch) => {
             dispatch(deleteTransaction(transactionId))
         },
         onFlagAsInternalTransferClicked: (transactionId) => {
-            dispatch(flagAsInternalTransfer(transactionId))
+            dispatch(flagAsInternalTransaction(transactionId))
         }
     }
 }
