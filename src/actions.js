@@ -259,7 +259,7 @@ export const excludeTransaction = (transactionId) => {
             method: 'POST',
             headers: headers,
             body: JSON.stringify({
-                is_internal_transfer: true
+                category_id: 65534
             })
         }
         return fetch(`http://localhost:9000/api/transactions/${transactionId}`, options)

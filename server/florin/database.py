@@ -29,7 +29,7 @@ class Transaction(db.Entity):
     tags = Optional(str)
     transaction_type = Required(str)
     account = Required(Account)
-    is_internal_transfer = Required(bool, default=False)
+    # is_internal_transfer = Required(bool, default=False)
     checksum = Required(str, unique=True)
 
 

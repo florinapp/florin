@@ -17,7 +17,7 @@ logging.basicConfig(level='DEBUG')
 
 
 TBD_CATEGORY_ID = 65535
-
+INTERNAL_TRANSFER_CATEGORY_ID = 65534
 
 ALL_ACCOUNTS = object()
 
@@ -160,7 +160,7 @@ def get_transactions(account_id):
     )
 
     if not include_excluded:
-        query = query.filter(lambda t: t.is_internal_transfer == False)
+        query = query.filter(lambda t: t.category_id != INTERNAL_TRANSFER_CATEGORY_ID)
 
     if only_uncategorized:
         query = query.filter(lambda t: t.category_id == TBD_CATEGORY_ID)
@@ -191,9 +191,16 @@ def get_account_summary(account_id):
     result = app.db.select(
         'SELECT categories.id as id, categories.parent_id as parent_id, SUM(transactions.amount) as amount '
         'FROM categories INNER JOIN transactions '
-        'WHERE categories.id = transactions.category_id AND transactions.is_internal_transfer = 0 '
+        'WHERE '
+        'categories.id = transactions.category_id '
+        'AND transactions.is_internal_transfer <> $internal_transfer_category_id '
         'AND transactions.date >= $start_date AND transactions.date <= $end_date '
-        'GROUP BY categories.id', {'start_date': start_date, 'end_date': end_date})
+        'GROUP BY categories.id',
+        {
+            'start_date': start_date,
+            'end_date': end_date,
+            'internal_transfer_category_id': INTERNAL_TRANSFER_CATEGORY_ID
+        })
 
     aggregated_result = defaultdict(lambda: Decimal('0'))
     for category_id, category_parent_id, sum_amount in result:

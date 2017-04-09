@@ -59,9 +59,9 @@ const TransactionTable = ({ transactions, onDeleteClicked, onExcludeClicked }) =
                                                 Delete
                                             </ButtonWithTooltip>
 
-                                            <ButtonWithTooltip buttonStyle="default" tooltip="Exclude the transaction"
+                                            <ButtonWithTooltip buttonStyle="default" tooltip="Flag this transaction as internal transfer"
                                                                onClick={() => { onExcludeClicked(transaction.id) }}>
-                                                Exclude
+                                                Internal
                                             </ButtonWithTooltip>
 
                                         </ButtonGroup>
