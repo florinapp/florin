@@ -141,6 +141,10 @@ def get_transactions(account_id):
 
     only_uncategorized = asbool(flask.request.args.get('onlyUncategorized', 'false'))
 
+    per_page = flask.request.args.get('per_page', 10)
+
+    page = flask.request.args.get('page', 1)
+
     Account, Transaction = app.db.Account, app.db.Transaction
 
     query = Transaction.select(
@@ -158,7 +162,7 @@ def get_transactions(account_id):
     if account is not ALL_ACCOUNTS:
         query = query.filter(lambda t: t.account == account)
 
-    query = query.order_by(Transaction.date.desc())
+    query = query.order_by(Transaction.date.desc()).limit(per_page, offset=page)
     transactions = query[:]
 
     return flask.jsonify({'transactions': [txn.to_dict() for txn in transactions]})

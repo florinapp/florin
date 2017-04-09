@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Button } from 'react-bootstrap'
+import { Button, Pagination } from 'react-bootstrap'
 import moment from 'moment'
 import TransactionTable from '../../containers/accounts/TransactionTable'
 import FilterPanel from '../../containers/accounts/FilterPanel'
@@ -99,6 +99,7 @@ class TransactionsPanel extends Component {
                     <div className="panel-body transaction-panel">
                         <FilterPanel />
                         <TransactionTable />
+                        <Pagination prev next first last ellipsis boundaryLinks items={20} maxButtons={5} />
                     </div >
                     <div className="panel-footer">
                         <div className="row">

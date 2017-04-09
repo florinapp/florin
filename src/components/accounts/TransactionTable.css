@@ -1,6 +1,5 @@
 .transaction-table {
-    height: 500px;
-    overflow: hidden;
+    padding-bottom: 40px;
 }
 
 td.transaction-table-cell {
