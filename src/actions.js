@@ -285,9 +285,10 @@ export const receiveCategorySummary = (json) => {
     }
 }
 export const fetchCategorySummary = (accountId, filter) => {
+    const params = querystring.stringify(buildDateRangeRequestParams(filter))
     return (dispatch) => {
         dispatch(requestCategorySummary())
-        return fetch(`http://localhost:9000/api/accounts/${accountId}/categorySummary`)
+        return fetch(`http://localhost:9000/api/accounts/${accountId}/categorySummary?${params}`)
             .then(response => response.json())
             .then(json => dispatch(receiveCategorySummary(json)))
     }

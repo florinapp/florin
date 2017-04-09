@@ -22,6 +22,16 @@ TBD_CATEGORY_ID = 65535
 ALL_ACCOUNTS = object()
 
 
+def _get_date_range_params(args):
+    start_date = flask.request.args.get('startDate', '1970-01-01')
+    end_date = flask.request.args.get('endDate', '9999-12-31')
+
+    start_date = datetime.datetime.strptime(start_date, '%Y-%m-%d').date()
+    end_date = datetime.datetime.strptime(end_date, '%Y-%m-%d').date()
+
+    return start_date, end_date
+
+
 def get_account_by_id(account_id):
     if account_id == '_all':
         return ALL_ACCOUNTS
@@ -132,11 +142,7 @@ def upload_transactions(account_id):
 @app.route('/api/accounts/<account_id>', methods=['GET'])
 @db_session
 def get_transactions(account_id):
-    start_date = flask.request.args.get('startDate', '1970-01-01')
-    end_date = flask.request.args.get('endDate', '9999-12-31')
-
-    start_date = datetime.datetime.strptime(start_date, '%Y-%m-%d').date()
-    end_date = datetime.datetime.strptime(end_date, '%Y-%m-%d').date()
+    start_date, end_date = _get_date_range_params(flask.request.args)
 
     include_excluded = asbool(flask.request.args.get('includeExcluded', 'false'))
 
@@ -177,6 +183,8 @@ def get_transactions(account_id):
 @app.route('/api/accounts/<account_id>/categorySummary', methods=['GET'])
 @db_session
 def get_account_summary(account_id):
+    start_date, end_date = _get_date_range_params(flask.request.args)
+
     account = get_account_by_id(account_id)
     categories = {c.id: c.name for c in app.db.Category.select()[:]}
 
@@ -184,7 +192,8 @@ def get_account_summary(account_id):
         'SELECT categories.id as id, categories.parent_id as parent_id, SUM(transactions.amount) as amount '
         'FROM categories INNER JOIN transactions '
         'WHERE categories.id = transactions.category_id AND transactions.is_internal_transfer = 0 '
-        'GROUP BY categories.id')
+        'AND transactions.date >= $start_date AND transactions.date <= $end_date '
+        'GROUP BY categories.id', {'start_date': start_date, 'end_date': end_date})
 
     aggregated_result = defaultdict(lambda: Decimal('0'))
     for category_id, category_parent_id, sum_amount in result:
