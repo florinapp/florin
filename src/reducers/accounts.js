@@ -21,6 +21,65 @@ const initState = {
     categorySummary: []
 }
 
+const handleLocationChange = (state, action) => {
+    const { pathname, search } = action.payload
+    const match = matchPath(pathname, {
+        path: '/accounts/:accountId'
+    })
+    if (match) {
+        console.log(match)
+        let queryParams = querystring.parse(search.slice(1, search.length))
+        return {
+            ...state,
+            currentAccountId: match.params.accountId,
+            filter: {
+                currentDateRange: queryParams.currentDateRange || 'thisMonth',
+                onlyUncategorized: queryParams.onlyUncategorized || false,
+                includeExcluded: queryParams.includeExcluded || false
+            }
+        }
+    }
+    return state
+}
+
+const handleUpdateTransactionSucceeded = (state, action) => {
+    const { transactions } = state
+    const theTransaction = action.transaction
+    const updatedTransactions = transactions.map((transaction) => {
+        if (transaction.id !== theTransaction.id) {
+            return transaction
+        }
+        return theTransaction
+    })
+
+    return {
+        ...state,
+        transactions: updatedTransactions
+    }
+}
+
+const handleDeleteTransactionSucceeded = (state, action) => {
+    const { transactionId } = action
+    const { transactions } = state
+    return {
+        ...state,
+        transactions: transactions.filter((transaction) => {
+            return transaction.id !== transactionId
+        })
+    }
+}
+
+const handleExcludeTransactionSucceeded = (state, action) => {
+    const { transactionId } = action
+    const { transactions } = state
+    return {
+        ...state,
+        transactions: transactions.filter((transaction) => {
+            return transaction.id !== transactionId
+        })
+    }
+}
+
 const accounts = (state=initState, action) => {
     switch (action.type) {
         case RECEIVE_ACCOUNTS_DATA:
@@ -34,55 +93,13 @@ const accounts = (state=initState, action) => {
                 transactions: action.transactions
             }
         case '@@router/LOCATION_CHANGE':
-            const {pathname, search} = action.payload
-            const match = matchPath(pathname, {
-                path: '/accounts/:accountId'
-            })
-            if (match) {
-                console.log(match)
-                let queryParams = querystring.parse(search.slice(1, search.length))
-                return {
-                    ...state,
-                    currentAccountId: match.params.accountId,
-                    filter: {
-                        currentDateRange: queryParams.currentDateRange || 'thisMonth',
-                        onlyUncategorized: queryParams.onlyUncategorized || false,
-                        includeExcluded: queryParams.includeExcluded || false
-                    }
-                }
-            }
-            return state
+            return handleLocationChange(state, action)
         case UPDATE_TRANSACTION_SUCCEEDED:
-            let { transactions } = state
-            const theTransaction = action.transaction
-            const updatedTransactions = transactions.map((transaction) => {
-                if (transaction.id !== theTransaction.id) {
-                    return transaction
-                }
-                return theTransaction
-            })
-            return {
-                ...state,
-                transactions: updatedTransactions
-            }
+            return handleUpdateTransactionSucceeded(state, action)
         case DELETE_TRANSACTION_SUCCEEDED:
-            let { transactionId } = action
-            transactions = state.transactions
-            return {
-                ...state,
-                transactions: transactions.filter((transaction) => {
-                    return transaction.id !== transactionId
-                })
-            }
+            return handleDeleteTransactionSucceeded(state, action)
         case EXCLUDE_TRANSACTION_SUCCEEDED:
-            transactionId = action.transactionId
-            transactions = state.transactions
-            return {
-                ...state,
-                transactions: transactions.filter((transaction) => {
-                    return transaction.id !== transactionId
-                })
-            }
+            return handleExcludeTransactionSucceeded(state, action)
         case RECEIVE_CATEGORY_SUMMARY:
             const { categorySummary } = action
             return {

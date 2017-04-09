@@ -10,6 +10,7 @@
     "bootswatch": "^3.3.7",
     "cors": "^2.8.2",
     "currency-formatter": "^1.2.0",
+    "deep-equal": "^1.0.1",
     "express": "^4.15.2",
     "font-awesome": "^4.7.0",
     "history": "^4.6.1",

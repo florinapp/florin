@@ -35,7 +35,9 @@ def get_account_by_id(account_id):
 class MyJSONEncoder(JSONEncoder):
     def default(self, obj):
         if isinstance(obj, Decimal):
-            return str(obj)
+            return str(round(obj, 2))
+        if isinstance(obj, float):
+            return str(round(Decimal(str(obj)), 2))
         if isinstance(obj, datetime.date):
             return obj.strftime('%Y-%m-%d')
 

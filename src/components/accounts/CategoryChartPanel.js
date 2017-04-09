@@ -7,33 +7,30 @@ class CategoryChartPanel extends Component {
         fetchCategorySummary(currentAccountId)
     }
 
-    componentWillReceiveProps() {
-        const { fetchCategorySummary, currentAccountId } = this.props
-        fetchCategorySummary(currentAccountId)
-    }
-
     render() {
-        const { categorySummary } = this.props
+        const { categorySummary, fetchCategorySummary } = this.props
         return (
             <div className="panel panel-default">
                 <div className="panel-heading">
-                    <h3 className="panel-title">Category Summary</h3>
+                    <span className="panel-title">Category Summary</span>
+                    <div className="pull-right">
+                        <button type="button" className="btn btn-primary btn-xs"
+                                onClick={()=>fetchCategorySummary("_all")}>
+                            <span className="glyphicon glyphicon-refresh"></span>
+                        </button>
+                    </div>
                 </div>
                 <div className="panel-body">
                     <div>
-                        <Table striped bordered condensed hover>
-                            <thead>
-                                <tr>
-                                    <th>Category</th>
-                                    <th width="20%">Amount</th>
-                                </tr>
-                            </thead>
+                        <Table condensed hover>
                             <tbody>
                                 {categorySummary.map((category) => {
                                     return (
                                         <tr key={category.category_name}>
                                             <td>{category.category_name}</td>
-                                            <td>{category.amount}</td>
+                                            <td width="20%" style={{textAlign: "right"}}>
+                                                {category.amount}
+                                            </td>
                                         </tr>
                                     )
                                 })}
