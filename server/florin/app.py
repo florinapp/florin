@@ -170,7 +170,7 @@ def get_transactions(account_id):
         query = query.filter(lambda t: t.account == account)
 
     total = query.count()
-    query = query.order_by(Transaction.date.desc()).limit(per_page, offset=page * per_page + 1)
+    query = query.order_by(Transaction.date.desc()).limit(per_page, offset=(page - 1) * per_page + 1)
     transactions = query[:]
 
     return flask.jsonify({
