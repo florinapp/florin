@@ -6,6 +6,7 @@ import {
     EXCLUDE_TRANSACTION_SUCCEEDED,
     RECEIVE_CATEGORY_SUMMARY,
     CHANGE_TRANSACTION_PAGE_NUMBER,
+    FORCE_REFRESH_CATEGORY_SUMMARY,
 } from '../actions'
 import querystring from 'querystring'
 import { matchPath } from 'react-router'
@@ -23,7 +24,8 @@ const initState = {
         totalPages: null,
         currentPage: 1
     },
-    categorySummary: []
+    categorySummary: [],
+    forceRefreshCategorySummary: false
 }
 
 const handleLocationChange = (state, action) => {
@@ -123,10 +125,16 @@ const accounts = (state=initState, action) => {
             const { categorySummary } = action
             return {
                 ...state,
+                forceRefreshCategorySummary: false,
                 categorySummary
             }
         case CHANGE_TRANSACTION_PAGE_NUMBER:
             return handleChangeTransactionPageNumber(state, action)
+        case FORCE_REFRESH_CATEGORY_SUMMARY:
+            return {
+                ...state,
+                forceRefreshCategorySummary: true
+            }
         default:
             return state
     }

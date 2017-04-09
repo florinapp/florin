@@ -8,6 +8,30 @@ class CategorySummaryPanel extends Component {
         fetchCategorySummary(currentAccountId, filter)
     }
 
+    componentWillReceiveProps(nextProps) {
+        const { fetchCategorySummary } = this.props
+        const { forceRefreshCategorySummary } = nextProps
+
+        if (forceRefreshCategorySummary) {
+            fetchCategorySummary(nextProps.currentAccountId, nextProps.filter)
+            return
+        }
+
+        const hasAccountIdChanged = () => (
+            this.props.currentAccountId !== nextProps.currentAccountId
+        )
+
+        const hasFilterChanged = () => {
+            return JSON.stringify(this.props.filter) !== JSON.stringify(nextProps.filter)
+        }
+
+        if (!hasAccountIdChanged() && !hasFilterChanged()) {
+            return
+        }
+
+        fetchCategorySummary(nextProps.currentAccountId, nextProps.filter)
+    }
+
     render() {
         const { categorySummary, fetchCategorySummary, filter } = this.props
         const { currentDateRange } = filter

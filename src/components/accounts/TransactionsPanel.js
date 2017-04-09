@@ -38,12 +38,10 @@ class TransactionsPanel extends Component {
         this.fetchTransactions(this.currentAccountId, this.filter, this.pagination)
     }
 
-    componentDidMount() {  // Triggers the initial fetch, subsequent fetches will be initiated by componentWillReceiveProps
-        this.fetchTransactions(this.currentAccountId, this.filter, this.pagination)
-    }
-
     componentWillMount() {
         this.setState({showModal: false})
+        // Triggers the initial fetch, subsequent fetches will be initiated by componentWillReceiveProps
+        this.fetchTransactions(this.currentAccountId, this.filter, this.pagination)
     }
 
     render() {
