@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Table } from 'react-bootstrap'
+import accounting from 'accounting'
 
 class CategoryChartPanel extends Component {
     componentWillMount() {
@@ -29,7 +30,7 @@ class CategoryChartPanel extends Component {
                                         <tr key={category.category_name}>
                                             <td>{category.category_name}</td>
                                             <td width="20%" style={{textAlign: "right"}}>
-                                                {category.amount}
+                                                {accounting.formatMoney(category.amount)}
                                             </td>
                                         </tr>
                                     )

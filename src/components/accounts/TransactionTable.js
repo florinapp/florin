@@ -2,6 +2,7 @@ import React from 'react'
 import { Button, ButtonGroup, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import './TransactionTable.css'
 import CategorySelect from '../../containers/accounts/CategorySelect'
+import accounting from 'accounting'
 
 const ButtonWithTooltip = ({buttonStyle, tooltip, onClick, children}) => {
     return (
@@ -48,7 +49,7 @@ const TransactionTable = ({ transactions, onDeleteClicked, onExcludeClicked }) =
                                     </td>
                                     <td className="transaction-table-cell transaction-table-cell-align-right">
                                         <span className={transaction.amount < 0 ? 'debit' : 'credit'}>
-                                            {transaction.amount}
+                                            {accounting.formatMoney(transaction.amount)}
                                         </span>
                                     </td>
                                     <td className="transaction-table-cell transaction-table-cell-align-left">
