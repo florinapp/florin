@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import CategoryChartPanel from '../../components/accounts/CategoryChartPanel'
+import CategorySummaryPanel from '../../components/accounts/CategorySummaryPanel'
 import { fetchCategorySummary } from '../../actions'
 
 const mapStateToProps = ({ accounts }) => {
@@ -19,4 +19,4 @@ const mapDispatchToProps = (dispatch) => {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(CategoryChartPanel)
+export default connect(mapStateToProps, mapDispatchToProps)(CategorySummaryPanel)

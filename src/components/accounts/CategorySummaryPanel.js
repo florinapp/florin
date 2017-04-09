@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Table } from 'react-bootstrap'
 import accounting from 'accounting'
 
-class CategoryChartPanel extends Component {
+class CategorySummaryPanel extends Component {
     componentWillMount() {
         const { fetchCategorySummary, currentAccountId } = this.props
         fetchCategorySummary(currentAccountId)
@@ -44,4 +44,4 @@ class CategoryChartPanel extends Component {
     }
 }
 
-export default CategoryChartPanel
+export default CategorySummaryPanel
