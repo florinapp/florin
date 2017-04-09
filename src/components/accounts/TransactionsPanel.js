@@ -111,12 +111,12 @@ class TransactionsPanel extends Component {
                         <h3 className="panel-title">Transactions</h3></div>
                     <div className="panel-body transaction-panel">
                         <FilterPanel />
-                        <TransactionTable />
                         <Pagination prev next first last ellipsis boundaryLinks
                                     items={pagination.totalPages} maxButtons={5}
                                     activePage={pagination.currentPage}
                                     onSelect={onPageClicked}
                         />
+                        <TransactionTable />
                     </div >
                     <div className="panel-footer">
                         <div className="row">
