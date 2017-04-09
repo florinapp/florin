@@ -144,7 +144,7 @@ def upload_transactions(account_id):
 def get_transactions(account_id):
     start_date, end_date = _get_date_range_params(flask.request.args)
 
-    include_excluded = asbool(flask.request.args.get('includeExcluded', 'false'))
+    include_internal_transfer = asbool(flask.request.args.get('includeInternalTransfer', 'false'))
 
     only_uncategorized = asbool(flask.request.args.get('onlyUncategorized', 'false'))
 
@@ -159,7 +159,7 @@ def get_transactions(account_id):
         and t.date <= end_date
     )
 
-    if not include_excluded:
+    if not include_internal_transfer:
         query = query.filter(lambda t: t.category_id != INTERNAL_TRANSFER_CATEGORY_ID)
 
     if only_uncategorized:
@@ -193,7 +193,7 @@ def get_account_summary(account_id):
         'FROM categories INNER JOIN transactions '
         'WHERE '
         'categories.id = transactions.category_id '
-        'AND transactions.is_internal_transfer <> $internal_transfer_category_id '
+        'AND transactions.category_id <> $internal_transfer_category_id '
         'AND transactions.date >= $start_date AND transactions.date <= $end_date '
         'GROUP BY categories.id',
         {

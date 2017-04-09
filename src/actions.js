@@ -94,7 +94,7 @@ const buildRequestParams = (filter, pagination) => {
     const builders = [
         buildDateRangeRequestParams,
         ({ onlyUncategorized }) => ({ onlyUncategorized }),
-        ({ includeExcluded }) => ({ includeExcluded }),
+        ({ includeInternalTransfer }) => ({ includeInternalTransfer }),
         buildPaginationRequestParams,
     ]
     let params = builders.reduce((params, fn) => (
@@ -233,26 +233,26 @@ export const deleteTransaction = (transactionId) => {
 }
 
 // ----------------------------------------------------------------------------
-// Exclude transaction
-export const REQUEST_EXCLUDE_TRANSACTION = 'REQUEST_DELETE_TRANSACTION '
-export const EXCLUDE_TRANSACTION_SUCCEEDED = 'DELETE_TRANSACTION_SUCCEEDED'
-export const requestExcludeTransaction = (transactionId) => {
+// Flag transaction as internal transfer
+export const REQUEST_FLAG_AS_INTERNAL_TRANSACTION = 'REQUEST_FLAG_AS_INTERNAL_TRANSACTION'
+export const FLAG_AS_INTERNAL_TRANSACTION_SUCCEEDED = 'FLAG_AS_INTERNAL_TRANSACTION_SUCCEEDED'
+export const requestFlagAsInternalTransaction = (transactionId) => {
     return {
-        type: REQUEST_EXCLUDE_TRANSACTION,
+        type: REQUEST_FLAG_AS_INTERNAL_TRANSACTION,
         transactionId
     }
 }
 
-export const excludeTransactionSucceeded = (transactionId) => {
+export const flagAsInternalTransactionSucceeded = (transactionId) => {
     return {
-        type: EXCLUDE_TRANSACTION_SUCCEEDED,
+        type: FLAG_AS_INTERNAL_TRANSACTION_SUCCEEDED,
         transactionId
     }
 }
 
-export const excludeTransaction = (transactionId) => {
+export const flagAsInternalTransaction = (transactionId) => {
     return (dispatch) => {
-        dispatch(requestExcludeTransaction(transactionId))
+        dispatch(requestFlagAsInternalTransaction(transactionId))
         let headers = new Headers()
         headers.set("Content-Type", "application/json")
         const options = {
@@ -264,7 +264,7 @@ export const excludeTransaction = (transactionId) => {
         }
         return fetch(`http://localhost:9000/api/transactions/${transactionId}`, options)
             .then(response => response.json())
-            .then(json => dispatch(excludeTransactionSucceeded(transactionId)))
+            .then(json => dispatch(flagAsInternalTransactionSucceeded(transactionId)))
     }
 }
 

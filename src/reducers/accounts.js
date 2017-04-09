@@ -3,7 +3,7 @@ import {
     RECEIVE_TRANSACTIONS,
     UPDATE_TRANSACTION_SUCCEEDED,
     DELETE_TRANSACTION_SUCCEEDED,
-    EXCLUDE_TRANSACTION_SUCCEEDED,
+    FLAG_AS_INTERNAL_TRANSACTION_SUCCEEDED,
     RECEIVE_CATEGORY_SUMMARY,
     CHANGE_TRANSACTION_PAGE_NUMBER,
     FORCE_REFRESH_CATEGORY_SUMMARY,
@@ -17,7 +17,7 @@ const initState = {
     transactions: [],  // transactions in the current selected account
     filter: {
         currentDateRange: 'thisMonth',
-        includeExcluded: false,
+        includeInternalTransfer: false,
         onlyUncategorized: false
     },
     pagination: {
@@ -42,7 +42,7 @@ const handleLocationChange = (state, action) => {
             filter: {
                 currentDateRange: queryParams.currentDateRange || 'thisMonth',
                 onlyUncategorized: queryParams.onlyUncategorized || false,
-                includeExcluded: queryParams.includeExcluded || false
+                includeInternalTransfer: queryParams.includeInternalTransfer || false
             }
         }
     }
@@ -76,7 +76,7 @@ const handleDeleteTransactionSucceeded = (state, action) => {
     }
 }
 
-const handleExcludeTransactionSucceeded = (state, action) => {
+const handleFlagAsInternalTransferSucceeded = (state, action) => {
     const { transactionId } = action
     const { transactions } = state
     return {
@@ -119,8 +119,8 @@ const accounts = (state=initState, action) => {
             return handleUpdateTransactionSucceeded(state, action)
         case DELETE_TRANSACTION_SUCCEEDED:
             return handleDeleteTransactionSucceeded(state, action)
-        case EXCLUDE_TRANSACTION_SUCCEEDED:
-            return handleExcludeTransactionSucceeded(state, action)
+        case FLAG_AS_INTERNAL_TRANSACTION_SUCCEEDED:
+            return handleFlagAsInternalTransferSucceeded(state, action)
         case RECEIVE_CATEGORY_SUMMARY:
             const { categorySummary } = action
             return {

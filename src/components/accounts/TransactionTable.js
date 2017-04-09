@@ -14,7 +14,7 @@ const ButtonWithTooltip = ({buttonStyle, tooltip, onClick, children}) => {
     )
 }
 
-const TransactionTable = ({ transactions, onDeleteClicked, onExcludeClicked }) => {
+const TransactionTable = ({ transactions, onDeleteClicked, onFlagAsInternalTransferClicked}) => {
 
     return (
         <div className="table-responsive transaction-table">
@@ -60,7 +60,7 @@ const TransactionTable = ({ transactions, onDeleteClicked, onExcludeClicked }) =
                                             </ButtonWithTooltip>
 
                                             <ButtonWithTooltip buttonStyle="default" tooltip="Flag this transaction as internal transfer"
-                                                               onClick={() => { onExcludeClicked(transaction.id) }}>
+                                                               onClick={() => { onFlagAsInternalTransferClicked(transaction.id) }}>
                                                 Internal
                                             </ButtonWithTooltip>
 

@@ -51,8 +51,8 @@ const SpecialFilterPanel = ({ currentAccountId, filter }) => {
                     Only Show Uncategorized
                 </NavLink>
             </li>
-            <li role="presentation" className={toBool(filter.includeExcluded) ? "active" : ""}>
-                <NavLink to={`/accounts/${currentAccountId}?${q(filter, { includeExcluded: !(toBool(filter.includeExcluded)) })}`}>
+            <li role="presentation" className={toBool(filter.includeInternalTransfer) ? "active" : ""}>
+                <NavLink to={`/accounts/${currentAccountId}?${q(filter, { includeInternalTransfer: !(toBool(filter.includeInternalTransfer)) })}`}>
                     Show Internal Transfers
                 </NavLink>
             </li>
