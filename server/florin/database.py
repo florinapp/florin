@@ -48,4 +48,4 @@ def init(app):
     dbfile = os.path.join(os.getcwd(), os.getenv('DBFILE'))
     db.bind('sqlite', dbfile, create_db=True)
     db.generate_mapping(create_tables=True)
-    sql_debug(True)
+    # sql_debug(True)
