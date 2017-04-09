@@ -25,7 +25,6 @@ class Transaction(db.Entity):
     payee = Required(str)
     memo = Required(str)
     amount = Required(Decimal)
-    category = Required(str, default='TBD')
     category_id = Required(int)
     tags = Optional(str)
     transaction_type = Required(str)

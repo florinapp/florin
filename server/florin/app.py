@@ -1,3 +1,4 @@
+import math
 import flask
 import logging
 import datetime
@@ -141,9 +142,9 @@ def get_transactions(account_id):
 
     only_uncategorized = asbool(flask.request.args.get('onlyUncategorized', 'false'))
 
-    per_page = flask.request.args.get('per_page', 10)
+    per_page = int(flask.request.args.get('per_page', '10'))
 
-    page = flask.request.args.get('page', 1)
+    page = int(flask.request.args.get('page', '1'))
 
     Account, Transaction = app.db.Account, app.db.Transaction
 
@@ -162,10 +163,15 @@ def get_transactions(account_id):
     if account is not ALL_ACCOUNTS:
         query = query.filter(lambda t: t.account == account)
 
-    query = query.order_by(Transaction.date.desc()).limit(per_page, offset=page)
+    total = query.count()
+    query = query.order_by(Transaction.date.desc()).limit(per_page, offset=page * per_page + 1)
     transactions = query[:]
 
-    return flask.jsonify({'transactions': [txn.to_dict() for txn in transactions]})
+    return flask.jsonify({
+        'total_pages': int(math.ceil(total / per_page)),
+        'current_page': page,
+        'transactions': [txn.to_dict() for txn in transactions]
+    })
 
 
 @app.route('/api/accounts/<account_id>/categorySummary', methods=['GET'])
