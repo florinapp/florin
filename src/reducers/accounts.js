@@ -5,6 +5,7 @@ import {
     DELETE_TRANSACTION_SUCCEEDED,
     EXCLUDE_TRANSACTION_SUCCEEDED,
     RECEIVE_CATEGORY_SUMMARY,
+    CHANGE_TRANSACTION_PAGE_NUMBER,
 } from '../actions'
 import querystring from 'querystring'
 import { matchPath } from 'react-router'
@@ -17,6 +18,10 @@ const initState = {
         currentDateRange: 'thisMonth',
         includeExcluded: false,
         onlyUncategorized: false
+    },
+    pagination: {
+        totalPages: null,
+        currentPage: 1
     },
     categorySummary: []
 }
@@ -80,6 +85,18 @@ const handleExcludeTransactionSucceeded = (state, action) => {
     }
 }
 
+const handleChangeTransactionPageNumber = (state, action) => {
+    const { page } = action
+    const { pagination } = state
+    return {
+        ...state,
+        pagination: {
+            ...pagination,
+            currentPage: page
+        }
+    }
+}
+
 const accounts = (state=initState, action) => {
     switch (action.type) {
         case RECEIVE_ACCOUNTS_DATA:
@@ -88,8 +105,10 @@ const accounts = (state=initState, action) => {
                 accounts: action.accounts
             }
         case RECEIVE_TRANSACTIONS:
+            const { pagination } = action
             return {
                 ...state,
+                pagination,
                 transactions: action.transactions
             }
         case '@@router/LOCATION_CHANGE':
@@ -106,6 +125,8 @@ const accounts = (state=initState, action) => {
                 ...state,
                 categorySummary
             }
+        case CHANGE_TRANSACTION_PAGE_NUMBER:
+            return handleChangeTransactionPageNumber(state, action)
         default:
             return state
     }

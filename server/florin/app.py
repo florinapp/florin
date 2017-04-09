@@ -142,7 +142,7 @@ def get_transactions(account_id):
 
     only_uncategorized = asbool(flask.request.args.get('onlyUncategorized', 'false'))
 
-    per_page = int(flask.request.args.get('per_page', '10'))
+    per_page = int(flask.request.args.get('perPage', '10'))
 
     page = int(flask.request.args.get('page', '1'))
 

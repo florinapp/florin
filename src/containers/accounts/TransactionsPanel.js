@@ -1,16 +1,17 @@
 import { connect } from 'react-redux'
 import TransactionsPanel from '../../components/accounts/TransactionsPanel'
 import { withRouter } from 'react-router'
-import { fetchTransactions } from '../../actions'
+import { fetchTransactions, changeTransactionPage } from '../../actions'
 import request from 'superagent'  // TODO: use isomorphic-fetch
 
 
 const mapStateToProps = ({accounts}) => {
-    const {currentAccountId, filter, transactions} = accounts
+    const {currentAccountId, filter, transactions, pagination} = accounts
     return {
         transactions,
         currentAccountId,
-        filter
+        filter,
+        pagination
     }
 }
 
@@ -25,6 +26,9 @@ const mapDispatchToProps = (dispatch) => {
                 req.attach(file.name, file)
             })
             req.end(callback)
+        },
+        onPageClicked: (page) => {
+            dispatch(changeTransactionPage(page))
         }
     }
 }

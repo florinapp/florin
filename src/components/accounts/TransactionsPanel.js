@@ -6,8 +6,7 @@ import FilterPanel from '../../containers/accounts/FilterPanel'
 import UploadTransactionsModal from './UploadTransactionsModal'
 import './TransactionsPanel.css'
 
-const buildDateRangeRequestParams = (filter) => {
-    let { currentDateRange } = filter
+const buildDateRangeRequestParams = ({ currentDateRange }) => {
     const FORMAT = 'YYYY-MM-DD'
     if (currentDateRange === undefined) {
         return {}
@@ -36,18 +35,25 @@ const buildDateRangeRequestParams = (filter) => {
     }
 }
 
-const buildRequestParams = (filter) => {
+const buildPaginationRequestParams = ({ currentPage }) => {
+    return {
+        page: currentPage
+    }
+}
+
+const buildRequestParams = (filter, pagination) => {
     const builders = [
         buildDateRangeRequestParams,
         ({ onlyUncategorized }) => ({ onlyUncategorized }),
-        ({ includeExcluded }) => ({ includeExcluded })
+        ({ includeExcluded }) => ({ includeExcluded }),
+        buildPaginationRequestParams,
     ]
     let params = builders.reduce((params, fn) => (
         {
             ...params,
             ...fn(params)
         }
-    ), filter)
+    ), {...filter, ...pagination})
     console.log(params)
     return params
 }
@@ -56,6 +62,7 @@ class TransactionsPanel extends Component {
     constructor(props) {
         super(props)
         this.filter = this.props.filter
+        this.pagination = this.props.pagination
         this.currentAccountId = this.props.currentAccountId
         this.fetchTransactions = this.props.fetchTransactions
     }
@@ -70,17 +77,22 @@ class TransactionsPanel extends Component {
             return JSON.stringify(this.filter) !== JSON.stringify(nextProps.filter)
         }
 
-        if (!hasAccountIdChanged() && !hasFilterChanged()) {
+        const hasPaginationChanged = () => {
+            return JSON.stringify(this.pagination) !== JSON.stringify(nextProps.pagination)
+        }
+
+        if (!hasAccountIdChanged() && !hasFilterChanged() && !hasPaginationChanged()) {
             return
         }
 
         this.currentAccountId = nextProps.currentAccountId
         this.filter = nextProps.filter
-        this.fetchTransactions(this.currentAccountId, buildRequestParams(this.filter))
+        this.pagination = nextProps.pagination
+        this.fetchTransactions(this.currentAccountId, buildRequestParams(this.filter, this.pagination))
     }
 
     componentDidMount() {  // Triggers the initial fetch, subsequent fetches will be initiated by componentWillReceiveProps
-        this.fetchTransactions(this.currentAccountId, buildRequestParams(this.filter))
+        this.fetchTransactions(this.currentAccountId, buildRequestParams(this.filter, this.pagination))
     }
 
     componentWillMount() {
@@ -88,9 +100,10 @@ class TransactionsPanel extends Component {
     }
 
     render() {
-        const {uploadTransactionFile} = this.props
+        const {uploadTransactionFile, pagination, onPageClicked} = this.props
         const {showModal} = this.state
         const {currentAccountId} = this
+        console.log(pagination)
         return (
             <div className="col-lg-9 col-md-6">
                 <div className="panel panel-default">
@@ -99,7 +112,11 @@ class TransactionsPanel extends Component {
                     <div className="panel-body transaction-panel">
                         <FilterPanel />
                         <TransactionTable />
-                        <Pagination prev next first last ellipsis boundaryLinks items={20} maxButtons={5} />
+                        <Pagination prev next first last ellipsis boundaryLinks
+                                    items={pagination.totalPages} maxButtons={5}
+                                    activePage={pagination.currentPage}
+                                    onSelect={onPageClicked}
+                        />
                     </div >
                     <div className="panel-footer">
                         <div className="row">

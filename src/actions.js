@@ -65,6 +65,10 @@ export const receiveTransactions = (json) => {
     return {
         type: RECEIVE_TRANSACTIONS,
         transactions: json.transactions,
+        pagination: {
+            currentPage: json.current_page,
+            totalPages: json.total_pages
+        },
         receivedAt: Date.now()
     }
 }
@@ -232,5 +236,15 @@ export const fetchCategorySummary = (accountId) => {
         return fetch(`http://localhost:9000/api/accounts/${accountId}/categorySummary`)
             .then(response => response.json())
             .then(json => dispatch(receiveCategorySummary(json)))
+    }
+}
+
+// ----------------------------------------------------------------------------
+// Transaction Pagination Change
+export const CHANGE_TRANSACTION_PAGE_NUMBER = 'CHANGE_TRANSACTION_PAGE_NUMBER'
+export const changeTransactionPage = (page) => {
+    return {
+        type: CHANGE_TRANSACTION_PAGE_NUMBER,
+        page
     }
 }
