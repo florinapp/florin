@@ -6,7 +6,6 @@ import {
     FLAG_AS_INTERNAL_TRANSACTION_SUCCEEDED,
     RECEIVE_CATEGORY_SUMMARY,
     CHANGE_TRANSACTION_PAGE_NUMBER,
-    FORCE_REFRESH_CATEGORY_SUMMARY,
 } from '../actions'
 import querystring from 'querystring'
 import { matchPath } from 'react-router'

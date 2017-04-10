@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import CategorySelect from '../../components/accounts/CategorySelect'
-import { updateTransaction, forceRefreshCategorySummary} from '../../actions'
+import { updateTransaction } from '../../actions'
 
 const mapStateToProps = (state) => {
     const { categories } = state
