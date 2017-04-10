@@ -3,6 +3,55 @@ import { Table } from 'react-bootstrap'
 import { Doughnut } from 'react-chartjs'
 import accounting from 'accounting'
 
+const SummaryChart = ({data}) => {
+    const chartData = data.map((item) => {
+        return {
+            value: Math.abs(item.amount),
+            label: item.category_name
+        }
+    })
+
+    return (
+        <div className="text-center">
+            <Doughnut data={chartData} />
+        </div>
+    )
+}
+
+const SummaryTable = ({data}) => {
+    return (
+        <div>
+            <Table condensed hover>
+                <tbody>
+                    {data.map((category) => {
+                        return (
+                            <tr key={category.category_name}>
+                                <td>{category.category_name}</td>
+                                <td width="20%" style={{ textAlign: "right" }}>
+                                    {accounting.formatMoney(category.amount)}
+                                </td>
+                            </tr>
+                        )
+                    })}
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td><strong>Total:</strong></td>
+                        <td width="20%" style={{ textAlign: "right" }}>
+                            <strong>
+                                {accounting.formatMoney(data.reduce((aggregate, category) => {
+                                    return aggregate + Number.parseFloat(category.amount)
+                                }, 0))
+                                }
+                            </strong>
+                        </td>
+                    </tr>
+                </tfoot>
+            </Table>
+        </div>
+    )
+}
+
 class CategorySummaryPanel extends Component {
     componentWillMount() {
         const { fetchCategorySummary, currentAccountId, filter } = this.props
@@ -33,13 +82,9 @@ class CategorySummaryPanel extends Component {
 
     render() {
         const { categorySummary, fetchCategorySummary, filter } = this.props
+        console.log(categorySummary)
+        const { income, expense } = categorySummary
         const { currentDateRange } = filter
-        const chartData = categorySummary.map((item) => {
-            return {
-                value: Math.abs(item.amount),
-                label: item.category_name
-            }
-        })
         return (
             <div className="panel panel-default">
                 <div className="panel-heading">
@@ -53,40 +98,12 @@ class CategorySummaryPanel extends Component {
                 </div>
                 <div className="panel-body">
                     <h3>Expense</h3>
-                    <div className="text-center">
-                        <Doughnut data={chartData} />
-                    </div>
-                    <div>
-                        <Table condensed hover>
-                            <tbody>
-                                {categorySummary.map((category) => {
-                                    return (
-                                        <tr key={category.category_name}>
-                                            <td>{category.category_name}</td>
-                                            <td width="20%" style={{textAlign: "right"}}>
-                                                {accounting.formatMoney(category.amount)}
-                                            </td>
-                                        </tr>
-                                    )
-                                })}
-                            </tbody>
-                            <tfoot>
-                                <tr>
-                                    <td><strong>Total:</strong></td>
-                                    <td width="20%" style={{textAlign: "right"}}>
-                                        <strong>
-                                        {accounting.formatMoney(categorySummary.reduce((aggregate, category) => {
-                                            return aggregate + Number.parseFloat(category.amount)
-                                        }, 0))
-                                        }
-                                        </strong>
-                                    </td>
-                                </tr>
-                            </tfoot>
-                        </Table>
-                    </div>
+                    <SummaryChart data={expense} />
+                    <SummaryTable data={expense} />
                     <hr />
                     <h3>Income</h3>
+                    <SummaryChart data={income} />
+                    <SummaryTable data={income} />
                 </div>
             </div>
         )

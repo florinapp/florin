@@ -23,7 +23,7 @@ const initState = {
         totalPages: null,
         currentPage: 1
     },
-    categorySummary: [],
+    categorySummary: {income: [], expense: []},
 }
 
 const handleLocationChange = (state, action) => {

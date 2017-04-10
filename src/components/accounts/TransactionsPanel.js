@@ -55,11 +55,23 @@ class TransactionsPanel extends Component {
                         <h3 className="panel-title">Transactions</h3></div>
                     <div className="panel-body transaction-panel">
                         <FilterPanel />
-                        <Pagination prev next first last ellipsis boundaryLinks
-                                    items={pagination.totalPages} maxButtons={5}
-                                    activePage={pagination.currentPage}
-                                    onSelect={onPageClicked}
-                        />
+                        <div className="row">
+                            <div className="col-md-12">
+                                <div className="btn-group pull-left" role="group" style={{marginTop: "0px"}}>
+                                    <Button bsStyle="primary" onClick={
+                                        () => {this.setState({showModal: true})}
+                                    }>Upload Transactions</Button>
+                                </div>
+                                <div className="text-center">
+                                    <Pagination prev next first last ellipsis boundaryLinks
+                                                items={pagination.totalPages} maxButtons={5}
+                                                activePage={pagination.currentPage}
+                                                onSelect={onPageClicked}
+                                                style={{marginTop: "0px"}}
+                                    />
+                                </div>
+                            </div>
+                        </div>
                         <TransactionTable />
                     </div >
                     <div className="panel-footer">
