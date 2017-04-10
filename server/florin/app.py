@@ -104,19 +104,9 @@ def upload_transactions(account_id):
     result = importer.import_from(file_storage)
     total_imported, total_skipped = 0, 0
 
+    account = get_account_by_id(account_id)
     for t in result:
         with db_session:
-            # THIS IS RIDICULOUS
-            # b/c a `commit()` is issued, the account fetched before
-            # is no longer in the session's cache. If I associate account with
-            # another transaction, I'm going to get:
-            #   TransactionError: An attempt to mix objects belonging to different transactions
-            # I need to do a commit() because I want duplicated transactions
-            # (unique checksum) to be detected and skipped, but I also want
-            # new transactions to be imported, but doing all in one transaction
-            # will rollback everything.
-            account = get_account_by_id(account_id)
-
             Transaction = app.db.Transaction
 
             common_attrs = dict(t.common_attrs)
@@ -172,7 +162,7 @@ def get_transactions(account_id):
     transactions = query[:]
 
     return flask.jsonify({
-        'total_pages': int(math.ceil(total / per_page)),
+        'total_pages': int(total / per_page) + 1,
         'current_page': page,
         'transactions': [txn.to_dict() for txn in transactions]
     })
