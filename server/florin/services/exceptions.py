@@ -1,0 +1,2 @@
+class ResourceNotFound(StandardError):
+    pass

@@ -1,3 +1,4 @@
+import functools
 import math
 import flask
 import logging
@@ -11,6 +12,7 @@ from pony.orm import commit, db_session, TransactionIntegrityError, CacheIndexEr
 from collections import defaultdict
 from . import database
 from .importer import get_importer
+from .services import transactions, params, accounts
 
 
 logging.basicConfig(level='DEBUG')
@@ -22,25 +24,23 @@ INTERNAL_TRANSFER_CATEGORY_ID = 65534
 ALL_ACCOUNTS = object()
 
 
-def _get_date_range_params(args):
-    start_date = flask.request.args.get('startDate', '1970-01-01')
-    end_date = flask.request.args.get('endDate', '9999-12-31')
+def handle_exceptions(fn):
+    @functools.wraps(fn)
+    def wrapper(*args, **kwargs):
+        try:
+            return fn(*args, **kwargs)
+        except ResourceNotFound:
+            flask.abort(404)
 
-    start_date = datetime.datetime.strptime(start_date, '%Y-%m-%d').date()
-    end_date = datetime.datetime.strptime(end_date, '%Y-%m-%d').date()
-
-    return start_date, end_date
+    return wrapper
 
 
-def get_account_by_id(account_id):
-    if account_id == '_all':
-        return ALL_ACCOUNTS
-
-    account = app.db.Account.select(lambda a: a.id == account_id)
-    if account.count() != 1:
-        flask.abort(404)
-
-    return account.get()
+def jsonify(fn):
+    @functools.wraps(fn)
+    def wrapper(*args, **kwargs):
+        response = fn(*args, **kwargs)
+        return flask.jsonify(response)
+    return wrapper
 
 
 class MyJSONEncoder(JSONEncoder):
@@ -104,7 +104,7 @@ def upload_transactions(account_id):
     result = importer.import_from(file_storage)
     total_imported, total_skipped = 0, 0
 
-    account = get_account_by_id(account_id)
+    account = accounts.get_by_id(app, account_id)
     for t in result:
         with db_session:
             Transaction = app.db.Transaction
@@ -128,52 +128,19 @@ def upload_transactions(account_id):
 
 
 @app.route('/api/accounts/<account_id>', methods=['GET'])
+@jsonify
+@handle_exceptions
 @db_session
 def get_transactions(account_id):
-    start_date, end_date = _get_date_range_params(flask.request.args)
-
-    include_internal_transfer = asbool(flask.request.args.get('includeInternalTransfer', 'false'))
-
-    only_uncategorized = asbool(flask.request.args.get('onlyUncategorized', 'false'))
-
-    per_page = int(flask.request.args.get('perPage', '10'))
-
-    page = int(flask.request.args.get('page', '1'))
-
-    Account, Transaction = app.db.Account, app.db.Transaction
-
-    query = Transaction.select(
-        lambda t: t.date >= start_date
-        and t.date <= end_date
-    )
-
-    if not include_internal_transfer:
-        query = query.filter(lambda t: t.category_id != INTERNAL_TRANSFER_CATEGORY_ID)
-
-    if only_uncategorized:
-        query = query.filter(lambda t: t.category_id == TBD_CATEGORY_ID)
-
-    account = get_account_by_id(account_id)
-    if account is not ALL_ACCOUNTS:
-        query = query.filter(lambda t: t.account == account.id)
-
-    total = query.count()
-    query = query.order_by(Transaction.date.desc()).limit(per_page, offset=(page - 1) * per_page)
-    transactions = query[:]
-
-    return flask.jsonify({
-        'total_pages': int(total / per_page) + 1,
-        'current_page': page,
-        'transactions': [txn.to_dict() for txn in transactions]
-    })
+    return transactions.get(app, account_id, flask.request.args)
 
 
 @app.route('/api/accounts/<account_id>/categorySummary', methods=['GET'])
 @db_session
 def get_account_summary(account_id):
-    start_date, end_date = _get_date_range_params(flask.request.args)
+    start_date, end_date = params.get_date_range_params(flask.request.args)
 
-    account = get_account_by_id(account_id)
+    account = accounts.get_by_id(app, account_id)
     categories = {c.id: c.name for c in app.db.Category.select()[:]}
 
     result = app.db.select(
@@ -224,7 +191,6 @@ def update_transaction(transaction_id):
         commit()
 
     return flask.jsonify({'transactions': [transaction.to_dict()]})
-
 
 
 @app.route('/api/transactions/<transaction_id>', methods=['DELETE'])
