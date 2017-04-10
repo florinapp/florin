@@ -14,7 +14,6 @@ class Account(db.Entity):
     institution = Required(str)
     name = Required(str)
     type = Required(str)
-    # transactions = Set('Transaction')
 
 
 class Transaction(db.Entity):
