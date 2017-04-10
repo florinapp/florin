@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Table } from 'react-bootstrap'
+import { Doughnut } from 'react-chartjs'
 import accounting from 'accounting'
 
 class CategorySummaryPanel extends Component {
@@ -10,13 +11,6 @@ class CategorySummaryPanel extends Component {
 
     componentWillReceiveProps(nextProps) {
         const { fetchCategorySummary } = this.props
-        const { forceRefreshCategorySummary } = nextProps
-
-        if (forceRefreshCategorySummary) {
-            fetchCategorySummary(nextProps.currentAccountId, nextProps.filter)
-            return
-        }
-
         const hasAccountIdChanged = () => (
             this.props.currentAccountId !== nextProps.currentAccountId
         )
@@ -36,9 +30,16 @@ class CategorySummaryPanel extends Component {
         fetchCategorySummary(nextProps.currentAccountId, nextProps.filter)
     }
 
+
     render() {
         const { categorySummary, fetchCategorySummary, filter } = this.props
         const { currentDateRange } = filter
+        const chartData = categorySummary.map((item) => {
+            return {
+                value: Math.abs(item.amount),
+                label: item.category_name
+            }
+        })
         return (
             <div className="panel panel-default">
                 <div className="panel-heading">
@@ -51,6 +52,10 @@ class CategorySummaryPanel extends Component {
                     </div>
                 </div>
                 <div className="panel-body">
+                    <h3>Expense</h3>
+                    <div className="text-center">
+                        <Doughnut data={chartData} />
+                    </div>
                     <div>
                         <Table condensed hover>
                             <tbody>
@@ -65,8 +70,23 @@ class CategorySummaryPanel extends Component {
                                     )
                                 })}
                             </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td><strong>Total:</strong></td>
+                                    <td width="20%" style={{textAlign: "right"}}>
+                                        <strong>
+                                        {accounting.formatMoney(categorySummary.reduce((aggregate, category) => {
+                                            return aggregate + Number.parseFloat(category.amount)
+                                        }, 0))
+                                        }
+                                        </strong>
+                                    </td>
+                                </tr>
+                            </tfoot>
                         </Table>
                     </div>
+                    <hr />
+                    <h3>Income</h3>
                 </div>
             </div>
         )

@@ -32,3 +32,8 @@ def run(ctx):
     ctx.run('DBFILE=florin.sqlite '
             'gunicorn --access-logfile=- --error-logfile=- --timeout=9999 -b 0.0.0.0:9000 --reload florin.app:app',
             pty=True)
+
+
+@task
+def lint(ctx):
+    ctx.run('flake8 --max-line-length=120 florin')
