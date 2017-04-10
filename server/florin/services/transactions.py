@@ -1,7 +1,9 @@
 from asbool import asbool
 from .params import get_date_range_params
 from .categories import TBD_CATEGORY_ID, INTERNAL_TRANSFER_CATEGORY_ID
-from . import accounts
+from . import accounts, exceptions
+from pony.orm import commit, db_session, TransactionIntegrityError, CacheIndexError
+from florin.importer import get_importer
 
 
 def get(app, account_id, args):
@@ -41,3 +43,66 @@ def get(app, account_id, args):
         'current_page': page,
         'transactions': [txn.to_dict() for txn in transactions]
     }
+
+
+def upload(app, account_id, files):
+    file_items = files.items()
+    assert len(file_items) == 1
+    filename, file_storage = file_items[0]
+    importer = get_importer(filename)
+    if not importer:
+        raise exceptions.InvalidRequest('Unsupported file extension')
+
+    result = importer.import_from(file_storage)
+    total_imported, total_skipped = 0, 0
+
+    account = accounts.get_by_id(app, account_id)
+    for t in result:
+        with db_session:
+            Transaction = app.db.Transaction
+
+            common_attrs = dict(t.common_attrs)
+            common_attrs['account'] = account.id
+            common_attrs['category_id'] = TBD_CATEGORY_ID
+            try:
+                Transaction(**common_attrs)
+                commit()
+            except (TransactionIntegrityError, CacheIndexError) as e:
+                print(str(e))
+                total_skipped += 1
+            else:
+                total_imported += 1
+
+    return {
+        'totalImported': total_imported,
+        'totalSkipped': total_skipped
+    }
+
+
+def delete(app, transaction_id):
+    Transaction = app.db.Transaction
+
+    transaction = Transaction.select(lambda t: t.id == transaction_id)
+    if transaction.count() != 1:
+        raise exceptions.ResourceNotFound()
+
+    transaction = transaction.get()
+    transaction.delete()
+    commit()
+
+    return {}
+
+
+def update(app, transaction_id, request_json):
+    Transaction = app.db.Transaction
+
+    transaction = Transaction.select(lambda t: t.id == transaction_id)
+    if transaction.count() != 1:
+        raise exceptions.ResourceNotFound()
+
+    transaction = transaction.get()
+    for key, value in request_json.items():
+        setattr(transaction, key, value)
+    commit()
+
+    return {'transactions': [transaction.to_dict()]}

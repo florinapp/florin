@@ -1,18 +1,15 @@
 import functools
-import math
 import flask
 import logging
 import datetime
 import operator
-from asbool import asbool
 from decimal import Decimal
 from flask_cors import CORS
 from flask.json import JSONEncoder
-from pony.orm import commit, db_session, TransactionIntegrityError, CacheIndexError
+from pony.orm import db_session
 from collections import defaultdict
 from . import database
-from .importer import get_importer
-from .services import transactions, params, accounts
+from .services import transactions, params, accounts, exceptions
 
 
 logging.basicConfig(level='DEBUG')
@@ -29,8 +26,12 @@ def handle_exceptions(fn):
     def wrapper(*args, **kwargs):
         try:
             return fn(*args, **kwargs)
-        except ResourceNotFound:
+        except exceptions.ResourceNotFound:
             flask.abort(404)
+        except exceptions.InvalidRequest as e:
+            flask.abort(flask.make_response(flask.jsonify({
+                'error': str(e)
+            }), 400))
 
     return wrapper
 
@@ -91,40 +92,10 @@ def get_categories():
 
 
 @app.route('/api/accounts/<account_id>/upload', methods=['POST'])
+@handle_exceptions
+@jsonify
 def upload_transactions(account_id):
-    file_items = flask.request.files.items()
-    assert len(file_items) == 1
-    filename, file_storage = file_items[0]
-    importer = get_importer(filename)
-    if not importer:
-        flask.abort(flask.make_response(flask.jsonify({
-            'error': 'Unsupported file extension'
-        }), 400))
-
-    result = importer.import_from(file_storage)
-    total_imported, total_skipped = 0, 0
-
-    account = accounts.get_by_id(app, account_id)
-    for t in result:
-        with db_session:
-            Transaction = app.db.Transaction
-
-            common_attrs = dict(t.common_attrs)
-            common_attrs['account'] = account.id
-            common_attrs['category_id'] = TBD_CATEGORY_ID
-            try:
-                Transaction(**common_attrs)
-                commit()
-            except (TransactionIntegrityError, CacheIndexError) as e:
-                print(str(e))
-                total_skipped += 1
-            else:
-                total_imported += 1
-
-    return flask.jsonify({
-        'totalImported': total_imported,
-        'totalSkipped': total_skipped
-    })
+    return transactions.upload(app, account_id, flask.request.files)
 
 
 @app.route('/api/accounts/<account_id>', methods=['GET'])
@@ -140,7 +111,7 @@ def get_transactions(account_id):
 def get_account_summary(account_id):
     start_date, end_date = params.get_date_range_params(flask.request.args)
 
-    account = accounts.get_by_id(app, account_id)
+    accounts.get_by_id(app, account_id)
     categories = {c.id: c.name for c in app.db.Category.select()[:]}
 
     result = app.db.select(
@@ -176,37 +147,19 @@ def get_account_summary(account_id):
 
 
 @app.route('/api/transactions/<transaction_id>', methods=['POST'])
+@jsonify
+@handle_exceptions
+@db_session
 def update_transaction(transaction_id):
-    Transaction = app.db.Transaction
-
-    with db_session:
-        transaction = Transaction.select(lambda t: t.id == transaction_id)
-        if transaction.count() != 1:
-            flask.abort(404)
-
-        transaction = transaction.get()
-        request = flask.request.json
-        for key, value in request.items():
-            setattr(transaction, key, value)
-        commit()
-
-    return flask.jsonify({'transactions': [transaction.to_dict()]})
+    return transactions.update(app, transaction_id, flask.request.json)
 
 
 @app.route('/api/transactions/<transaction_id>', methods=['DELETE'])
+@jsonify
+@handle_exceptions
+@db_session
 def delete_transaction(transaction_id):
-    Transaction = app.db.Transaction
-
-    with db_session:
-        transaction = Transaction.select(lambda t: t.id == transaction_id)
-        if transaction.count() != 1:
-            flask.abort(404)
-
-        transaction = transaction.get()
-        transaction.delete()
-        commit()
-
-    return flask.jsonify({})
+    return transactions.delete(app, transaction_id)
 
 
 @app.route('/api/charts/assets', methods=['GET'])

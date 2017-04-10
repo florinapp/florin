@@ -33,7 +33,7 @@ class CSVImporter(object):
             try:
                 file_storage.seek(0)
                 result = self._import(file_storage, transaction_class)
-            except Exception as e:
+            except Exception:
                 continue
         return result
 

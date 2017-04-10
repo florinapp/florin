@@ -21,7 +21,7 @@ class CSVImporter(object):
             result.append(transaction_class(**attrs))
 
     def import_from(self, file_storage):
-        _import(file_storage)
+        self._import(file_storage)
 
 
 def get_importer(filename):

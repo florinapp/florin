@@ -1,7 +1,7 @@
 import os
 import datetime
 from decimal import Decimal
-from pony.orm import Database, Optional, Required, PrimaryKey, Set, sql_debug
+from pony.orm import Database, Optional, Required, PrimaryKey
 
 
 db = Database()
