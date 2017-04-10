@@ -181,7 +181,7 @@ def get_account_summary(account_id):
         'FROM categories INNER JOIN transactions '
         'WHERE '
         'categories.id = transactions.category_id '
-        'AND transactions.category_id <> $internal_transfer_category_id '
+        'AND transactions.category_id <> $internal_transfer_category_id '  # excluding internal transfers
         'AND transactions.date >= $start_date AND transactions.date <= $end_date '
         'GROUP BY categories.id',
         {

@@ -303,12 +303,3 @@ export const changeTransactionPage = (page) => {
         page
     }
 }
-
-// ----------------------------------------------------------------------------
-// Force Refresh Category Summary
-export const FORCE_REFRESH_CATEGORY_SUMMARY = 'FORCE_REFRESH_CATEGORY_SUMMARY'
-export const forceRefreshCategorySummary = () => {
-    return {
-        type: FORCE_REFRESH_CATEGORY_SUMMARY,
-    }
-}

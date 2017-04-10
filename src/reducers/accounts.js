@@ -25,7 +25,6 @@ const initState = {
         currentPage: 1
     },
     categorySummary: [],
-    forceRefreshCategorySummary: false
 }
 
 const handleLocationChange = (state, action) => {
@@ -125,16 +124,10 @@ const accounts = (state=initState, action) => {
             const { categorySummary } = action
             return {
                 ...state,
-                forceRefreshCategorySummary: false,
                 categorySummary
             }
         case CHANGE_TRANSACTION_PAGE_NUMBER:
             return handleChangeTransactionPageNumber(state, action)
-        case FORCE_REFRESH_CATEGORY_SUMMARY:
-            return {
-                ...state,
-                forceRefreshCategorySummary: true
-            }
         default:
             return state
     }

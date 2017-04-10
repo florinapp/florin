@@ -3,12 +3,13 @@ import CategorySummaryPanel from '../../components/accounts/CategorySummaryPanel
 import { fetchCategorySummary } from '../../actions'
 
 const mapStateToProps = ({ accounts }) => {
-    const { currentAccountId, filter, categorySummary, forceRefreshCategorySummary } = accounts
+    const { currentAccountId, filter, categorySummary, forceRefreshCategorySummary, transactions } = accounts
     return {
         currentAccountId,
         filter,
         categorySummary,
-        forceRefreshCategorySummary
+        forceRefreshCategorySummary,
+        transactions
     }
 }
 

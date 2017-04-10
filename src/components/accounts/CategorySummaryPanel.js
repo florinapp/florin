@@ -25,7 +25,11 @@ class CategorySummaryPanel extends Component {
             return JSON.stringify(this.props.filter) !== JSON.stringify(nextProps.filter)
         }
 
-        if (!hasAccountIdChanged() && !hasFilterChanged()) {
+        const hasTransactionsChanged = () => {
+            return JSON.stringify(this.props.transactions) !== JSON.stringify(nextProps.transactions)
+        }
+
+        if (!hasAccountIdChanged() && !hasFilterChanged()  && !hasTransactionsChanged()) {
             return
         }
 

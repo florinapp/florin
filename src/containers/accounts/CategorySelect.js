@@ -17,7 +17,6 @@ const mapDispatchToProps = (dispatch) => {
                 category_id: newCategoryId
             }
             dispatch(updateTransaction(transactionId, transactionData))
-            dispatch(forceRefreshCategorySummary())
         }
     }
 }
