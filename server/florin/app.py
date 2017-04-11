@@ -63,7 +63,7 @@ app = create_app()
 @app.route('/api/accounts', methods=['GET'])
 def get_accounts():
     with db_session:
-        accounts = list(app.db.Account.select().order_by(app.db.Account.name.desc()))
+        accounts = list(app.db.Account.select().order_by(app.db.Account.institution.desc()))
 
     return flask.jsonify({
         'accounts': [account.to_dict() for account in accounts]
