@@ -9,3 +9,15 @@ def reset_database():
     for category in db.Category.select()[:]:
         category.delete()
     commit()
+
+
+def db_fixture(db_class):
+    def decorator(fn):
+        def wrapper(*args, **kwargs):
+            response = fn(*args, **kwargs)
+            with db_session:
+                db_class(**response)
+                commit()
+            return response
+        return wrapper
+    return decorator
