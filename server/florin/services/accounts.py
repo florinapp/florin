@@ -96,3 +96,10 @@ def get_summary(app, account_id, args):
             'income': _get_income_category_summary(app, account_id, args)
         }
     }
+
+
+def get(app):
+    accounts = list(app.db.Account.select().order_by(app.db.Account.institution.desc()))
+    return {
+        'accounts': [account.to_dict() for account in accounts]
+    }
