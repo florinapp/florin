@@ -3,7 +3,7 @@ from pony.orm import commit, db_session, TransactionIntegrityError, CacheIndexEr
 from florin.importer import get_importer
 from decimal import Decimal
 from collections import defaultdict
-from .exceptions import ResourceNotFound
+from .exceptions import ResourceNotFound, InvalidRequest
 from .categories import INTERNAL_TRANSFER_CATEGORY_ID
 from . import params
 
@@ -113,7 +113,7 @@ def upload(app, account_id, files):
     filename, file_storage = file_items[0]
     importer = get_importer(filename)
     if not importer:
-        raise exceptions.InvalidRequest('Unsupported file extension')
+        raise InvalidRequest('Unsupported file extension')
 
     result = importer.import_from(file_storage)
     total_imported, total_skipped = 0, 0

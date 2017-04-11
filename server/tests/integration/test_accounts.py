@@ -59,7 +59,9 @@ def test_accounts_get___ordered_by_institution_name_by_default(td_chequing_accou
     assert names == ['TD', 'CIBC', 'BMO']
 
 
-def test_accounts_upload___tangerine(tangerine_credit_card_account):
-    with open('requirements.txt') as f:
-        response = requests.post('http://localhost:7000/api/accounts/4/upload', data=f)
-        # TODO: FIX THIS
+def test_accounts_upload___file_extension_not_supported(tangerine_credit_card_account):
+    response = requests.post('http://localhost:7000/api/accounts/4/upload', files=[
+        ('requirements.txt', ('requirements.txt', open('requirements.txt', 'r'), 'text/plain'))
+    ])
+    assert response.status_code == 400
+    assert response.json() == {'error': 'Unsupported file extension'}
