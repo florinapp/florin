@@ -17,8 +17,7 @@ def build(ctx):
 
 
 @task()
-def run_image(ctx, test=False, port=None):
-    port = port or 9000
+def run_image(ctx, test=False, port=9000):
     if test:
         volume_mappings = [
             '-v $(pwd)/{db}:/app/{db}'.format(db='test.sqlite'),
@@ -43,10 +42,11 @@ def clean(ctx):
 
 
 @task
-def run(ctx):
+def run(ctx, dbfile='florin.sqlite', port=9000):
     # TODO: change to os.execvp
-    ctx.run('DBFILE=florin.sqlite '
-            'gunicorn --access-logfile=- --error-logfile=- --timeout=9999 -b 0.0.0.0:9000 --reload florin.app:app',
+    ctx.run('DBFILE={} '
+            'gunicorn --access-logfile=- --error-logfile=- --timeout=9999 '
+            '-b 0.0.0.0:{} --reload florin.app:app'.format(dbfile, port),
             pty=True)
 
 
