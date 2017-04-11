@@ -1,4 +1,6 @@
 import operator
+from pony.orm import commit, db_session, TransactionIntegrityError, CacheIndexError
+from florin.importer import get_importer
 from decimal import Decimal
 from collections import defaultdict
 from .exceptions import ResourceNotFound
@@ -102,4 +104,38 @@ def get(app):
     accounts = list(app.db.Account.select().order_by(app.db.Account.institution.desc()))
     return {
         'accounts': [account.to_dict() for account in accounts]
+    }
+
+
+def upload(app, account_id, files):
+    file_items = files.items()
+    assert len(file_items) == 1
+    filename, file_storage = file_items[0]
+    importer = get_importer(filename)
+    if not importer:
+        raise exceptions.InvalidRequest('Unsupported file extension')
+
+    result = importer.import_from(file_storage)
+    total_imported, total_skipped = 0, 0
+
+    account = accounts.get_by_id(app, account_id)
+    for t in result:
+        with db_session:
+            Transaction = app.db.Transaction
+
+            common_attrs = dict(t.common_attrs)
+            common_attrs['account'] = account.id
+            common_attrs['category_id'] = TBD_CATEGORY_ID
+            try:
+                Transaction(**common_attrs)
+                commit()
+            except (TransactionIntegrityError, CacheIndexError) as e:
+                print(str(e))
+                total_skipped += 1
+            else:
+                total_imported += 1
+
+    return {
+        'totalImported': total_imported,
+        'totalSkipped': total_skipped
     }

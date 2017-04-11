@@ -51,5 +51,10 @@ def run(ctx, dbfile='florin.sqlite', port=9000):
 
 
 @task
+def run_test_server(ctx):
+    run(ctx, 'test.sqlite', 7000)
+
+
+@task
 def lint(ctx):
     ctx.run('flake8 --max-line-length=120 florin')

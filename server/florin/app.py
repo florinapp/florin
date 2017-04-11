@@ -77,7 +77,7 @@ def get_categories():
 @handle_exceptions
 @jsonify
 def upload_transactions(account_id):
-    return transactions.upload(app, account_id, flask.request.files)
+    return accounts.upload(app, account_id, flask.request.files)
 
 
 @app.route('/api/accounts/<account_id>', methods=['GET'])
