@@ -2,6 +2,7 @@ import pytest
 import requests
 from florin.database import db
 from pony.orm import db_session, commit
+from .utils import reset_database
 
 
 @pytest.fixture
@@ -19,11 +20,8 @@ def bmo_chequing_account():
     return dict(id='3', institution='BMO', name='Chequing (USD)', type='chequing')
 
 
-@db_session
 def setup_function(function):
-    for acct in db.Account.select()[:]:
-        acct.delete()
-    commit()
+    reset_database()
 
 
 def test_accounts_get___empty():

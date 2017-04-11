@@ -6,9 +6,8 @@ from decimal import Decimal
 from flask_cors import CORS
 from flask.json import JSONEncoder
 from pony.orm import db_session
-from collections import defaultdict
 from . import database
-from .services import transactions, exceptions, accounts
+from .services import transactions, exceptions, accounts, categories
 
 
 logging.basicConfig(level='DEBUG')
@@ -68,17 +67,10 @@ def get_accounts():
 
 
 @app.route('/api/categories', methods=['GET'])
+@jsonify
+@db_session
 def get_categories():
-    with db_session:
-        categories = list(app.db.Category.select())
-
-    flat_categories = [category.to_dict() for category in categories]
-    top_level_categories = [c for c in flat_categories if c['parent_id'] is None]
-    for category in top_level_categories:
-        category['subcategories'] = [c for c in flat_categories if c['parent_id'] == category['id']]
-    return flask.jsonify({
-        'categories': top_level_categories
-    })
+    return categories.get(app)
 
 
 @app.route('/api/accounts/<account_id>/upload', methods=['POST'])
@@ -118,40 +110,3 @@ def update_transaction(transaction_id):
 @db_session
 def delete_transaction(transaction_id):
     return transactions.delete(app, transaction_id)
-
-
-@app.route('/api/charts/assets', methods=['GET'])
-def get_asset_chart_data():
-    with db_session:
-        accounts = list(app.db.Account.select())
-
-    accounts_lookup_table = {account.id: account.name for account in accounts}
-    default = {account.id: None for account in accounts}
-    data_by_date = defaultdict(lambda: dict(default))
-
-    for account in accounts:
-        with db_session:
-            snapshots = list(account.snapshots.select())
-        for snapshot in snapshots:
-            data_by_date[snapshot.date].update({account.id: str(snapshot.value)})
-
-    data = []
-    for date, account_values in sorted(data_by_date.items()):
-        if len(data) == 0:
-            prev_data = dict(default)
-        else:
-            prev_data = data[-1]
-
-        value = dict(account_values)
-        value.update({'date': str(date)})
-
-        for account_id, account_value in value.items():
-            if account_value is None:
-                value[account_id] = prev_data.get(account_id) or '0'
-
-        data.append(value)
-
-    return flask.jsonify({
-        'accounts': accounts_lookup_table,
-        'data': data,
-    })
