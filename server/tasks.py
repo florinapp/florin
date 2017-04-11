@@ -16,9 +16,25 @@ def build(ctx):
     ctx.run('docker build -t florin-server .', pty=True)
 
 
-@task
-def run_image(ctx):
-    ctx.run('docker run -d -v $(pwd)/florin.sqlite:/app/florin.sqlite -p 9000:9000 florin-server')
+@task()
+def run_image(ctx, test=False, port=None):
+    port = port or 9000
+    if test:
+        volume_mappings = [
+            '-v $(pwd)/{db}:/app/{db}'.format(db='test.sqlite'),
+            '-v $(pwd)/requirements.txt:/app/requirements.txt',
+            '-v $(pwd)/requirements-dev.txt:/app/requirements-dev.txt',
+            '--env DBFILE=test.sqlite',
+        ]
+    else:
+        volume_mappings = [
+            '-v $(pwd)/{db}:/app/{db}'.format(db='florin.sqlite'),
+            '--env DBFILE=florin.sqlite',
+        ]
+
+    ctx.run('docker run -d {volume_mappings} '
+            '-p {port}:9000 florin-server'.format(volume_mappings=' '.join(volume_mappings),
+                                                  port=port))
 
 
 @task

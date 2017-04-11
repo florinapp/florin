@@ -5,5 +5,4 @@ COPY ["requirements.txt", "requirements-dev.txt", "/app/"]
 COPY ["tasks.py", "/app"]
 COPY ["wsgi.py", "/app"]
 WORKDIR /app
-RUN pip install -r requirements-dev.txt
-CMD inv run
+CMD pip install -r requirements-dev.txt && inv run
