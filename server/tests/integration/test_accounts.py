@@ -59,5 +59,7 @@ def test_accounts_get___ordered_by_institution_name_by_default(td_chequing_accou
     assert names == ['TD', 'CIBC', 'BMO']
 
 
-# def test_accounts_upload___tangerine(tangerine_credit_card_account):
-#     response = requests.get('http://localhost:7000/api/accounts')
+def test_accounts_upload___tangerine(tangerine_credit_card_account):
+    with open('requirements.txt') as f:
+        response = requests.post('http://localhost:7000/api/accounts/4/upload', data=f)
+        # TODO: FIX THIS
