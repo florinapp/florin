@@ -8,6 +8,8 @@ def reset_database():
         acct.delete()
     for category in db.Category.select()[:]:
         category.delete()
+    for transaction in db.Transaction.select()[:]:
+        transaction.delete()
     commit()
 
 

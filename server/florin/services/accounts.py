@@ -4,7 +4,7 @@ from florin.importer import get_importer
 from decimal import Decimal
 from collections import defaultdict
 from .exceptions import ResourceNotFound, InvalidRequest
-from .categories import INTERNAL_TRANSFER_CATEGORY_ID
+from .categories import INTERNAL_TRANSFER_CATEGORY_ID, TBD_CATEGORY_ID
 from . import params
 
 
@@ -118,7 +118,7 @@ def upload(app, account_id, files):
     result = importer.import_from(file_storage)
     total_imported, total_skipped = 0, 0
 
-    account = accounts.get_by_id(app, account_id)
+    account = get_by_id(app, account_id)
     for t in result:
         with db_session:
             Transaction = app.db.Transaction
