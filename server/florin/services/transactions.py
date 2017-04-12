@@ -1,3 +1,4 @@
+import math
 from asbool import asbool
 from .params import get_date_range_params
 from .categories import TBD_CATEGORY_ID, INTERNAL_TRANSFER_CATEGORY_ID
@@ -38,7 +39,7 @@ def get(app, account_id, args):
     transactions = query[:]
 
     return {
-        'total_pages': int(total / per_page) + 1,
+        'total_pages': int(math.ceil(1.0 * total / per_page)),
         'current_page': page,
         'transactions': [txn.to_dict() for txn in transactions]
     }

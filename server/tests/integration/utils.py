@@ -18,7 +18,11 @@ def db_fixture(db_class):
         def wrapper(*args, **kwargs):
             response = fn(*args, **kwargs)
             with db_session:
-                db_class(**response)
+                if isinstance(response, list):
+                    for r in response:
+                        db_class(**r)
+                else:
+                    db_class(**response)
                 commit()
             return response
         return wrapper

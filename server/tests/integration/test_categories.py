@@ -2,28 +2,11 @@ import pytest
 import requests
 from florin.database import db
 from .utils import reset_database, db_fixture
+from .fixtures.categories import automobile, gasoline, insurance
 
 
 def setup_function(function):
     reset_database()
-
-
-@pytest.fixture
-@db_fixture(db.Category)
-def automobile():
-    return dict(id=1, name='Automobile', parent_id=None, type='expense')
-
-
-@pytest.fixture
-@db_fixture(db.Category)
-def gasoline():
-    return dict(id=2, name='Gasoline', parent_id=1, type='expense')
-
-
-@pytest.fixture
-@db_fixture(db.Category)
-def insurance():
-    return dict(id=3, name='Insurance', parent_id=1, type='expense')
 
 
 def test_categories_get___empty():
