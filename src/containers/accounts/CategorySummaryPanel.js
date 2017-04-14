@@ -2,13 +2,14 @@ import { connect } from 'react-redux'
 import CategorySummaryPanel from '../../components/accounts/CategorySummaryPanel'
 import { fetchCategorySummary } from '../../actions'
 
-const mapStateToProps = ({ accounts }) => {
+const mapStateToProps = ({ ui, accounts }) => {
     const { currentAccountId, filter, categorySummary, transactions } = accounts
     return {
         currentAccountId,
         filter,
         categorySummary,
-        transactions
+        transactions,
+        loadingCategorySummary: ui.loadingCategorySummary,
     }
 }
 

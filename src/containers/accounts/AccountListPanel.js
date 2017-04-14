@@ -8,7 +8,7 @@ const mapStateToProps = ({ ui, accounts, currentAccountId }) => {
     return {
         accounts,
         currentAccountId,
-        requestAccountsData: ui.requestAccountsData,
+        loadingAccountsData: ui.loadingAccountsData,
     }
 }
 

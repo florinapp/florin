@@ -1,11 +1,13 @@
 import {
     REQUEST_ACCOUNTS_DATA,
     RECEIVE_ACCOUNTS_DATA,
+    REQUEST_CATEGORY_SUMMARY,
+    RECEIVE_CATEGORY_SUMMARY,
 } from '../actions'
 
 const initState = {
-    requestAccountsData: false,
-    requestCategories: false
+    loadingAccountsData: false,
+    loadingCategorySummary: false
 }
 
 const ui = (state=initState, action) => {
@@ -13,12 +15,22 @@ const ui = (state=initState, action) => {
         case REQUEST_ACCOUNTS_DATA:
             return {
                 ...state,
-                requestAccountsData: true
+                loadingAccountsData: true
             }
         case RECEIVE_ACCOUNTS_DATA:
             return {
                 ...state,
-                requestAccountsData: false
+                loadingAccountsData: false
+            }
+        case REQUEST_CATEGORY_SUMMARY:
+            return {
+                ...state,
+                loadingCategorySummary: true
+            }
+        case RECEIVE_CATEGORY_SUMMARY:
+            return {
+                ...state,
+                loadingCategorySummary: false
             }
         default:
             return state

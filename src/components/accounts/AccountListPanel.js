@@ -10,17 +10,17 @@ class AccountListPanel extends Component {
     }
 
     render() {
-        let { requestAccountsData, accounts, match, location, currentAccountId } = this.props
+        let { loadingAccountsData, accounts, match, location, currentAccountId } = this.props
         currentAccountId = currentAccountId || match.params.accountId
         return (
             <div className="panel panel-default">
                 <div className="panel-heading">
                     <h3 className="panel-title">Accounts
-                    {requestAccountsData ? <i className="fa fa-spinner fa-spin" style={{ fontSize: "16px" }}></i> : ""}
+                    {loadingAccountsData ? <i className="fa fa-spinner fa-spin" style={{ fontSize: "16px" }}></i> : ""}
                     </h3>
                 </div>
                 <div className="panel-body">
-                    { requestAccountsData ? "" :
+                    {loadingAccountsData ? "" :
                         <ul className="nav nav-pills nav-stacked">
                             <li className={currentAccountId === undefined || currentAccountId === "_all" ? "active" : ""}>
                                 <NavLink to={`/accounts/_all${location.search}`} activeClassName="active">All</NavLink>
