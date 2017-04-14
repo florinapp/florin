@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Table } from 'react-bootstrap'
 import { Doughnut } from 'react-chartjs'
 import accounting from 'accounting'
+import Spinner from '../Spinner'
 
 const SummaryChart = ({data}) => {
     const chartData = data.map((item) => {
@@ -89,7 +90,7 @@ class CategorySummaryPanel extends Component {
             <div className="panel panel-default">
                 <div className="panel-heading">
                     <span className="panel-title">Category Summary ({currentDateRange})</span>
-                    {loadingCategorySummary ? <i className="fa fa-spinner fa-spin" style={{ fontSize: "16px" }}></i> : ""}
+                    {loadingCategorySummary ? <Spinner size="16px" /> : ""}
                     <div className="pull-right">
                         <button type="button" className="btn btn-primary btn-xs"
                                 onClick={()=>fetchCategorySummary("_all", filter)}>

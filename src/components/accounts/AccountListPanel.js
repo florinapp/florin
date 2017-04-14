@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { NavLink } from 'react-router-dom'
 import './AccountListPanel.css'
+import Spinner from '../Spinner'
 
 class AccountListPanel extends Component {
 
@@ -16,7 +17,7 @@ class AccountListPanel extends Component {
             <div className="panel panel-default">
                 <div className="panel-heading">
                     <h3 className="panel-title">Accounts
-                    {loadingAccountsData ? <i className="fa fa-spinner fa-spin" style={{ fontSize: "16px" }}></i> : ""}
+                    {loadingAccountsData ? <Spinner size="16px" /> : ""}
                     </h3>
                 </div>
                 <div className="panel-body">

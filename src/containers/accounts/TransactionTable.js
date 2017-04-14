@@ -3,9 +3,12 @@ import TransactionTable from '../../components/accounts/TransactionTable'
 import { deleteTransaction, flagAsInternalTransaction } from '../../actions'
 
 const mapStateToProps = (state) => {
-    const { transactions } = state.accounts
+    const { accounts, ui } = state
+    const { transactions } = accounts
+    const { loadingTransactions } = ui
     return {
-        transactions
+        transactions,
+        loadingTransactions,
     }
 }
 

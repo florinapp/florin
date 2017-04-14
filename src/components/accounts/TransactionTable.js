@@ -2,6 +2,7 @@ import React from 'react'
 import { Button, ButtonGroup, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import './TransactionTable.css'
 import CategorySelect from '../../containers/accounts/CategorySelect'
+import Spinner from '../Spinner'
 import accounting from 'accounting'
 
 const ButtonWithTooltip = ({buttonStyle, tooltip, onClick, children}) => {
@@ -26,10 +27,11 @@ const TableHeader = ({text, width, sortable}) => {
     )
 }
 
-const TransactionTable = ({ transactions, onDeleteClicked, onFlagAsInternalTransferClicked}) => {
+const TransactionTable = ({ loadingTransactions, transactions, onDeleteClicked, onFlagAsInternalTransferClicked}) => {
 
     return (
         <div className="table-responsive transaction-table">
+            {loadingTransactions ? <div className="text-center"><Spinner size="64" /></div> : 
             <table className="table table-striped table-bordered table-hover">
                 <thead>
                     <tr>
@@ -83,6 +85,7 @@ const TransactionTable = ({ transactions, onDeleteClicked, onFlagAsInternalTrans
                     }
                 </tbody>
             </table>
+            }
         </div>
     )
 }

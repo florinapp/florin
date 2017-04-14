@@ -3,11 +3,14 @@ import {
     RECEIVE_ACCOUNTS_DATA,
     REQUEST_CATEGORY_SUMMARY,
     RECEIVE_CATEGORY_SUMMARY,
+    REQUEST_TRANSACTIONS,
+    RECEIVE_TRANSACTIONS,
 } from '../actions'
 
 const initState = {
     loadingAccountsData: false,
-    loadingCategorySummary: false
+    loadingCategorySummary: false,
+    loadingTransactions: false,
 }
 
 const ui = (state=initState, action) => {
@@ -31,6 +34,16 @@ const ui = (state=initState, action) => {
             return {
                 ...state,
                 loadingCategorySummary: false
+            }
+        case REQUEST_TRANSACTIONS:
+            return {
+                ...state,
+                loadingTransactions: true
+            }
+        case RECEIVE_TRANSACTIONS:
+            return {
+                ...state,
+                loadingTransactions: false
             }
         default:
             return state
