@@ -14,6 +14,18 @@ const ButtonWithTooltip = ({buttonStyle, tooltip, onClick, children}) => {
     )
 }
 
+const TableHeader = ({text, width, sortable}) => {
+    sortable = !!sortable
+    return (
+        <th width={{width}}>
+            {text}&nbsp;
+            {sortable ? <span><a href="#"><i className="glyphicon glyphicon-chevron-up"></i></a>
+                        <a href="#"><i className="glyphicon glyphicon-chevron-down"></i></a>
+                        </span> : "" }
+        </th>
+    )
+}
+
 const TransactionTable = ({ transactions, onDeleteClicked, onFlagAsInternalTransferClicked}) => {
 
     return (
@@ -21,12 +33,12 @@ const TransactionTable = ({ transactions, onDeleteClicked, onFlagAsInternalTrans
             <table className="table table-striped table-bordered table-hover">
                 <thead>
                     <tr>
-                        <th width="5%">Date</th>
-                        <th>Payee</th>
-                        <th>Info</th>
-                        <th width="25%">Category</th>
-                        <th>Amount</th>
-                        <th width="12%"></th>
+                        <TableHeader text="Date" width="8%" sortable />
+                        <TableHeader text="Payee" sortable />
+                        <TableHeader text="Info" sortable />
+                        <TableHeader text="Category" width="25%" sortable />
+                        <TableHeader text="Amount" sortable />
+                        <TableHeader text="" wdith="12%" />
                     </tr>
                 </thead>
                 <tbody>
