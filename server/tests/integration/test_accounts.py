@@ -97,3 +97,10 @@ def test_accounts_upload___csv___tangerine___skip_duplicates(tangerine_credit_ca
     ])
     assert response.status_code == 200
     assert response.json() == {'totalImported': 0, 'totalSkipped': 2}
+
+
+def test_accounts_upload___ofx(tangerine_credit_card_account):
+    response = requests.post('http://localhost:7000/api/accounts/4/upload', files=[
+        ('reports.ofx', ('reports.ofx', open(os.path.join(
+            os.path.dirname(__file__), 'fixtures/reports.ofx'), 'r'), 'application/ofx'))
+    ])

@@ -22,7 +22,7 @@ class Transaction(db.Entity):
     date = Required(datetime.date)
     info = Optional(str)
     payee = Required(str)
-    memo = Required(str)
+    memo = Optional(str)
     amount = Required(Decimal)
     category_id = Required(int)
     tags = Optional(str)
