@@ -1,5 +1,15 @@
 import React, { Component } from 'react'
-import { Modal } from 'react-bootstrap'
+import { Button, Modal, ControlLabel, FormControl, HelpBlock, FormGroup } from 'react-bootstrap'
+
+const FieldGroup = ({id, label, help, ...props}) => {
+    return (
+        <FormGroup controlId={id}>
+            <ControlLabel>{label}</ControlLabel>
+            <FormControl {...props} />
+            {help && <HelpBlock>{help}</HelpBlock>}
+        </FormGroup>
+    )
+}
 
 class NewAccountModal extends Component {
 
@@ -7,6 +17,27 @@ class NewAccountModal extends Component {
         const { show } = this.props
         return (
             <Modal show={show}>
+                <Modal.Header>
+                    <Modal.Title>Add New Account</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <form>
+                        <FieldGroup id="institution-name" type="text" label="Institution Name" placeholder="Institution Name" focus={true}/>
+                        <FieldGroup id="account-name" type="text" label="Account Name" placeholder="Account Name" />
+                        <FormGroup controlId="account-type">
+                            <ControlLabel>Account Type</ControlLabel>
+                            <FormControl componentClass="select" placeholder="Type">
+                                <option value="chequing">Chequing</option>
+                                <option value="savings">Savings</option>
+                                <option value="credit">Credit Card</option>
+                            </FormControl>
+                        </FormGroup>
+                    </form>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button bsStyle="primary">Save</Button>
+                    <Button>Close</Button>
+                </Modal.Footer>
             </Modal>
         )
     }
