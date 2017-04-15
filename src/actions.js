@@ -305,3 +305,18 @@ export const changeTransactionPage = (page) => {
         page
     }
 }
+
+// ----------------------------------------------------------------------------
+// Show/Close New Account Modal Dialog
+export const SHOW_NEW_ACCOUNT_MODAL = 'SHOW_NEW_ACCOUNT_MODAL'
+export const CLOSE_NEW_ACCOUNT_MODAL = 'CLOSE_NEW_ACCOUNT_MODAL'
+export const showNewAccountModal = () => {
+    return {
+        type: SHOW_NEW_ACCOUNT_MODAL
+    }
+}
+export const closeNewAccountModal = () => {
+    return {
+        type: CLOSE_NEW_ACCOUNT_MODAL 
+    }
+}

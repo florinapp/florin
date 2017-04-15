@@ -1,4 +1,4 @@
-import React, { Component}  from 'react'
+import React, { Component }  from 'react'
 import { Modal, Button, Alert } from 'react-bootstrap'
 import Dropzone from 'react-dropzone'
 

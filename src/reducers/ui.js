@@ -5,12 +5,15 @@ import {
     RECEIVE_CATEGORY_SUMMARY,
     REQUEST_TRANSACTIONS,
     RECEIVE_TRANSACTIONS,
+    SHOW_NEW_ACCOUNT_MODAL,
+    CLOSE_NEW_ACCOUNT_MODAL,
 } from '../actions'
 
 const initState = {
     loadingAccountsData: false,
     loadingCategorySummary: false,
     loadingTransactions: false,
+    showNewAccountModal: false,
 }
 
 const ui = (state=initState, action) => {
@@ -44,6 +47,16 @@ const ui = (state=initState, action) => {
             return {
                 ...state,
                 loadingTransactions: false
+            }
+        case SHOW_NEW_ACCOUNT_MODAL:
+            return {
+                ...state,
+                showNewAccountModal: true
+            }
+        case CLOSE_NEW_ACCOUNT_MODAL:
+            return {
+                ...state,
+                showNewAccountModal: false
             }
         default:
             return state

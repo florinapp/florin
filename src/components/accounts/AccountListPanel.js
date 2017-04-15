@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { NavLink } from 'react-router-dom'
+import NewAccountModal from '../../containers/accounts/NewAccountModal'
 import './AccountListPanel.css'
 import Spinner from '../Spinner'
 
@@ -11,14 +12,20 @@ class AccountListPanel extends Component {
     }
 
     render() {
-        let { loadingAccountsData, accounts, match, location, currentAccountId } = this.props
+        let { loadingAccountsData, accounts, match, location, currentAccountId, showNewAccountModal } = this.props
         currentAccountId = currentAccountId || match.params.accountId
         return (
             <div className="panel panel-default">
                 <div className="panel-heading">
-                    <h3 className="panel-title">Accounts
+                    <span className="panel-title">Accounts
                     {loadingAccountsData ? <Spinner size="16px" /> : ""}
-                    </h3>
+                    </span>
+                    <div className="pull-right">
+                        <button type="button" className="btn btn-primary btn-xs" onClick={() => showNewAccountModal()}>
+                            <span className="fa fa-plus-circle"></span>
+                            &nbsp;New
+                        </button>
+                    </div>
                 </div>
                 <div className="panel-body">
                     {loadingAccountsData ? "" :
@@ -39,6 +46,7 @@ class AccountListPanel extends Component {
                         </ul>
                     }
                 </div>
+                <NewAccountModal />
             </div>
         )
     }

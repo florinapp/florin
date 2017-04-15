@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import AccountListPanel from '../../components/accounts/AccountListPanel'
-import { fetchAccountsData } from '../../actions'
+import { fetchAccountsData, showNewAccountModal } from '../../actions'
 import { withRouter } from 'react-router'
 
 const mapStateToProps = ({ ui, accounts, currentAccountId }) => {
@@ -16,6 +16,9 @@ const mapDispatchToProps = (dispatch) => {
     return {
         fetchAccountsData: () => {
             dispatch(fetchAccountsData())
+        },
+        showNewAccountModal: () => {
+            dispatch(showNewAccountModal())
         }
     }
 }
