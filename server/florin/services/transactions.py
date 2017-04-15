@@ -64,11 +64,9 @@ def get(app, account_id, args):
     paginator = Paginator(args)
     sorter = Sorter(Transaction, args, 'date:desc')
 
-    query = Transaction.select()
-    query = filter(query)
-
-    query = sorter(query)
-    query = paginator(query)
+    query = reduce(lambda query, fn: fn(query),
+                   [filter, sorter, paginator],
+                   Transaction.select())
     transactions = query[:]
 
     return {
