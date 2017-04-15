@@ -9,6 +9,7 @@ class TransactionsPanel extends Component {
     constructor(props) {
         super(props)
         this.filter = this.props.filter
+        this.sort = this.props.sort
         this.pagination = this.props.pagination
         this.currentAccountId = this.props.currentAccountId
         this.fetchTransactions = this.props.fetchTransactions
@@ -24,24 +25,29 @@ class TransactionsPanel extends Component {
             return JSON.stringify(this.filter) !== JSON.stringify(nextProps.filter)
         }
 
+        const hasSortChanged = () => {
+            return JSON.stringify(this.sort) !== JSON.stringify(nextProps.sort)
+        }
+
         const hasPaginationChanged = () => {
             return JSON.stringify(this.pagination) !== JSON.stringify(nextProps.pagination)
         }
 
-        if (!hasAccountIdChanged() && !hasFilterChanged() && !hasPaginationChanged()) {
+        if (!hasAccountIdChanged() && !hasFilterChanged() && !hasSortChanged() && !hasPaginationChanged()) {
             return
         }
 
         this.currentAccountId = nextProps.currentAccountId
         this.filter = nextProps.filter
+        this.sort = nextProps.sort
         this.pagination = nextProps.pagination
-        this.fetchTransactions(this.currentAccountId, this.filter, this.pagination)
+        this.fetchTransactions(this.currentAccountId, this.filter, this.sort, this.pagination)
     }
 
     componentWillMount() {
         this.setState({showModal: false})
         // Triggers the initial fetch, subsequent fetches will be initiated by componentWillReceiveProps
-        this.fetchTransactions(this.currentAccountId, this.filter, this.pagination)
+        this.fetchTransactions(this.currentAccountId, this.filter, this.sort, this.pagination)
     }
 
     render() {

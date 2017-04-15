@@ -47,7 +47,7 @@ const handleLocationChange = (state, action) => {
             },
             sort: {
                 orderBy: queryParams.orderBy || "date:desc"
-            }
+            },
         }
     }
     return state

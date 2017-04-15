@@ -6,19 +6,20 @@ import request from 'superagent'  // TODO: use isomorphic-fetch
 
 
 const mapStateToProps = ({accounts}) => {
-    const {currentAccountId, filter, transactions, pagination} = accounts
+    const {currentAccountId, filter, sort, transactions, pagination} = accounts
     return {
         transactions,
         currentAccountId,
         filter,
+        sort,
         pagination
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        fetchTransactions: (accountId, filter, pagination) => {
-            dispatch(fetchTransactions(accountId, filter, pagination))
+        fetchTransactions: (accountId, filter, sort, pagination) => {
+            dispatch(fetchTransactions(accountId, filter, sort, pagination))
         },
         uploadTransactionFile: (accountId, files, callback) => {
             const req = request.post(`http://localhost:9000/api/accounts/${accountId}/upload`)

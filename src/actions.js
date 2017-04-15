@@ -86,15 +86,16 @@ const buildDateRangeRequestParams = ({ currentDateRange }) => {
 
 const buildPaginationRequestParams = ({ currentPage }) => {
     return {
-        page: currentPage
+        page: currentPage || 1
     }
 }
 
-const buildRequestParams = (filter, pagination) => {
+const buildRequestParams = (filter, sort, pagination) => {
     const builders = [
         buildDateRangeRequestParams,
         ({ onlyUncategorized }) => ({ onlyUncategorized }),
         ({ includeInternalTransfer }) => ({ includeInternalTransfer }),
+        ({ orderBy }) => ({ orderBy }),
         buildPaginationRequestParams,
     ]
     let params = builders.reduce((params, fn) => (
@@ -102,8 +103,7 @@ const buildRequestParams = (filter, pagination) => {
             ...params,
             ...fn(params)
         }
-    ), {...filter, ...pagination})
-    console.log(params)
+    ), {...filter, ...sort, ...pagination})
     return params
 }
 
@@ -126,9 +126,11 @@ export const receiveTransactions = (json) => {
         receivedAt: Date.now()
     }
 }
-export const fetchTransactions = (accountId, filter, pagination) => {
+export const fetchTransactions = (accountId, filter, sort, pagination) => {
     let url = `http://localhost:9000/api/accounts/${accountId}`
-    const params = querystring.stringify(buildRequestParams(filter, pagination))
+    const params = querystring.stringify(buildRequestParams(filter, sort, pagination))
+    console.log(pagination)
+    console.log(params)
     url = `${url}?${params}`
     return (dispatch) => {
         // TODO: following doesn't work
