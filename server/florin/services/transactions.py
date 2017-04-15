@@ -58,16 +58,11 @@ class Sorter(object):
 
     def __call__(self, query):
         field_name, direction = self.order_by.split(':')
+        order = self.get_order(field_name, direction)
 
-        if field_name == 'category':
-            # TODO: modify query to order by category's full name: PARENT::SUB
-            return query
-        else:
-            order = self.get_order(field_name, direction)
-
-            if not order:
-                raise exceptions.InvalidRequest('Invalid orderBy param: "{}"'.format(self.order_by))
-            return query.order_by(order)
+        if not order:
+            raise exceptions.InvalidRequest('Invalid orderBy param: "{}"'.format(self.order_by))
+        return query.order_by(order)
 
 
 def get(app, account_id, args):

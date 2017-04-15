@@ -63,7 +63,7 @@ const TransactionTable = ({ loadingTransactions, currentAccountId, filter, sort,
                         <TableHeader currentAccountId={currentAccountId} filterParam={filter} sortParam={sort}
                                      text="Info" sort="info" />
                         <TableHeader currentAccountId={currentAccountId} filterParam={filter} sortParam={sort}
-                                     text="Category" width="25%" sort="category_id" />
+                                     text="Category" width="25%" />
                         <TableHeader currentAccountId={currentAccountId} filterParam={filter} sortParam={sort}
                                      text="Amount" sort="amount" />
                         <TableHeader currentAccountId={currentAccountId} filterParam={filter} sortParam={sort}
