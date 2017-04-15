@@ -17,7 +17,7 @@ const ButtonWithTooltip = ({buttonStyle, tooltip, onClick, children}) => {
     )
 }
 
-const TableHeader = ({currentAccountId, filter, text, width, sort}) => {
+const TableHeader = ({currentAccountId, filterParam, sortParam, text, width, sort}) => {
     if (!sort) {
         return (
             <th width={{ width }}>
@@ -26,38 +26,48 @@ const TableHeader = ({currentAccountId, filter, text, width, sort}) => {
         )
     }
 
-    const [orderBy, direction] = (sort.orderBy || "").split(":")
+    const [orderBy, direction] = (sortParam.orderBy || "").split(":")
     const isActiveOrderByField = (orderBy === sort)
     return (
         <th width={{width}}>
             {text}&nbsp;
             <span>
-                <NavLink to={`/accounts/${currentAccountId}?${q(filter, {orderBy: `${sort}:asc`})}`}
-                         className={isActiveOrderByField && direction === "asc" ? "active" : ""}>
-                    <i className="glyphicon glyphicon-chevron-up"></i>
+                <NavLink to={`/accounts/${currentAccountId}?${q(filterParam, {orderBy: `${sort}:asc`})}`}
+                         className={(isActiveOrderByField && direction === "asc") ? "active" : ""}>
+                    <i className={(isActiveOrderByField && direction === "asc")
+                                   ? "glyphicon glyphicon-chevron-up active-sort" : "glyphicon glyphicon-chevron-up inactive-sort"}
+                    />
                 </NavLink>
-                <NavLink to={`/accounts/${currentAccountId}?${q(filter, {orderBy: `${sort}:desc`})}`}
-                         className={isActiveOrderByField && direction === "desc" ? "active": ""}>
-                    <i className="glyphicon glyphicon-chevron-down"></i>
+                <NavLink to={`/accounts/${currentAccountId}?${q(filterParam, {orderBy: `${sort}:desc`})}`}
+                         className={(isActiveOrderByField && direction === "desc") ? "active" : ""}>
+                    <i className={(isActiveOrderByField && direction === "desc")
+                                   ? "glyphicon glyphicon-chevron-down active-sort" : "glyphicon glyphicon-chevron-down inactive-sort"}
+                    />
                 </NavLink>
             </span>
         </th>
     )
 }
 
-const TransactionTable = ({ loadingTransactions, currentAccountId, filter, transactions, onDeleteClicked, onFlagAsInternalTransferClicked }) => {
+const TransactionTable = ({ loadingTransactions, currentAccountId, filter, sort, transactions, onDeleteClicked, onFlagAsInternalTransferClicked }) => {
     return (
         <div className="table-responsive transaction-table">
             {loadingTransactions ? <div className="text-center"><Spinner size="64px" /></div> : 
             <table className="table table-striped table-bordered table-hover">
                 <thead>
                     <tr>
-                        <TableHeader currentAccountId={currentAccountId} filter={filter} text="Date" width="8%" sort="date"/>
-                        <TableHeader currentAccountId={currentAccountId} filter={filter} text="Payee" sort="payee" />
-                        <TableHeader currentAccountId={currentAccountId} filter={filter} text="Info" sort="info" />
-                        <TableHeader currentAccountId={currentAccountId} filter={filter} text="Category" width="25%" sort="category" />
-                        <TableHeader currentAccountId={currentAccountId} filter={filter} text="Amount" sort="amount" />
-                        <TableHeader currentAccountId={currentAccountId} filter={filter} text="" wdith="12%" />
+                        <TableHeader currentAccountId={currentAccountId} filterParam={filter} sortParam={sort}
+                                     text="Date" width="8%" sort="date" />
+                        <TableHeader currentAccountId={currentAccountId} filterParam={filter} sortParam={sort}
+                                     text="Payee" sort="payee" />
+                        <TableHeader currentAccountId={currentAccountId} filterParam={filter} sortParam={sort}
+                                     text="Info" sort="info" />
+                        <TableHeader currentAccountId={currentAccountId} filterParam={filter} sortParam={sort}
+                                     text="Category" width="25%" sort="category" />
+                        <TableHeader currentAccountId={currentAccountId} filterParam={filter} sortParam={sort}
+                                     text="Amount" sort="amount" />
+                        <TableHeader currentAccountId={currentAccountId} filterParam={filter} sortParam={sort}
+                                     text="" wdith="12%" />
                     </tr>
                 </thead>
                 <tbody>

@@ -19,6 +19,9 @@ const initState = {
         includeInternalTransfer: false,
         onlyUncategorized: false
     },
+    sort: {
+        orderBy: "date:desc"
+    },
     pagination: {
         totalPages: null,
         currentPage: 1
@@ -41,6 +44,9 @@ const handleLocationChange = (state, action) => {
                 currentDateRange: queryParams.currentDateRange || 'thisMonth',
                 onlyUncategorized: queryParams.onlyUncategorized || false,
                 includeInternalTransfer: queryParams.includeInternalTransfer || false
+            },
+            sort: {
+                orderBy: queryParams.orderBy || "date:desc"
             }
         }
     }

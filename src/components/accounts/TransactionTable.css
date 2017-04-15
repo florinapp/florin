@@ -22,3 +22,11 @@ span.debit {
 span.credit {
     color: green;
 }
+
+i.active-sort {
+    color: red;
+}
+
+i.inactive-sort {
+    color: grey;
+}
