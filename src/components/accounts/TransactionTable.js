@@ -77,7 +77,7 @@ const TransactionTable = ({ loadingTransactions, currentAccountId, filter, sort,
                             transactions.map((transaction) => (
                                 <tr key={transaction.id}>
                                     <td className="transaction-table-cell">
-                                        {transaction.date}
+                                        <strong>{transaction.date}</strong>
                                     </td>
                                     <td className="transaction-table-cell transaction-table-cell-align-left">
                                         {transaction.payee}
