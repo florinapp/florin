@@ -8,7 +8,6 @@ from pony.orm import commit
 
 class Paginator(object):
     def __init__(self, args):
-        self._args = args
         self.per_page = int(args.get('perPage', '10'))
         self.page = int(args.get('page', '1'))
         self.total = None
@@ -22,7 +21,6 @@ class Paginator(object):
 
 class TransactionFilter(object):
     def __init__(self, account, args):
-        self._args = args
         self.start_date, self.end_date = get_date_range_params(args)
         self.include_internal_transfer = asbool(args.get('includeInternalTransfer', 'false'))
         self.only_uncategorized = asbool(args.get('onlyUncategorized', 'false'))
@@ -43,17 +41,33 @@ class TransactionFilter(object):
         return query
 
 
+class Sorter(object):
+    def __init__(self, clazz, args, default_order):
+        self.clazz = clazz
+        self.order_by = args.get('orderBy', default_order)
+
+    def __call__(self, query):
+        field_name, direction = self.order_by.split(':')
+        if direction == 'asc':
+            order = getattr(self.clazz, field_name)
+        elif direction == 'desc':
+            order = getattr(self.clazz, field_name).desc()
+        query = query.order_by(order)
+        return query
+
+
 def get(app, account_id, args):
+    Transaction = app.db.Transaction
+
     account = accounts.get_by_id(app, account_id)
     filter = TransactionFilter(account, args)
     paginator = Paginator(args)
-
-    Transaction = app.db.Transaction
+    sorter = Sorter(Transaction, args, 'date:desc')
 
     query = Transaction.select()
     query = filter(query)
 
-    query = query.order_by(Transaction.date.desc())
+    query = sorter(query)
     query = paginator(query)
     transactions = query[:]
 
