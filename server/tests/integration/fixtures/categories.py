@@ -19,3 +19,15 @@ def gasoline():
 @db_fixture(db.Category)
 def insurance():
     return dict(id=3, name='Insurance', parent_id=1, type='expense')
+
+
+@pytest.fixture
+@db_fixture(db.Category)
+def mortgage():
+    return dict(id=4, name='Mortgagge', parent_id=None, type='expense')
+
+
+@pytest.fixture
+@db_fixture(db.Category)
+def salary():
+    return dict(id=4, name='Salary', parent_id=None, type='income')
