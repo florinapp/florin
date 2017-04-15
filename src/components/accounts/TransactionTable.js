@@ -66,7 +66,7 @@ const TransactionTable = ({ loadingTransactions, transactions, onDeleteClicked, 
                                             {accounting.formatMoney(transaction.amount)}
                                         </span>
                                     </td>
-                                    <td className="transaction-table-cell transaction-table-cell-align-left">
+                                    <td className="transaction-table-cell transaction-table-cell-align-center">
                                         <ButtonGroup>
                                             <ButtonWithTooltip buttonStyle="primary" tooltip="Delete the transaction"
                                                                onClick={() => { onDeleteClicked(transaction.id) }}>
