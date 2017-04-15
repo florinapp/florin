@@ -15,8 +15,7 @@ class Paginator(object):
     def __call__(self, query):
         total = query.count()
         self.total_pages = int(math.ceil(1.0 * total / self.per_page))
-        query = query.limit(self.per_page, offset=(self.page - 1) * self.per_page)
-        return query
+        return query.limit(self.per_page, offset=(self.page - 1) * self.per_page)
 
 
 class TransactionFilter(object):
@@ -46,14 +45,25 @@ class Sorter(object):
         self.clazz = clazz
         self.order_by = args.get('orderBy', default_order)
 
+    def get_order(self, field_name, direction):
+        order = None
+        if direction == 'asc':
+            order = getattr(self.clazz, field_name, None)
+        elif direction == 'desc':
+            field = getattr(self.clazz, field_name, None)
+            if field:
+                order = field.desc()
+
+        return order
+
     def __call__(self, query):
         field_name, direction = self.order_by.split(':')
-        if direction == 'asc':
-            order = getattr(self.clazz, field_name)
-        elif direction == 'desc':
-            order = getattr(self.clazz, field_name).desc()
-        query = query.order_by(order)
-        return query
+
+        order = self.get_order(field_name, direction)
+
+        if not order:
+            raise exceptions.InvalidRequest('Invalid orderBy param: "{}"'.format(self.order_by))
+        return query.order_by(order)
 
 
 def get(app, account_id, args):
