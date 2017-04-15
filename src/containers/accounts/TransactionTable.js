@@ -4,11 +4,13 @@ import { deleteTransaction, flagAsInternalTransaction } from '../../actions'
 
 const mapStateToProps = (state) => {
     const { accounts, ui } = state
-    const { transactions } = accounts
+    const { transactions, currentAccountId, filter } = accounts
     const { loadingTransactions } = ui
     return {
         transactions,
         loadingTransactions,
+        currentAccountId,
+        filter,
     }
 }
 

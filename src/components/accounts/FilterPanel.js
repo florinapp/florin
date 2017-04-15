@@ -1,5 +1,6 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
+import q from '../../q'
 
 const toBool = (val) => {
     if (typeof(val) === 'boolean') {
@@ -9,14 +10,6 @@ const toBool = (val) => {
         return true
     }
     return false
-}
-
-const q = (filter, replace) => {
-    let params = {
-        ...filter,
-        ...replace
-    }
-    return Object.keys(params).map((k) => `${encodeURIComponent(k)}=${encodeURIComponent(params[k])}`).join('&')
 }
 
 const DateRangeFilterPanel = ({ currentAccountId, filter }) => {

@@ -1,9 +1,11 @@
 import React from 'react'
 import { Button, ButtonGroup, OverlayTrigger, Tooltip } from 'react-bootstrap'
-import './TransactionTable.css'
+import { NavLink } from 'react-router-dom'
 import CategorySelect from '../../containers/accounts/CategorySelect'
 import Spinner from '../Spinner'
 import accounting from 'accounting'
+import q from '../../q'
+import './TransactionTable.css'
 
 const ButtonWithTooltip = ({buttonStyle, tooltip, onClick, children}) => {
     return (
@@ -15,32 +17,36 @@ const ButtonWithTooltip = ({buttonStyle, tooltip, onClick, children}) => {
     )
 }
 
-const TableHeader = ({text, width, sortable}) => {
-    sortable = !!sortable
+const TableHeader = ({currentAccountId, filter, text, width, sort}) => {
     return (
         <th width={{width}}>
             {text}&nbsp;
-            {sortable ? <span><a href="#"><i className="glyphicon glyphicon-chevron-up"></i></a>
-                        <a href="#"><i className="glyphicon glyphicon-chevron-down"></i></a>
-                        </span> : "" }
+            {sort ? (
+                <span>
+                    <NavLink to={`/accounts/${currentAccountId}?${q(filter, {orderBy: `${sort}:asc`})}`}>
+                        <i className="glyphicon glyphicon-chevron-up"></i>
+                    </NavLink>
+                    <NavLink to={`/accounts/${currentAccountId}?${q(filter, {orderBy: `${sort}:desc`})}`}>
+                        <i className="glyphicon glyphicon-chevron-down"></i>
+                    </NavLink>
+                </span>) : "" }
         </th>
     )
 }
 
-const TransactionTable = ({ loadingTransactions, transactions, onDeleteClicked, onFlagAsInternalTransferClicked}) => {
-
+const TransactionTable = ({ loadingTransactions, currentAccountId, filter, transactions, onDeleteClicked, onFlagAsInternalTransferClicked }) => {
     return (
         <div className="table-responsive transaction-table">
-            {loadingTransactions ? <div className="text-center"><Spinner size="64" /></div> : 
+            {loadingTransactions ? <div className="text-center"><Spinner size="64px" /></div> : 
             <table className="table table-striped table-bordered table-hover">
                 <thead>
                     <tr>
-                        <TableHeader text="Date" width="8%" sortable />
-                        <TableHeader text="Payee" sortable />
-                        <TableHeader text="Info" sortable />
-                        <TableHeader text="Category" width="25%" sortable />
-                        <TableHeader text="Amount" sortable />
-                        <TableHeader text="" wdith="12%" />
+                        <TableHeader currentAccountId={currentAccountId} filter={filter} text="Date" width="8%" sort="date"/>
+                        <TableHeader currentAccountId={currentAccountId} filter={filter} text="Payee" sort="payee" />
+                        <TableHeader currentAccountId={currentAccountId} filter={filter} text="Info" sort="info" />
+                        <TableHeader currentAccountId={currentAccountId} filter={filter} text="Category" width="25%" sort="category" />
+                        <TableHeader currentAccountId={currentAccountId} filter={filter} text="Amount" sort="amount" />
+                        <TableHeader currentAccountId={currentAccountId} filter={filter} text="" wdith="12%" />
                     </tr>
                 </thead>
                 <tbody>
