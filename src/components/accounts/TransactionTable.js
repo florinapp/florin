@@ -18,18 +18,29 @@ const ButtonWithTooltip = ({buttonStyle, tooltip, onClick, children}) => {
 }
 
 const TableHeader = ({currentAccountId, filter, text, width, sort}) => {
+    if (!sort) {
+        return (
+            <th width={{ width }}>
+                {text}&nbsp;
+            </th>
+        )
+    }
+
+    const [orderBy, direction] = (sort.orderBy || "").split(":")
+    const isActiveOrderByField = (orderBy === sort)
     return (
         <th width={{width}}>
             {text}&nbsp;
-            {sort ? (
-                <span>
-                    <NavLink to={`/accounts/${currentAccountId}?${q(filter, {orderBy: `${sort}:asc`})}`}>
-                        <i className="glyphicon glyphicon-chevron-up"></i>
-                    </NavLink>
-                    <NavLink to={`/accounts/${currentAccountId}?${q(filter, {orderBy: `${sort}:desc`})}`}>
-                        <i className="glyphicon glyphicon-chevron-down"></i>
-                    </NavLink>
-                </span>) : "" }
+            <span>
+                <NavLink to={`/accounts/${currentAccountId}?${q(filter, {orderBy: `${sort}:asc`})}`}
+                         className={isActiveOrderByField && direction === "asc" ? "active" : ""}>
+                    <i className="glyphicon glyphicon-chevron-up"></i>
+                </NavLink>
+                <NavLink to={`/accounts/${currentAccountId}?${q(filter, {orderBy: `${sort}:desc`})}`}
+                         className={isActiveOrderByField && direction === "desc" ? "active": ""}>
+                    <i className="glyphicon glyphicon-chevron-down"></i>
+                </NavLink>
+            </span>
         </th>
     )
 }
