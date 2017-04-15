@@ -50,30 +50,33 @@ const TableHeader = ({currentAccountId, filterParam, sortParam, text, width, sor
 }
 
 const TransactionTable = ({ loadingTransactions, currentAccountId, filter, sort, transactions, onDeleteClicked, onFlagAsInternalTransferClicked }) => {
+    const tableHeaders = [
+        <TableHeader key="1" currentAccountId={currentAccountId} filterParam={filter} sortParam={sort}
+            text="Date" width="8%" sort="date" />,
+        <TableHeader key="2" currentAccountId={currentAccountId} filterParam={filter} sortParam={sort}
+            text="Payee" sort="payee" />,
+        <TableHeader key="3" currentAccountId={currentAccountId} filterParam={filter} sortParam={sort}
+            text="Info" sort="info" />,
+        <TableHeader key="4" currentAccountId={currentAccountId} filterParam={filter} sortParam={sort}
+            text="Category" width="20%" />,
+        <TableHeader key="5" currentAccountId={currentAccountId} filterParam={filter} sortParam={sort}
+            text="Amount" sort="amount" />,
+        <TableHeader key="6" currentAccountId={currentAccountId} filterParam={filter} sortParam={sort}
+            text="" wdith="12%" />,
+    ]
     return (
         <div className="table-responsive transaction-table">
             {loadingTransactions ? <div className="text-center"><Spinner size="64px" /></div> : 
             <table className="table table-striped table-bordered table-hover">
                 <thead>
                     <tr>
-                        <TableHeader currentAccountId={currentAccountId} filterParam={filter} sortParam={sort}
-                                     text="Date" width="8%" sort="date" />
-                        <TableHeader currentAccountId={currentAccountId} filterParam={filter} sortParam={sort}
-                                     text="Payee" sort="payee" />
-                        <TableHeader currentAccountId={currentAccountId} filterParam={filter} sortParam={sort}
-                                     text="Info" sort="info" />
-                        <TableHeader currentAccountId={currentAccountId} filterParam={filter} sortParam={sort}
-                                     text="Category" width="25%" />
-                        <TableHeader currentAccountId={currentAccountId} filterParam={filter} sortParam={sort}
-                                     text="Amount" sort="amount" />
-                        <TableHeader currentAccountId={currentAccountId} filterParam={filter} sortParam={sort}
-                                     text="" wdith="12%" />
+                        {tableHeaders.map((t) => t)}
                     </tr>
                 </thead>
                 <tbody>
                     {
                         (transactions === undefined || transactions.length === 0) ?
-                            <tr><td colSpan="6">No transactions</td></tr> :
+                            <tr><td colSpan={tableHeaders.length}>No transactions</td></tr> :
                             transactions.map((transaction) => (
                                 <tr key={transaction.id}>
                                     <td className="transaction-table-cell">

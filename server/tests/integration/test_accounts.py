@@ -1,6 +1,5 @@
 import datetime
 import os
-import pytest
 import requests
 from decimal import Decimal
 from florin.database import db
@@ -49,7 +48,6 @@ def test_accounts_upload___file_extension_not_supported(tangerine_credit_card_ac
 def assert_transaction(transaction, expected_dict):
     for key, value in expected_dict.items():
         assert getattr(transaction, key) == value
-
 
 
 def test_accounts_upload___csv___tangerine(tangerine_credit_card_account):
@@ -104,3 +102,8 @@ def test_accounts_upload___ofx(tangerine_credit_card_account):
         ('reports.ofx', ('reports.ofx', open(os.path.join(
             os.path.dirname(__file__), 'fixtures/reports.ofx'), 'r'), 'application/ofx'))
     ])
+    assert response.status_code == 200
+
+    response = requests.get('http://localhost:7000/api/accounts/4')
+    assert response.status_code == 200
+    assert 6 == len(response.json()['transactions'])
