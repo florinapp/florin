@@ -14,7 +14,7 @@ const FieldGroup = ({id, label, help, ...props}) => {
 class NewAccountModal extends Component {
 
     render() {
-        const { show } = this.props
+        const { show, saveNewAccount, closeDialog } = this.props
         return (
             <Modal show={show}>
                 <Modal.Header>
@@ -22,7 +22,7 @@ class NewAccountModal extends Component {
                 </Modal.Header>
                 <Modal.Body>
                     <form>
-                        <FieldGroup id="institution-name" type="text" label="Institution Name" placeholder="Institution Name" focus={true}/>
+                        <FieldGroup id="institution-name" type="text" label="Institution Name" placeholder="Institution Name" autoFocus />
                         <FieldGroup id="account-name" type="text" label="Account Name" placeholder="Account Name" />
                         <FormGroup controlId="account-type">
                             <ControlLabel>Account Type</ControlLabel>
@@ -35,8 +35,8 @@ class NewAccountModal extends Component {
                     </form>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button bsStyle="primary">Save</Button>
-                    <Button>Close</Button>
+                    <Button bsStyle="primary" onClick={() => saveNewAccount() }>Save</Button>
+                    <Button onClick={() => closeDialog() }>Close</Button>
                 </Modal.Footer>
             </Modal>
         )
