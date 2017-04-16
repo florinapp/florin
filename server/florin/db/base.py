@@ -8,26 +8,25 @@ from sqlalchemy import Column, Integer, String, ForeignKey, Date, Float, Unicode
 Base = declarative_base()
 
 
-class ExportableMixin(object):
-    __export__ = []  # define
+class ToDictMixin(object):
+    __export__ = []  # subclass must define
 
     def to_dict(self):
+        assert hasattr(self, '__export__')
         return {
             k: self.__dict__[k] for k in self.__export__
         }
 
 
-class Account(Base, ExportableMixin):
+class Account(Base, ToDictMixin):
     __tablename__ = 'accounts'
-
     __export__ = ['id', 'institution', 'name', 'type']
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     institution = Column(String(64), nullable=False)
     name = Column(String(64), nullable=False)
     type = Column(String(32), nullable=False)
-    # TODO: migrate
-    # signature = Column(String(64), nullable=True)
+    signature = Column(String(64), nullable=True)
 
 
 class AccountBalance(Base):
