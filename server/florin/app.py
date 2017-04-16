@@ -28,12 +28,14 @@ def handle_exceptions(fn):
     return wrapper
 
 
-def jsonify(fn):
-    @functools.wraps(fn)
-    def wrapper(*args, **kwargs):
-        response = fn(*args, **kwargs)
-        return flask.jsonify(response)
-    return wrapper
+def jsonify(success_status_code=200):
+    def decorator(fn):
+        @functools.wraps(fn)
+        def wrapper(*args, **kwargs):
+            response = fn(*args, **kwargs)
+            return flask.jsonify(response), success_status_code
+        return wrapper
+    return decorator
 
 
 class MyJSONEncoder(JSONEncoder):
@@ -60,29 +62,39 @@ app = create_app()
 
 
 @app.route('/api/accounts', methods=['GET'])
-@jsonify
+@jsonify()
+@handle_exceptions
 @db_session
 def get_accounts():
     return accounts.get(app)
 
 
+@app.route('/api/accounts', methods=['POST'])
+@jsonify(success_status_code=201)
+@handle_exceptions
+@db_session
+def post_accounts():
+    return accounts.post(app, flask.request.json)
+
+
 @app.route('/api/categories', methods=['GET'])
-@jsonify
+@jsonify()
+@handle_exceptions
 @db_session
 def get_categories():
     return categories.get(app)
 
 
 @app.route('/api/accounts/<account_id>/upload', methods=['POST'])
+@jsonify()
 @handle_exceptions
-@jsonify
 @db_session
 def upload_transactions(account_id):
     return accounts.upload(app, account_id, flask.request.files)
 
 
 @app.route('/api/accounts/<account_id>', methods=['GET'])
-@jsonify
+@jsonify()
 @handle_exceptions
 @db_session
 def get_transactions(account_id):
@@ -90,7 +102,7 @@ def get_transactions(account_id):
 
 
 @app.route('/api/accounts/<account_id>/categorySummary', methods=['GET'])
-@jsonify
+@jsonify()
 @handle_exceptions
 @db_session
 def get_account_summary(account_id):
@@ -98,7 +110,7 @@ def get_account_summary(account_id):
 
 
 @app.route('/api/transactions/<transaction_id>', methods=['POST'])
-@jsonify
+@jsonify()
 @handle_exceptions
 @db_session
 def update_transaction(transaction_id):
@@ -106,7 +118,7 @@ def update_transaction(transaction_id):
 
 
 @app.route('/api/transactions/<transaction_id>', methods=['DELETE'])
-@jsonify
+@jsonify()
 @handle_exceptions
 @db_session
 def delete_transaction(transaction_id):

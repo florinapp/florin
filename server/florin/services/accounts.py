@@ -1,3 +1,4 @@
+import uuid
 import operator
 from pony.orm import commit, db_session, TransactionIntegrityError, CacheIndexError
 from florin.importer import get_importer
@@ -105,6 +106,16 @@ def get(app):
     return {
         'accounts': [account.to_dict() for account in accounts]
     }
+
+
+def post(app, request_json):
+    try:
+        request_json['account']['id'] = uuid.uuid4().hex
+        account = app.db.Account(**request_json['account'])
+    except IndexError:
+        raise InvalidRequest()
+    else:
+        return {'account': account.to_dict()}
 
 
 def upload(app, account_id, files):

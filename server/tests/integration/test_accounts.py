@@ -1,3 +1,4 @@
+import json
 import datetime
 import os
 import requests
@@ -107,3 +108,20 @@ def test_accounts_upload___ofx(tangerine_credit_card_account):
     response = requests.get('http://localhost:7000/api/accounts/4')
     assert response.status_code == 200
     assert 6 == len(response.json()['transactions'])
+
+
+def test_accounts_new():
+    response = requests.post('http://localhost:7000/api/accounts',
+                             headers={'content-type': 'application/json'},
+                             data=json.dumps({
+                                 'account': {
+                                     'institution': 'BAH',
+                                     'name': 'DOH',
+                                     'type': 'chequing',
+                                 }
+                             }))
+    assert response.status_code == 201
+    response_json = response.json()
+    assert response_json['account']['institution'] == 'BAH'
+    assert response_json['account']['name'] == 'DOH'
+    assert response_json['account']['type'] == 'chequing'
