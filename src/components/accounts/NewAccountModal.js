@@ -20,6 +20,11 @@ class NewAccountModal extends Component {
         })
     }
 
+    resetInputFields() {
+        this.institutionNameElement.value = ""
+        this.accountNameElement = ""
+    }
+
     componentWillMount() {
         this.resetValidationState()
     }
@@ -60,10 +65,10 @@ class NewAccountModal extends Component {
                 </Modal.Body>
                 <Modal.Footer>
                     <Button bsStyle="primary" onClick={() => {
-                        const institutionName = this.institutionNameElement.value
-                        const accountName = this.accountNameElement.value
-                        const accountType = this.accountTypeNode.value
-                        const newAccount = {institutionName, accountName, accountType}
+                        const institution = this.institutionNameElement.value
+                        const name = this.accountNameElement.value
+                        const type = this.accountTypeNode.value
+                        const newAccount = {institution, name, type}
                         const validationResult = validate(newAccount)
                         this.setState({
                             ...this.state,
@@ -71,6 +76,8 @@ class NewAccountModal extends Component {
                         })
                         if (validationResult.isValid) {
                             saveNewAccount(newAccount)
+                            this.resetValidationState()
+                            this.resetInputFields()
                         }
                     }}>Save</Button>
                     <Button onClick={
