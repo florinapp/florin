@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import NewAccountModal from '../../components/accounts/NewAccountModal'
-import { closeNewAccountModal } from '../../actions'
+import { closeNewAccountModal, createAccount } from '../../actions'
 
 const mapStateToProps = ({ ui }) => {
     return {
@@ -10,8 +10,8 @@ const mapStateToProps = ({ ui }) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        saveNewAccount: ({institutionName, accountName, accountType}) => {
-            console.log('Save clicked')
+        saveNewAccount: (account) => {
+            dispatch(createAccount(account))
         },
         validate: ({institutionName, accountName, accountType}) => {
             let result = {

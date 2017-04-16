@@ -320,3 +320,35 @@ export const closeNewAccountModal = () => {
         type: CLOSE_NEW_ACCOUNT_MODAL 
     }
 }
+
+// ----------------------------------------------------------------------------
+// Create New Account
+export const REQUEST_CREATE_ACCOUNT = 'REQUEST_CREATE_ACCOUNT'
+export const requestCreateAccount = () => {
+    return {
+        type: REQUEST_CREATE_ACCOUNT 
+    }
+}
+export const CREATE_ACCOUNT_SUCCEEDED = 'CREATE_ACCOUNT_SUCCEEDED'
+export const createAccountSucceeded = (json) => {
+    return {
+        type: CREATE_ACCOUNT_SUCCEEDED,
+        account: json.account,
+        receivedAt: Date.now(),
+    }
+}
+export const createAccount = (account) => {
+    let headers = new Headers()
+    headers.set("Content-Type", "application/json")
+    const options = {
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify(account)
+    }
+    return (dispatch) => {
+        dispatch(requestCreateAccount())
+        return fetch(`http://localhost:9000/api/accounts`, options)
+            .then(response => response.json())
+            .then(json => dispatch(createAccountSucceeded(json)))
+    }
+}
