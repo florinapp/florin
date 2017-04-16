@@ -125,3 +125,6 @@ def test_accounts_new():
     assert response_json['account']['institution'] == 'BAH'
     assert response_json['account']['name'] == 'DOH'
     assert response_json['account']['type'] == 'chequing'
+    with db_session:
+        balances = db.AccountBalance.select()[:]
+    assert 1 == len(balances)
