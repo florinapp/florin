@@ -16,6 +16,15 @@ class Account(db.Entity):
     type = Required(str)
 
 
+class AccountBalance(db.Entity):
+    _table_ = 'account_balances'
+
+    id = PrimaryKey(int)
+    account_id = Required(str)
+    date = Required(datetime.date)
+    balance = Required(Decimal)
+
+
 class Transaction(db.Entity):
     _table_ = 'transactions'
 
