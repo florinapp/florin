@@ -111,9 +111,12 @@ def get(app):
 
 
 def post(app, request_json):
+    session = app.session
     try:
         request_json['account']['id'] = uuid.uuid4().hex
-        account = app.db.Account(**request_json['account'])
+        account = Account(**request_json['account'])
+        session.add(account)
+        commit()
     except IndexError:
         raise InvalidRequest()
     else:

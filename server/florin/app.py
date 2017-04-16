@@ -69,12 +69,12 @@ def get_accounts():
     return accounts.get(app)
 
 
-# @app.route('/api/accounts', methods=['POST'])
-# @jsonify(success_status_code=201)
-# @handle_exceptions
-# @db_session
-# def post_accounts():
-#     return accounts.post(app, flask.request.json)
+@app.route('/api/accounts', methods=['POST'])
+@jsonify(success_status_code=201)
+@handle_exceptions
+@db_session
+def post_accounts():
+    return accounts.post(app, flask.request.json)
 
 
 # @app.route('/api/categories', methods=['GET'])
@@ -85,12 +85,12 @@ def get_accounts():
 #     return categories.get(app)
 
 
-# @app.route('/api/accounts/<account_id>/upload', methods=['POST'])
-# @jsonify()
-# @handle_exceptions
-# @db_session
-# def upload_transactions(account_id):
-#     return accounts.upload(app, account_id, flask.request.files)
+@app.route('/api/accounts/<account_id>/upload', methods=['POST'])
+@jsonify()
+@handle_exceptions
+@db_session
+def upload_transactions(account_id):
+    return accounts.upload(app, account_id, flask.request.files)
 
 
 # @app.route('/api/accounts/<account_id>', methods=['GET'])

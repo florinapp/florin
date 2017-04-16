@@ -110,21 +110,21 @@ def test_accounts_upload___file_extension_not_supported(tangerine_credit_card_ac
 #     assert 6 == len(response.json()['transactions'])
 
 
-# def test_accounts_new():
-#     response = requests.post('http://localhost:7000/api/accounts',
-#                              headers={'content-type': 'application/json'},
-#                              data=json.dumps({
-#                                  'account': {
-#                                      'institution': 'BAH',
-#                                      'name': 'DOH',
-#                                      'type': 'chequing',
-#                                  }
-#                              }))
-#     assert response.status_code == 201
-#     response_json = response.json()
-#     assert response_json['account']['institution'] == 'BAH'
-#     assert response_json['account']['name'] == 'DOH'
-#     assert response_json['account']['type'] == 'chequing'
-#     with db_session:
-#         balances = db.AccountBalance.select()[:]
-#     assert 1 == len(balances)
+def test_accounts_new():
+    response = requests.post('http://localhost:7000/api/accounts',
+                             headers={'content-type': 'application/json'},
+                             data=json.dumps({
+                                 'account': {
+                                     'institution': 'BAH',
+                                     'name': 'DOH',
+                                     'type': 'chequing',
+                                 }
+                             }))
+    assert response.status_code == 201
+    response_json = response.json()
+    assert response_json['account']['institution'] == 'BAH'
+    assert response_json['account']['name'] == 'DOH'
+    assert response_json['account']['type'] == 'chequing'
+    # with db_session:
+    #     balances = db.AccountBalance.select()[:]
+    # assert 1 == len(balances)
