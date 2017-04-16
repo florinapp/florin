@@ -1,6 +1,6 @@
+import json
 import datetime
 import os
-import pytest
 import requests
 from decimal import Decimal
 from florin.database import db
@@ -51,7 +51,6 @@ def assert_transaction(transaction, expected_dict):
         assert getattr(transaction, key) == value
 
 
-
 def test_accounts_upload___csv___tangerine(tangerine_credit_card_account):
     response = requests.post('http://localhost:7000/api/accounts/4/upload', files=[
         ('tangerine.csv', ('tangerine.csv', open(os.path.join(
@@ -97,3 +96,35 @@ def test_accounts_upload___csv___tangerine___skip_duplicates(tangerine_credit_ca
     ])
     assert response.status_code == 200
     assert response.json() == {'totalImported': 0, 'totalSkipped': 2}
+
+
+def test_accounts_upload___ofx(tangerine_credit_card_account):
+    response = requests.post('http://localhost:7000/api/accounts/4/upload', files=[
+        ('reports.ofx', ('reports.ofx', open(os.path.join(
+            os.path.dirname(__file__), 'fixtures/reports.ofx'), 'r'), 'application/ofx'))
+    ])
+    assert response.status_code == 200
+
+    response = requests.get('http://localhost:7000/api/accounts/4')
+    assert response.status_code == 200
+    assert 6 == len(response.json()['transactions'])
+
+
+def test_accounts_new():
+    response = requests.post('http://localhost:7000/api/accounts',
+                             headers={'content-type': 'application/json'},
+                             data=json.dumps({
+                                 'account': {
+                                     'institution': 'BAH',
+                                     'name': 'DOH',
+                                     'type': 'chequing',
+                                 }
+                             }))
+    assert response.status_code == 201
+    response_json = response.json()
+    assert response_json['account']['institution'] == 'BAH'
+    assert response_json['account']['name'] == 'DOH'
+    assert response_json['account']['type'] == 'chequing'
+    with db_session:
+        balances = db.AccountBalance.select()[:]
+    assert 1 == len(balances)

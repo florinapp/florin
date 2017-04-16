@@ -5,3 +5,4 @@ invoke==0.15.0
 asbool==0.1.1
 flask-sqlalchemy==2.2
 sqlalchemy==1.1.9
+ofxparse==0.16

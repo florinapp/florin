@@ -1,3 +1,4 @@
+import uuid
 import operator
 from pony.orm import commit, db_session, TransactionIntegrityError, CacheIndexError
 from florin.importer import get_importer
@@ -6,6 +7,7 @@ from collections import defaultdict
 from .exceptions import ResourceNotFound, InvalidRequest
 from .categories import INTERNAL_TRANSFER_CATEGORY_ID, TBD_CATEGORY_ID
 from . import params
+from florin.db import Account
 
 
 ALL_ACCOUNTS = object()
@@ -101,10 +103,21 @@ def get_summary(app, account_id, args):
 
 
 def get(app):
-    accounts = list(app.db.Account.select().order_by(app.db.Account.institution.desc()))
+    query = app.session.query(Account).order_by(Account.institution.desc())  # TODO: why desc?
+    accounts = query.all()
     return {
         'accounts': [account.to_dict() for account in accounts]
     }
+
+
+def post(app, request_json):
+    try:
+        request_json['account']['id'] = uuid.uuid4().hex
+        account = app.db.Account(**request_json['account'])
+    except IndexError:
+        raise InvalidRequest()
+    else:
+        return {'account': account.to_dict()}
 
 
 def upload(app, account_id, files):
@@ -115,11 +128,11 @@ def upload(app, account_id, files):
     if not importer:
         raise InvalidRequest('Unsupported file extension')
 
-    result = importer.import_from(file_storage)
+    transactions, balance = importer.import_from(file_storage)
     total_imported, total_skipped = 0, 0
 
     account = get_by_id(app, account_id)
-    for t in result:
+    for t in transactions:
         with db_session:
             Transaction = app.db.Transaction
 
@@ -134,6 +147,14 @@ def upload(app, account_id, files):
                 total_skipped += 1
             else:
                 total_imported += 1
+
+    if balance is not None:
+        balance.update({
+            'id': uuid.uuid4().hex,
+            'account_id': account.id,
+        })
+        app.db.AccountBalance(**balance)
+        commit()
 
     return {
         'totalImported': total_imported,

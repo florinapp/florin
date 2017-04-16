@@ -6,6 +6,7 @@ import {
     FLAG_AS_INTERNAL_TRANSACTION_SUCCEEDED,
     RECEIVE_CATEGORY_SUMMARY,
     CHANGE_TRANSACTION_PAGE_NUMBER,
+    CREATE_ACCOUNT_SUCCEEDED,
 } from '../actions'
 import querystring from 'querystring'
 import { matchPath } from 'react-router'
@@ -133,6 +134,11 @@ const accounts = (state=initState, action) => {
             }
         case CHANGE_TRANSACTION_PAGE_NUMBER:
             return handleChangeTransactionPageNumber(state, action)
+        case CREATE_ACCOUNT_SUCCEEDED:
+            return {
+                ...state,
+                accounts: [...state.accounts, action.account]
+            }
         default:
             return state
     }

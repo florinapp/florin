@@ -16,13 +16,22 @@ class Account(db.Entity):
     type = Required(str)
 
 
+class AccountBalance(db.Entity):
+    _table_ = 'account_balances'
+
+    id = PrimaryKey(str)
+    account_id = Required(str)
+    date = Required(datetime.date)
+    balance = Required(Decimal)
+
+
 class Transaction(db.Entity):
     _table_ = 'transactions'
 
     date = Required(datetime.date)
     info = Optional(str)
     payee = Required(str)
-    memo = Required(str)
+    memo = Optional(str)
     amount = Required(Decimal)
     category_id = Required(int)
     tags = Optional(str)

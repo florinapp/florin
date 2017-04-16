@@ -305,3 +305,50 @@ export const changeTransactionPage = (page) => {
         page
     }
 }
+
+// ----------------------------------------------------------------------------
+// Show/Close New Account Modal Dialog
+export const SHOW_NEW_ACCOUNT_MODAL = 'SHOW_NEW_ACCOUNT_MODAL'
+export const CLOSE_NEW_ACCOUNT_MODAL = 'CLOSE_NEW_ACCOUNT_MODAL'
+export const showNewAccountModal = () => {
+    return {
+        type: SHOW_NEW_ACCOUNT_MODAL
+    }
+}
+export const closeNewAccountModal = () => {
+    return {
+        type: CLOSE_NEW_ACCOUNT_MODAL 
+    }
+}
+
+// ----------------------------------------------------------------------------
+// Create New Account
+export const REQUEST_CREATE_ACCOUNT = 'REQUEST_CREATE_ACCOUNT'
+export const requestCreateAccount = () => {
+    return {
+        type: REQUEST_CREATE_ACCOUNT 
+    }
+}
+export const CREATE_ACCOUNT_SUCCEEDED = 'CREATE_ACCOUNT_SUCCEEDED'
+export const createAccountSucceeded = (json) => {
+    return {
+        type: CREATE_ACCOUNT_SUCCEEDED,
+        account: json.account,
+        receivedAt: Date.now(),
+    }
+}
+export const createAccount = (account) => {
+    let headers = new Headers()
+    headers.set("Content-Type", "application/json")
+    const options = {
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify(account)
+    }
+    return (dispatch) => {
+        dispatch(requestCreateAccount())
+        return fetch(`http://localhost:9000/api/accounts`, options)
+            .then(response => response.json())
+            .then(json => dispatch(createAccountSucceeded(json)))
+    }
+}

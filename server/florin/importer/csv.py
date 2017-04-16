@@ -35,7 +35,7 @@ class CSVImporter(object):
                 result = self._import(file_storage, transaction_class)
             except Exception:
                 continue
-        return result
+        return result, None  # csv importer doesn't deal with account balances
 
 
 def _parse_date(date_str):
