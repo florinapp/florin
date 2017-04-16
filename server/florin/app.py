@@ -77,12 +77,11 @@ def post_accounts():
     return accounts.post(app, flask.request.json)
 
 
-# @app.route('/api/categories', methods=['GET'])
-# @jsonify()
-# @handle_exceptions
-# @db_session
-# def get_categories():
-#     return categories.get(app)
+@app.route('/api/categories', methods=['GET'])
+@jsonify()
+@handle_exceptions
+def get_categories():
+    return categories.get(app)
 
 
 @app.route('/api/accounts/<account_id>/upload', methods=['POST'])

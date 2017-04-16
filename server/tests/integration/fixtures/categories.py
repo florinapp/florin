@@ -1,5 +1,5 @@
 import pytest
-from florin.database import db
+from florin import db
 from ..utils import db_fixture
 
 

@@ -1,7 +1,7 @@
 import hashlib
 import os
 import sqlalchemy
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, String, ForeignKey, Date, Float, UnicodeText
 
@@ -69,13 +69,15 @@ class Transaction(Base, ToDictMixin):
         super(Transaction, self).__init__(*args, **kwargs)
 
 
-class Category(Base):
+class Category(Base, ToDictMixin):
     __tablename__ = 'categories'
+    __export__ = ['id', 'name', 'parent_id', 'type']
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(255), nullable=False)
     parent_id = Column(Integer, ForeignKey('categories.id'), nullable=True)
     type = Column(String(16), nullable=False)
+    parent = relationship('Category', remote_side=[id])
 
 
 def get_engine(dbfile):
