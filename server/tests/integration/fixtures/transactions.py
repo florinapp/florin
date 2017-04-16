@@ -1,9 +1,7 @@
 import uuid
 import random
-import pytest
-import datetime
 from decimal import Decimal
-from florin.database import db
+from florin import db
 from florin.services.categories import TBD_CATEGORY_ID
 from ..utils import db_fixture
 from .accounts import tangerine_credit_card_account
@@ -25,7 +23,7 @@ def create(**kwargs):
         memo=kwargs.get('memo', fake.text(max_nb_chars=20)),
         amount=kwargs.get('amount', random_amount()),
         category_id=kwargs.get('category_id', TBD_CATEGORY_ID),
-        account=kwargs['account'],
+        account_id=kwargs['account_id'],
         transaction_type=kwargs.get('transaction_type', random.choice(['expense', 'income'])),
         checksum=kwargs.get('checksum', uuid.uuid4().hex)
     )

@@ -1,4 +1,5 @@
 import math
+from florin.db import Transaction
 from asbool import asbool
 from .params import get_date_range_params
 from .categories import TBD_CATEGORY_ID, INTERNAL_TRANSFER_CATEGORY_ID
@@ -86,16 +87,13 @@ def get(app, account_id, args):
 
 
 def delete(app, transaction_id):
-    Transaction = app.db.Transaction
-
-    transaction = Transaction.select(lambda t: t.id == transaction_id)
-    if transaction.count() != 1:
+    query = app.session.query(Transaction).filter_by(id=transaction_id)
+    if query.count() != 1:
         raise exceptions.ResourceNotFound()
 
-    transaction = transaction.get()
-    transaction.delete()
-    commit()
-
+    transaction = query.one()
+    app.session.delete(transaction)
+    app.session.commit()
     return {}
 
 
