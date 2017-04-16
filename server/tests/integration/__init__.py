@@ -1,9 +1,18 @@
 import os
-from florin.database import db
+from florin.db import Base, get_engine, init
 
 
-TEST_DBFILE = os.path.join(os.path.dirname(__name__), '..', '..', 'test.sqlite')
+TEST_DBFILE = 'test.sqlite'
 
 
-db.bind('sqlite', TEST_DBFILE, create_db=True)
-db.generate_mapping(create_tables=True)
+class TestApp(object):
+    pass
+
+
+app = TestApp()
+
+
+from florin.db import get_engine, Base
+engine = get_engine(TEST_DBFILE)
+Base.metadata.create_all(engine)
+init(app, TEST_DBFILE)
