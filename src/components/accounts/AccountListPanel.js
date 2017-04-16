@@ -38,7 +38,7 @@ class AccountListPanel extends Component {
                                 return (
                                     <li key={account.id} className={isActive ? "active" : ""}>
                                         <NavLink to={`/accounts/${account.id}${location.search}`} activeClassName="active">
-                                        {account.name}
+                                        {account.institution}&nbsp;{account.name}
                                         </NavLink>
                                     </li>
                                 )
