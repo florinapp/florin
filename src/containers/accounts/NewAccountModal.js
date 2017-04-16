@@ -10,8 +10,21 @@ const mapStateToProps = ({ ui }) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        saveNewAccount: () => {
+        saveNewAccount: ({institutionName, accountName, accountType}) => {
             console.log('Save clicked')
+        },
+        validate: ({institutionName, accountName, accountType}) => {
+            let result = {
+                institutionNameValidationState: (institutionName || "").length >= 1 ? 'success' : 'error',
+                accountNameValidationState: (accountName || "").length >= 1 ? 'success' : 'error',
+                accountTypeValidationState: (accountType || "").length >= 1 ? 'success' : 'error',
+            }
+            result.isValid = (
+                result.institutionNameValidationState === 'success'
+                && result.accountNameValidationState === 'success'
+                && result.accountTypeValidationState === 'success'
+            )
+            return result
         },
         closeDialog: () => {
             dispatch(closeNewAccountModal())
