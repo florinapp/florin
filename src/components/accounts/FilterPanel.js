@@ -16,7 +16,8 @@ const DateRangeFilterPanel = ({ currentAccountId, filter }) => {
     const dateRangeFilters = [
         { name: 'thisMonth', caption: 'This Month' },
         { name: 'lastMonth', caption: 'Last Month' },
-        { name: 'thisYear', caption: 'This Year' }
+        { name: 'thisYear', caption: 'This Year' },
+        { name: 'allTime', caption: 'All Time' },
     ]
 
     const { currentDateRange } = filter
