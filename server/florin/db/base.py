@@ -38,8 +38,9 @@ class AccountBalance(Base):
     balance = Column(Float(as_decimal=True), nullable=False)
 
 
-class Transaction(Base):
+class Transaction(Base, ToDictMixin):
     __tablename__ = 'transactions'
+    __export__ = ['id', 'date', 'info', 'payee', 'memo', 'amount', 'transaction_type', 'category_id']
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     date = Column(Date, nullable=False)

@@ -7,7 +7,7 @@ from collections import defaultdict
 from .exceptions import ResourceNotFound, InvalidRequest
 from .categories import INTERNAL_TRANSFER_CATEGORY_ID, TBD_CATEGORY_ID
 from . import params
-from florin.db import Account
+from florin.db import Account, AccountBalance, Transaction
 
 
 ALL_ACCOUNTS = object()
@@ -17,11 +17,11 @@ def get_by_id(app, account_id):
     if account_id == '_all':
         return ALL_ACCOUNTS
 
-    account = app.db.Account.select(lambda a: a.id == account_id)
-    if account.count() != 1:
+    query = app.session.query(Account).filter(Account.id == account_id)
+    if query.count() != 1:
         raise ResourceNotFound()
 
-    return account.get()
+    return query.one()
 
 
 def _get_income_category_summary(app, account_id, args):
@@ -124,6 +124,7 @@ def post(app, request_json):
 
 
 def upload(app, account_id, files):
+    session = app.session
     file_items = files.items()
     assert len(file_items) == 1
     filename, file_storage = file_items[0]
@@ -136,28 +137,25 @@ def upload(app, account_id, files):
 
     account = get_by_id(app, account_id)
     for t in transactions:
-        with db_session:
-            Transaction = app.db.Transaction
-
-            common_attrs = dict(t.common_attrs)
-            common_attrs['account'] = account.id
-            common_attrs['category_id'] = TBD_CATEGORY_ID
-            try:
-                Transaction(**common_attrs)
-                commit()
-            except (TransactionIntegrityError, CacheIndexError) as e:
-                print(str(e))
-                total_skipped += 1
-            else:
-                total_imported += 1
+        common_attrs = dict(t.common_attrs)
+        common_attrs['account_id'] = account.id  # TODO: Use relationship
+        common_attrs['category_id'] = TBD_CATEGORY_ID
+        try:
+            session.add(Transaction(**common_attrs))
+            session.commit()
+        except (TransactionIntegrityError, CacheIndexError) as e:
+            print(str(e))
+            total_skipped += 1
+        else:
+            total_imported += 1
 
     if balance is not None:
         balance.update({
             'id': uuid.uuid4().hex,
             'account_id': account.id,
         })
-        app.db.AccountBalance(**balance)
-        commit()
+        account_balance = AccountBalance(**balance)
+        session.commit()
 
     return {
         'totalImported': total_imported,

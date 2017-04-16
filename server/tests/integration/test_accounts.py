@@ -3,7 +3,7 @@ import datetime
 import os
 import requests
 from decimal import Decimal
-from florin.database import db
+from florin import db
 from .utils import reset_database
 from pony.orm import db_session
 from .fixtures.accounts import (td_chequing_account,
@@ -46,68 +46,66 @@ def test_accounts_upload___file_extension_not_supported(tangerine_credit_card_ac
     assert response.json() == {'error': 'Unsupported file extension'}
 
 
-# def assert_transaction(transaction, expected_dict):
-#     for key, value in expected_dict.items():
-#         assert getattr(transaction, key) == value
+def assert_transaction(transaction, expected_dict):
+    for key, value in expected_dict.items():
+        assert getattr(transaction, key) == value
 
 
-# def test_accounts_upload___csv___tangerine(tangerine_credit_card_account):
-#     response = requests.post('http://localhost:7000/api/accounts/4/upload', files=[
-#         ('tangerine.csv', ('tangerine.csv', open(os.path.join(
-#             os.path.dirname(__file__), 'fixtures/tangerine.csv'), 'r'), 'text/csv'))
-#     ])
-#     assert response.status_code == 200
-#     assert response.json() == {'totalImported': 2, 'totalSkipped': 0}
-#     with db_session:
-#         transactions = db.Transaction.select()[:]
-#         assert len(transactions) == 2
-#         assert_transaction(transactions[0],
-#                            {
-#                                'info': 'Completed transfer to Tangerine DDA account XXXXXXXXXXXX~ Internet Withdrawal',
-#                                'account': '4',
-#                                'tags': '',
-#                                "transaction_type": "debit",
-#                                'payee': 'Internet Withdrawal to Tangerine',
-#                                'amount': Decimal('-1000.00'),
-#                                'date': datetime.date(2017, 3, 7),
-#                                'category_id': 65535,
-#                            })
-#         assert_transaction(transactions[1],
-#                            {'info': 'From FOOINC.COM INC',
-#                             'account': '4',
-#                             'tags': '',
-#                             'amount': Decimal('3000.00'),
-#                             'date': datetime.date(2017, 3, 14),
-#                             'category_id': 65535
-#                             })
+def test_accounts_upload___csv___tangerine(tangerine_credit_card_account):
+    response = requests.post('http://localhost:7000/api/accounts/4/upload', files=[
+        ('tangerine.csv', ('tangerine.csv', open(os.path.join(
+            os.path.dirname(__file__), 'fixtures/tangerine.csv'), 'r'), 'text/csv'))
+    ])
+    assert response.status_code == 200
+    assert response.json() == {'totalImported': 2, 'totalSkipped': 0}
+
+    transactions = db.Transaction.session.query(db.Transaction).all()
+    assert len(transactions) == 2
+    assert_transaction(transactions[0],
+                        {
+                            'info': 'Completed transfer to Tangerine DDA account XXXXXXXXXXXX~ Internet Withdrawal',
+                            'account_id': 4,
+                            "transaction_type": "debit",
+                            'payee': 'Internet Withdrawal to Tangerine',
+                            'amount': Decimal('-1000.00'),
+                            'date': datetime.date(2017, 3, 7),
+                            'category_id': 65535,
+                        })
+    assert_transaction(transactions[1],
+                        {'info': 'From FOOINC.COM INC',
+                        'account_id': 4,
+                        'amount': Decimal('3000.00'),
+                        'date': datetime.date(2017, 3, 14),
+                        'category_id': 65535
+                        })
 
 
-# def test_accounts_upload___csv___tangerine___skip_duplicates(tangerine_credit_card_account):
-#     response = requests.post('http://localhost:7000/api/accounts/4/upload', files=[
-#         ('tangerine.csv', ('tangerine.csv', open(os.path.join(
-#             os.path.dirname(__file__), 'fixtures/tangerine.csv'), 'r'), 'text/csv'))
-#     ])
-#     assert response.status_code == 200
-#     assert response.json() == {'totalImported': 2, 'totalSkipped': 0}
+def test_accounts_upload___csv___tangerine___skip_duplicates(tangerine_credit_card_account):
+    response = requests.post('http://localhost:7000/api/accounts/4/upload', files=[
+        ('tangerine.csv', ('tangerine.csv', open(os.path.join(
+            os.path.dirname(__file__), 'fixtures/tangerine.csv'), 'r'), 'text/csv'))
+    ])
+    assert response.status_code == 200
+    assert response.json() == {'totalImported': 2, 'totalSkipped': 0}
 
-#     response = requests.post('http://localhost:7000/api/accounts/4/upload', files=[
-#         ('tangerine.csv', ('tangerine.csv', open(os.path.join(
-#             os.path.dirname(__file__), 'fixtures/tangerine.csv'), 'r'), 'text/csv'))
-#     ])
-#     assert response.status_code == 200
-#     assert response.json() == {'totalImported': 0, 'totalSkipped': 2}
+    response = requests.post('http://localhost:7000/api/accounts/4/upload', files=[
+        ('tangerine.csv', ('tangerine.csv', open(os.path.join(
+            os.path.dirname(__file__), 'fixtures/tangerine.csv'), 'r'), 'text/csv'))
+    ])
+    assert response.status_code == 200
+    assert response.json() == {'totalImported': 0, 'totalSkipped': 2}
 
 
-# def test_accounts_upload___ofx(tangerine_credit_card_account):
-#     response = requests.post('http://localhost:7000/api/accounts/4/upload', files=[
-#         ('reports.ofx', ('reports.ofx', open(os.path.join(
-#             os.path.dirname(__file__), 'fixtures/reports.ofx'), 'r'), 'application/ofx'))
-#     ])
-#     assert response.status_code == 200
+def test_accounts_upload___ofx(tangerine_credit_card_account):
+    response = requests.post('http://localhost:7000/api/accounts/4/upload', files=[
+        ('reports.ofx', ('reports.ofx', open(os.path.join(
+            os.path.dirname(__file__), 'fixtures/reports.ofx'), 'r'), 'application/ofx'))
+    ])
+    assert response.status_code == 200
 
-#     response = requests.get('http://localhost:7000/api/accounts/4')
-#     assert response.status_code == 200
-#     assert 6 == len(response.json()['transactions'])
+    response = requests.get('http://localhost:7000/api/accounts/4')
+    assert response.status_code == 200
+    assert 6 == len(response.json()['transactions'])
 
 
 def test_accounts_new():
