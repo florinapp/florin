@@ -19,7 +19,7 @@ class Account(db.Entity):
 class AccountBalance(db.Entity):
     _table_ = 'account_balances'
 
-    id = PrimaryKey(int)
+    id = PrimaryKey(str)
     account_id = Required(str)
     date = Required(datetime.date)
     balance = Required(Decimal)

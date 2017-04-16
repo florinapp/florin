@@ -42,4 +42,8 @@ class OFXImporter(object):
         assert 1 == len(result.accounts)
         for t in result.accounts[0].statement.transactions:
             print(t.common_attrs)
-        return result.accounts[0].statement.transactions
+        balance = {
+            'balance': result.accounts[0].statement.balance,
+            'date': result.accounts[0].statement.balance_date.date(),
+        }
+        return result.accounts[0].statement.transactions, balance

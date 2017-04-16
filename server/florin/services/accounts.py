@@ -126,11 +126,11 @@ def upload(app, account_id, files):
     if not importer:
         raise InvalidRequest('Unsupported file extension')
 
-    result = importer.import_from(file_storage)
+    transactions, balance = importer.import_from(file_storage)
     total_imported, total_skipped = 0, 0
 
     account = get_by_id(app, account_id)
-    for t in result:
+    for t in transactions:
         with db_session:
             Transaction = app.db.Transaction
 
@@ -145,6 +145,14 @@ def upload(app, account_id, files):
                 total_skipped += 1
             else:
                 total_imported += 1
+
+    if balance is not None:
+        balance.update({
+            'id': uuid.uuid4().hex,
+            'account_id': account.id,
+        })
+        app.db.AccountBalance(**balance)
+        commit()
 
     return {
         'totalImported': total_imported,
