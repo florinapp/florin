@@ -13,6 +13,7 @@ steps = [
                 institution VARCHAR(64) NOT NULL,
                 name VARCHAR(64) NOT NULL,
                 type VARCHAR(32) NOT NULL,
+                signature VARCHAR(64),
                 PRIMARY KEY (id)
     );
          """),
