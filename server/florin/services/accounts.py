@@ -8,6 +8,7 @@ from .exceptions import ResourceNotFound, InvalidRequest
 from .categories import INTERNAL_TRANSFER_CATEGORY_ID, TBD_CATEGORY_ID
 from . import params
 from florin.db import Account, AccountBalance, Transaction
+from sqlalchemy.exc import IntegrityError
 
 
 ALL_ACCOUNTS = object()
@@ -143,8 +144,9 @@ def upload(app, account_id, files):
         try:
             session.add(Transaction(**common_attrs))
             session.commit()
-        except (TransactionIntegrityError, CacheIndexError) as e:
+        except Exception as e:
             print(str(e))
+            session.rollback()
             total_skipped += 1
         else:
             total_imported += 1

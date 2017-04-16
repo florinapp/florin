@@ -57,17 +57,7 @@ def default(obj):
         return millis
 
 
-class Hashable(object):
-    HASH_FIELDS = None
-
-    def __init__(self):
-        checksum = md5('\n'.join([
-            str(self.__getitem__(field)) for field in self.HASH_FIELDS
-        ]).encode('utf-8')).hexdigest()
-        self.update({'checksum': 'md5:{}'.format(checksum)})
-
-
-class TangerineTransaction(dict, Hashable):
+class TangerineTransaction(dict):
     transaction_date = None
     transaction_type = None
     name = None
@@ -92,7 +82,6 @@ class TangerineTransaction(dict, Hashable):
 
     def __init__(self, *args, **kwargs):
         super(TangerineTransaction, self).__init__(*args, **kwargs)
-        Hashable.__init__(self)
 
     @property
     def common_attrs(self):
@@ -103,11 +92,10 @@ class TangerineTransaction(dict, Hashable):
             memo=json.dumps(self, default=default),
             amount=self['amount'],
             transaction_type='credit' if self['amount'] > 0 else 'debit',
-            checksum=self['checksum'],
         )
 
 
-class RogersTransaction(dict, Hashable):
+class RogersTransaction(dict):
     transaction_date = None
     posting_date = None
     amount = None
@@ -118,19 +106,6 @@ class RogersTransaction(dict, Hashable):
     reference_number = None
     sic_mcc = None
     is_internal_transfer = None
-
-    HASH_FIELDS = [
-        'transaction_date',
-        'posting_date',
-        'amount',
-        'merchant',
-        'merchant_city',
-        'merchant_province',
-        'merchant_postalcode',
-        'reference_number',
-        'debit_or_credit',
-        'sic_mcc',
-    ]
 
     MAPPING = dict(
         transaction_date=('Transaction Date', _parse_date),
@@ -147,7 +122,6 @@ class RogersTransaction(dict, Hashable):
 
     def __init__(self, *args, **kwargs):
         super(RogersTransaction, self).__init__(*args, **kwargs)
-        Hashable.__init__(self)
 
     @property
     def common_attrs(self):
@@ -160,7 +134,6 @@ class RogersTransaction(dict, Hashable):
             memo=json.dumps(self, default=default),
             amount=self['amount'] if transaction_type == 'credit' else -1 * self['amount'],
             transaction_type=transaction_type,
-            checksum=self['checksum'],
         )
 
 

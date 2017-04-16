@@ -1,3 +1,4 @@
+import hashlib
 import os
 import sqlalchemy
 from sqlalchemy.orm import sessionmaker
@@ -44,14 +45,28 @@ class Transaction(Base, ToDictMixin):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     date = Column(Date, nullable=False)
-    info = Column(String(255))
-    payee = Column(String(255))
+    info = Column(String(255), nullable=True)
+    payee = Column(String(255), nullable=False)
     memo = Column(UnicodeText)
     amount = Column(Float(as_decimal=True), nullable=False)
     category_id = Column(Integer, ForeignKey('categories.id'), nullable=False)
     transaction_type = Column(String, nullable=False)
     account_id = Column(Integer, ForeignKey('accounts.id'), nullable=True)
-    checksum = Column(String(64), nullable=False)
+    checksum = Column(String(128), nullable=False, unique=True)
+
+    @staticmethod
+    def _calculate_checksum(attrs):
+        fields = ['date', 'info', 'payee', 'memo', 'amount', 'transaction_type']
+        sig = '&'.join([str(attrs[field]) for field in fields])
+        print(sig)
+        return 'sha256:{}'.format(hashlib.sha256(sig).hexdigest())
+
+    def __init__(self, *args, **kwargs):
+        checksum = kwargs.pop('checksum', None)
+        if checksum is None:
+            checksum = self._calculate_checksum(kwargs)
+        kwargs['checksum'] = checksum
+        super(Transaction, self).__init__(*args, **kwargs)
 
 
 class Category(Base):

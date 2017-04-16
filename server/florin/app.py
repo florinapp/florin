@@ -96,7 +96,6 @@ def upload_transactions(account_id):
 # @app.route('/api/accounts/<account_id>', methods=['GET'])
 # @jsonify()
 # @handle_exceptions
-# @db_session
 # def get_transactions(account_id):
 #     return transactions.get(app, account_id, flask.request.args)
 

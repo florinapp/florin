@@ -4,10 +4,8 @@ from tests.integration import app
 
 def reset_database():
     session = app.session
-    session.query(db.Account).delete()
-    session.query(db.AccountBalance).delete()
-    session.query(db.Category).delete()
-    session.query(db.Transaction).delete()
+    for clazz in (db.Account, db.AccountBalance, db.Category, db.Transaction):
+        session.query(clazz).delete()
     session.commit()
 
 
