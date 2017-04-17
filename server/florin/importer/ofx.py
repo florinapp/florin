@@ -3,33 +3,17 @@ from ofxparse import OfxParser
 from ofxparse.ofxparse import Transaction
 
 
-HASH_FIELDS = (
-    'date',
-    'payee',
-    'memo',
-    'amount',
-    'type',
-)
-
-
-def checksum(self):
-    return md5('\n'.join([
-        str(self.__dict__[field]) for field in HASH_FIELDS
-    ]).encode('utf-8')).hexdigest()
-
-
 def common_attrs(self):
     return {
         'date': self.__dict__['date'],
         'payee': self.__dict__['payee'],
         'memo': self.__dict__['memo'],
+        'info': self.__dict__['memo'],
         'amount': self.__dict__['amount'],
         'transaction_type': self.__dict__['type'],
-        'checksum': 'md5:{}'.format(self.checksum),
     }
 
 
-Transaction.checksum = property(checksum)
 Transaction.common_attrs = property(common_attrs)
 
 
