@@ -7,7 +7,8 @@ from collections import defaultdict
 from .exceptions import ResourceNotFound, InvalidRequest
 from .categories import INTERNAL_TRANSFER_CATEGORY_ID, TBD_CATEGORY_ID
 from . import params
-from florin.db import Account, AccountBalance, Transaction
+from florin.db import Account, AccountBalance, Transaction, Category
+from sqlalchemy import func, and_
 from sqlalchemy.exc import IntegrityError
 
 
@@ -25,73 +26,48 @@ def get_by_id(app, account_id):
     return query.one()
 
 
-def _get_income_category_summary(app, account_id, args):
-    start_date, end_date = params.get_date_range_params(args)
-
-    get_by_id(app, account_id)
-    categories = {c.id: c.name for c in app.db.Category.select()[:]}
-
-    result = app.db.select(
-        'SELECT categories.id as id, SUM(transactions.amount) as amount '
-        'FROM categories INNER JOIN transactions '
-        'WHERE '
-        'categories.id = transactions.category_id '
-        'AND transactions.category_id <> $internal_transfer_category_id '  # excluding internal transfers
-        'AND transactions.date >= $start_date AND transactions.date <= $end_date '
-        'AND categories.type = "income" '
-        'GROUP BY categories.id',
-        {
-            'start_date': start_date,
-            'end_date': end_date,
-            'internal_transfer_category_id': INTERNAL_TRANSFER_CATEGORY_ID
-        })
-
-    category_summary = [
-        {
-            'category_id': category_id,
-            'category_name': categories[category_id],
-            'amount': abs(amount)
-        } for (category_id, amount) in sorted(result, key=operator.itemgetter(1))
-    ]
-    return category_summary
-
-
 def _get_expense_category_summary(app, account_id, args):
     start_date, end_date = params.get_date_range_params(args)
+    session = app.session
+    query = (
+        session.query(Category.id, Category.parent_id, Category.name, func.sum(Transaction.amount).label('amount'))
+        .join(Transaction, Transaction.category_id == Category.id)
+        .filter(and_(Transaction.date >= start_date, Transaction.date <= end_date))
+        .filter(Category.type == 'expense')
+        .group_by(Category.id)
+    )
 
-    get_by_id(app, account_id)
-    categories = {c.id: c.name for c in app.db.Category.select()[:]}
+    result = query.all()
 
-    result = app.db.select(
-        'SELECT categories.id as id, categories.parent_id as parent_id, SUM(transactions.amount) as amount '
-        'FROM categories INNER JOIN transactions '
-        'WHERE '
-        'categories.id = transactions.category_id '
-        'AND transactions.category_id <> $internal_transfer_category_id '  # excluding internal transfers
-        'AND transactions.date >= $start_date AND transactions.date <= $end_date '
-        'AND categories.type = "expense" '
-        'GROUP BY categories.id',
-        {
-            'start_date': start_date,
-            'end_date': end_date,
-            'internal_transfer_category_id': INTERNAL_TRANSFER_CATEGORY_ID
-        })
-
-    aggregated_result = defaultdict(lambda: Decimal('0'))
-    for category_id, category_parent_id, sum_amount in result:
-        if category_parent_id is None:
-            aggregated_result[category_id] += Decimal(str(sum_amount))
+    def reducer(aggregate, (id, parent_id, name, amount)):
+        if parent_id is None:
+            aggregate[id] += amount
         else:
-            aggregated_result[category_parent_id] += Decimal(str(sum_amount))
+            aggregate[parent_id] += amount
+        return aggregate
 
-    category_summary = [
-        {
-            'category_id': category_id,
-            'category_name': categories[category_id],
-            'amount': abs(amount)
-        } for (category_id, amount) in sorted(aggregated_result.items(), key=operator.itemgetter(1))
+    result = reduce(reducer, result, defaultdict(float))
+
+    return [
+        {'category_id': id, 'category_name': Category.get_by_id(id).name, 'amount': abs(amount)}
+        for id, amount in reversed(sorted(result.items(), key=operator.itemgetter(1)))
     ]
-    return category_summary
+
+
+def _get_income_category_summary(app, account_id, args):
+    start_date, end_date = params.get_date_range_params(args)
+    session = app.session
+    query = session.query(Category.id, Category.name, func.sum(Transaction.amount))
+    query = query.filter(and_(Transaction.date >= start_date,
+                              Transaction.date <= end_date))
+    query = query.filter(Transaction.category_id == Category.id)
+    query = query.filter(Category.type == 'income')
+    query = query.group_by(Category.id)
+
+    return [
+        {'category_id': category_id, 'category_name': category_name, 'amount': abs(amount)}
+        for category_id, category_name, amount in query.all()
+    ]
 
 
 def get_summary(app, account_id, args):

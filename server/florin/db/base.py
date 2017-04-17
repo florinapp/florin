@@ -80,6 +80,10 @@ class Category(Base, ToDictMixin):
     type = Column(String(16), nullable=False)
     parent = relationship('Category', remote_side=[id])
 
+    @classmethod
+    def get_by_id(cls, id):
+        return cls.session.query(cls).filter_by(id=id).one()
+
 
 def get_engine(dbfile):
     return sqlalchemy.create_engine('sqlite:///{}'.format(dbfile))

@@ -4,7 +4,6 @@ from decimal import Decimal
 from florin import db
 from florin.services.categories import TBD_CATEGORY_ID
 from ..utils import db_fixture
-from .accounts import tangerine_credit_card_account
 from faker import Faker
 
 
