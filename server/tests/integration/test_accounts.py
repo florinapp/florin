@@ -105,6 +105,9 @@ def test_accounts_upload___ofx(tangerine_credit_card_account):
 
     txns = db.Transaction.session.query(db.Transaction).all()
     assert 6 == len(txns)
+    account_balances = db.AccountBalance.session.query(db.AccountBalance).all()
+    assert 1 == len(account_balances)
+    assert 2935.4 == account_balances[0].balance
 
 
 def test_accounts_new():

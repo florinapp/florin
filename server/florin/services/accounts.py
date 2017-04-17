@@ -156,10 +156,10 @@ def upload(app, account_id, files):
 
     if balance is not None:
         balance.update({
-            'id': uuid.uuid4().hex,
             'account_id': account.id,
         })
         account_balance = AccountBalance(**balance)
+        session.add(account_balance)
         try:
             session.commit()
         except:
