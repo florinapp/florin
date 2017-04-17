@@ -1,3 +1,4 @@
+import json
 import datetime
 import requests
 from florin import db
@@ -150,6 +151,18 @@ def test_transactions_delete(tangerine_credit_card_account):
     response = requests.delete('http://localhost:7000/api/transactions/{}'.format(txns[0].id))
     assert response.status_code == 200
     assert 9 == db.Transaction.session.query(db.Transaction).count()
+
+
+def test_transactions_put___change_memo(tangerine_credit_card_account):
+    create(account_id=tangerine_credit_card_account['id'])
+    txn_before = db.Transaction.session.query(db.Transaction).first()
+    response = requests.put('http://localhost:7000/api/transactions/{}'.format(txn_before.id),
+                            headers={'content-type': 'application/json'},
+                            data=json.dumps({
+                                'memo': 'XYZ'
+                            }))
+    assert response.status_code == 200
+    assert response.json()['transactions'][0]['memo'] == 'XYZ'
 
 
 # TODO: order by category name

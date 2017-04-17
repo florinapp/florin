@@ -98,15 +98,14 @@ def delete(app, transaction_id):
 
 
 def update(app, transaction_id, request_json):
-    Transaction = app.db.Transaction
-
-    transaction = Transaction.select(lambda t: t.id == transaction_id)
-    if transaction.count() != 1:
+    query = app.session.query(Transaction).filter_by(id=transaction_id)
+    if query.count() != 1:
         raise exceptions.ResourceNotFound()
 
-    transaction = transaction.get()
+    transaction = query.one()
     for key, value in request_json.items():
         setattr(transaction, key, value)
-    commit()
-
+    app.session.add(transaction)
+    app.session.commit()
+    transaction = app.session.query(Transaction).filter_by(id=transaction_id).one()
     return {'transactions': [transaction.to_dict()]}

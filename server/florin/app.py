@@ -107,11 +107,11 @@ def upload_transactions(account_id):
 #     return accounts.get_summary(app, account_id, flask.request.args)
 
 
-# @app.route('/api/transactions/<transaction_id>', methods=['POST'])
-# @jsonify()
-# @handle_exceptions
-# def update_transaction(transaction_id):
-#     return transactions.update(app, transaction_id, flask.request.json)
+@app.route('/api/transactions/<transaction_id>', methods=['PUT'])
+@jsonify()
+@handle_exceptions
+def update_transaction(transaction_id):
+    return transactions.update(app, transaction_id, flask.request.json)
 
 
 @app.route('/api/transactions/<transaction_id>', methods=['DELETE'])
