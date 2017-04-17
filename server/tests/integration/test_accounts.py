@@ -131,7 +131,7 @@ def test_accounts_new():
 
 
 def test_accounts_get_category_summary___empty_account():
-    response = requests.post('http://localhost:7000/api/accounts/_all/categorySummary')
+    response = requests.get('http://localhost:7000/api/accounts/_all/categorySummary')
     assert response.status_code == 200
     response_json = response.json()
     assert response_json['categorySummary'] == {'expense': [], 'income': []}
