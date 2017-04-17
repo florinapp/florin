@@ -1,4 +1,3 @@
-from hashlib import md5
 from ofxparse import OfxParser
 from ofxparse.ofxparse import Transaction
 

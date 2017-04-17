@@ -1,15 +1,11 @@
-import uuid
 import operator
-from pony.orm import commit, db_session, TransactionIntegrityError, CacheIndexError
 from florin.importer import get_importer
-from decimal import Decimal
 from collections import defaultdict
 from .exceptions import ResourceNotFound, InvalidRequest
-from .categories import INTERNAL_TRANSFER_CATEGORY_ID, TBD_CATEGORY_ID
+from .categories import TBD_CATEGORY_ID
 from . import params
 from florin.db import Account, AccountBalance, Transaction, Category
 from sqlalchemy import func, and_
-from sqlalchemy.exc import IntegrityError
 
 
 ALL_ACCOUNTS = object()

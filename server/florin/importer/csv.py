@@ -4,7 +4,6 @@ import calendar
 import json
 import decimal
 import datetime
-from hashlib import md5
 
 
 class CSVImporter(object):

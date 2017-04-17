@@ -1,5 +1,4 @@
 import hashlib
-import os
 import sqlalchemy
 from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy.ext.declarative import declarative_base
