@@ -4,7 +4,7 @@ from asbool import asbool
 from .params import get_date_range_params
 from .categories import TBD_CATEGORY_ID, INTERNAL_TRANSFER_CATEGORY_ID
 from . import accounts, exceptions
-from pony.orm import commit
+from sqlalchemy import and_
 
 
 class Paginator(object):
@@ -16,7 +16,7 @@ class Paginator(object):
     def __call__(self, query):
         total = query.count()
         self.total_pages = int(math.ceil(1.0 * total / self.per_page))
-        return query.limit(self.per_page, offset=(self.page - 1) * self.per_page)
+        return query.limit(self.per_page).offset((self.page - 1) * self.per_page)
 
 
 class TransactionFilter(object):
@@ -27,16 +27,16 @@ class TransactionFilter(object):
         self.account = account
 
     def __call__(self, query):
-        query = query.filter(lambda t: t.date >= self.start_date and t.date <= self.end_date)
+        query = query.filter(and_(Transaction.date >= self.start_date, Transaction.date <= self.end_date))
 
         if not self.include_internal_transfer:
-            query = query.filter(lambda t: t.category_id != INTERNAL_TRANSFER_CATEGORY_ID)
+            query = query.filter(Transaction.category_id != INTERNAL_TRANSFER_CATEGORY_ID)
 
         if self.only_uncategorized:
-            query = query.filter(lambda t: t.category_id == TBD_CATEGORY_ID)
+            query = query.filter(Transaction.category_id == TBD_CATEGORY_ID)
 
         if self.account is not accounts.ALL_ACCOUNTS:
-            query = query.filter(lambda t: t.account == self.account.id)
+            query = query.filter(Transaction.account_id == self.account.id)
 
         return query
 
@@ -61,14 +61,13 @@ class Sorter(object):
         field_name, direction = self.order_by.split(':')
         order = self.get_order(field_name, direction)
 
-        if not order:
+        if order is None:
             raise exceptions.InvalidRequest('Invalid orderBy param: "{}"'.format(self.order_by))
         return query.order_by(order)
 
 
 def get(app, account_id, args):
-    Transaction = app.db.Transaction
-
+    session = app.session
     account = accounts.get_by_id(app, account_id)
     filter = TransactionFilter(account, args)
     paginator = Paginator(args)
@@ -76,8 +75,8 @@ def get(app, account_id, args):
 
     query = reduce(lambda query, fn: fn(query),
                    [filter, sorter, paginator],
-                   Transaction.select())
-    transactions = query[:]
+                   session.query(Transaction))
+    transactions = query.all()
 
     return {
         'total_pages': paginator.total_pages,

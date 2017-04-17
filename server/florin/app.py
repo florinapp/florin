@@ -91,11 +91,11 @@ def upload_transactions(account_id):
     return accounts.upload(app, account_id, flask.request.files)
 
 
-# @app.route('/api/accounts/<account_id>', methods=['GET'])
-# @jsonify()
-# @handle_exceptions
-# def get_transactions(account_id):
-#     return transactions.get(app, account_id, flask.request.args)
+@app.route('/api/accounts/<account_id>', methods=['GET'])
+@jsonify()
+@handle_exceptions
+def get_transactions(account_id):
+    return transactions.get(app, account_id, flask.request.args)
 
 
 # @app.route('/api/accounts/<account_id>/categorySummary', methods=['GET'])
