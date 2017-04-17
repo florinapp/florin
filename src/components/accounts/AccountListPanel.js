@@ -34,7 +34,7 @@ class AccountListPanel extends Component {
                                 <NavLink to={`/accounts/_all${location.search}`} activeClassName="active">All</NavLink>
                             </li>
                             {accounts.map((account) => {
-                                const isActive = currentAccountId === account.id
+                                const isActive = currentAccountId === account.id.toString()
                                 return (
                                     <li key={account.id} className={isActive ? "active" : ""}>
                                         <NavLink to={`/accounts/${account.id}${location.search}`} activeClassName="active">
