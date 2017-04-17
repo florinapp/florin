@@ -18,7 +18,13 @@ class ToDictMixin(object):
         }
 
 
-class Account(Base, ToDictMixin):
+class SearchByIdMixin(object):
+    @classmethod
+    def get_by_id(cls, id):
+        return cls.session.query(cls).filter_by(id=id).one()
+
+
+class Account(Base, ToDictMixin, SearchByIdMixin):
     __tablename__ = 'accounts'
     __export__ = ['id', 'institution', 'name', 'type']
 
@@ -39,7 +45,7 @@ class AccountBalance(Base, ToDictMixin):
     balance = Column(Float(as_decimal=True), nullable=False)
 
 
-class Transaction(Base, ToDictMixin):
+class Transaction(Base, ToDictMixin, SearchByIdMixin):
     __tablename__ = 'transactions'
     __export__ = ['id', 'date', 'info', 'payee', 'memo', 'amount', 'transaction_type', 'category_id']
 
@@ -69,7 +75,7 @@ class Transaction(Base, ToDictMixin):
         super(Transaction, self).__init__(*args, **kwargs)
 
 
-class Category(Base, ToDictMixin):
+class Category(Base, ToDictMixin, SearchByIdMixin):
     __tablename__ = 'categories'
     __export__ = ['id', 'name', 'parent_id', 'type']
 
@@ -78,10 +84,6 @@ class Category(Base, ToDictMixin):
     parent_id = Column(Integer, ForeignKey('categories.id'), nullable=True)
     type = Column(String(16), nullable=False)
     parent = relationship('Category', remote_side=[id])
-
-    @classmethod
-    def get_by_id(cls, id):
-        return cls.session.query(cls).filter_by(id=id).one()
 
 
 def get_engine(dbfile):
