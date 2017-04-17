@@ -30,8 +30,9 @@ class Account(Base, ToDictMixin):
     signature = Column(String(64), nullable=True)
 
 
-class AccountBalance(Base):
+class AccountBalance(Base, ToDictMixin):
     __tablename__ = 'account_balances'
+    __export__ = ['id', 'account_id', 'date', 'balance']
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     account_id = Column(Integer, ForeignKey('accounts.id'), nullable=False)

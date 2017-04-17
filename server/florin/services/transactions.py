@@ -92,7 +92,11 @@ def delete(app, transaction_id):
 
     transaction = query.one()
     app.session.delete(transaction)
-    app.session.commit()
+    try:
+        app.session.commit()
+    except:
+        app.session.rollback()
+        raise
     return {}
 
 
@@ -105,6 +109,10 @@ def update(app, transaction_id, request_json):
     for key, value in request_json.items():
         setattr(transaction, key, value)
     app.session.add(transaction)
-    app.session.commit()
+    try:
+        app.session.commit()
+    except:
+        app.session.rollback()
+        raise
     transaction = app.session.query(Transaction).filter_by(id=transaction_id).one()
     return {'transactions': [transaction.to_dict()]}

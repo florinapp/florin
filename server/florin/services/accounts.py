@@ -117,9 +117,10 @@ def post(app, request_json):
         request_json['account']['id'] = uuid.uuid4().hex
         account = Account(**request_json['account'])
         session.add(account)
-        commit()
-    except IndexError:
-        raise InvalidRequest()
+        session.commit()
+    except Exception as e:
+        session.rollback()
+        raise InvalidRequest(str(e))
     else:
         return {'account': account.to_dict()}
 
@@ -157,7 +158,11 @@ def upload(app, account_id, files):
             'account_id': account.id,
         })
         account_balance = AccountBalance(**balance)
-        session.commit()
+        try:
+            session.commit()
+        except:
+            session.rollback()
+            raise
 
     return {
         'totalImported': total_imported,
