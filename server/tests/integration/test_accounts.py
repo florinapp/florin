@@ -103,9 +103,8 @@ def test_accounts_upload___ofx(tangerine_credit_card_account):
     ])
     assert response.status_code == 200
 
-    response = requests.get('http://localhost:7000/api/accounts/4')
-    assert response.status_code == 200
-    assert 6 == len(response.json()['transactions'])
+    txns = db.Transaction.session.query(db.Transaction).all()
+    assert 6 == len(txns)
 
 
 def test_accounts_new():
