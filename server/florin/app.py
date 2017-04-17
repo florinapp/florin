@@ -6,7 +6,6 @@ import datetime
 from decimal import Decimal
 from flask_cors import CORS
 from flask.json import JSONEncoder
-from pony.orm import db_session
 from . import db
 from .services import transactions, exceptions, accounts, categories
 
@@ -72,7 +71,6 @@ def get_accounts():
 @app.route('/api/accounts', methods=['POST'])
 @jsonify(success_status_code=201)
 @handle_exceptions
-@db_session
 def post_accounts():
     return accounts.post(app, flask.request.json)
 

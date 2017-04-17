@@ -6,7 +6,6 @@ from decimal import Decimal
 from florin import db
 from florin.services.categories import INTERNAL_TRANSFER_CATEGORY_ID
 from .utils import reset_database
-from pony.orm import db_session
 from .fixtures.accounts import (td_chequing_account,
                                 cibc_savings_account,
                                 bmo_chequing_account,
