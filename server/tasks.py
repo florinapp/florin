@@ -2,6 +2,13 @@ from invoke import task
 
 
 @task
+def bootstrap(ctx, dbfile):
+    from florin.db import get_engine, Base
+    engine = get_engine(dbfile)
+    Base.metadata.create_all(engine)
+
+
+@task
 def new_migration(ctx, m):
     ctx.run('yoyo new ./migrations -m "{}"'.format(m), pty=True)
 

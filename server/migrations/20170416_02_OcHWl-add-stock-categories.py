@@ -1,10 +1,10 @@
 """
-Add stock categories
+add stock categories
 """
 
 from yoyo import step
 
-__depends__ = {'20170406_01_SAwvg-add-type-column-to-categories'}
+__depends__ = {'20170416_01_ZLKvX-bootstrap'}
 
 categories = {
     (1, 'Automobile', 'expense'): [
@@ -56,12 +56,13 @@ categories = {
         'Lodging',
         'Travel',
     ],
-    (50, 'Income', 'income'): [
-        'Interest',
-        'Rewards',
-        'Salary',
-        'Salary (Spouse)',
-    ]
+    (50, 'Interest', 'income'): [],
+    (51, 'Rewards', 'income'): [],
+    (52, 'Salary', 'income'): [],
+    (53, 'Salary (Spouse)', 'income'): [],
+    (54, 'Tax Returns', 'income'): [],
+    (65534, 'Internal Transfer', 'other'): [],
+    (65535, 'TBD', 'other'): [],
 }
 
 

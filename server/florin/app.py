@@ -1,3 +1,4 @@
+import os
 import functools
 import flask
 import logging
@@ -5,8 +6,7 @@ import datetime
 from decimal import Decimal
 from flask_cors import CORS
 from flask.json import JSONEncoder
-from pony.orm import db_session
-from . import database
+from . import db
 from .services import transactions, exceptions, accounts, categories
 
 
@@ -54,7 +54,7 @@ def create_app():
     app = flask.Flask(__name__)
     app.json_encoder = MyJSONEncoder
     CORS(app)
-    database.init(app)
+    db.init(app, os.getenv('DBFILE'))
     return app
 
 
@@ -64,7 +64,6 @@ app = create_app()
 @app.route('/api/accounts', methods=['GET'])
 @jsonify()
 @handle_exceptions
-@db_session
 def get_accounts():
     return accounts.get(app)
 
@@ -72,7 +71,6 @@ def get_accounts():
 @app.route('/api/accounts', methods=['POST'])
 @jsonify(success_status_code=201)
 @handle_exceptions
-@db_session
 def post_accounts():
     return accounts.post(app, flask.request.json)
 
@@ -80,7 +78,6 @@ def post_accounts():
 @app.route('/api/categories', methods=['GET'])
 @jsonify()
 @handle_exceptions
-@db_session
 def get_categories():
     return categories.get(app)
 
@@ -88,7 +85,6 @@ def get_categories():
 @app.route('/api/accounts/<account_id>/upload', methods=['POST'])
 @jsonify()
 @handle_exceptions
-@db_session
 def upload_transactions(account_id):
     return accounts.upload(app, account_id, flask.request.files)
 
@@ -96,7 +92,6 @@ def upload_transactions(account_id):
 @app.route('/api/accounts/<account_id>', methods=['GET'])
 @jsonify()
 @handle_exceptions
-@db_session
 def get_transactions(account_id):
     return transactions.get(app, account_id, flask.request.args)
 
@@ -104,15 +99,13 @@ def get_transactions(account_id):
 @app.route('/api/accounts/<account_id>/categorySummary', methods=['GET'])
 @jsonify()
 @handle_exceptions
-@db_session
 def get_account_summary(account_id):
     return accounts.get_summary(app, account_id, flask.request.args)
 
 
-@app.route('/api/transactions/<transaction_id>', methods=['POST'])
+@app.route('/api/transactions/<transaction_id>', methods=['PUT'])
 @jsonify()
 @handle_exceptions
-@db_session
 def update_transaction(transaction_id):
     return transactions.update(app, transaction_id, flask.request.json)
 
@@ -120,6 +113,5 @@ def update_transaction(transaction_id):
 @app.route('/api/transactions/<transaction_id>', methods=['DELETE'])
 @jsonify()
 @handle_exceptions
-@db_session
 def delete_transaction(transaction_id):
     return transactions.delete(app, transaction_id)

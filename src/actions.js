@@ -194,7 +194,7 @@ export const updateTransaction = (transactionId, transactionData) => {
         let headers = new Headers()
         headers.set("Content-Type", "application/json")
         const options = {
-            method: 'POST',
+            method: 'PUT',
             headers: headers,
             body: JSON.stringify(transactionData)
         }
@@ -258,7 +258,7 @@ export const flagAsInternalTransaction = (transactionId) => {
         let headers = new Headers()
         headers.set("Content-Type", "application/json")
         const options = {
-            method: 'POST',
+            method: 'PUT',
             headers: headers,
             body: JSON.stringify({
                 category_id: 65534

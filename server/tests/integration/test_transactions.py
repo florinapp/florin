@@ -1,5 +1,7 @@
+import json
 import datetime
 import requests
+from florin import db
 from .utils import reset_database
 from .fixtures.transactions import create, fake
 from .fixtures.accounts import tangerine_credit_card_account, rogers_bank_credit_card_account
@@ -17,7 +19,7 @@ def test_transactions_get___empty():
 
 def test_transactions_get___tangerine_account(tangerine_credit_card_account):  # noqa
     for _ in xrange(5):
-        create(account=tangerine_credit_card_account['id'])
+        create(account_id=tangerine_credit_card_account['id'])
     response = requests.get('http://localhost:7000/api/accounts/4')
     assert response.status_code == 200
     response_json = response.json()
@@ -28,7 +30,7 @@ def test_transactions_get___tangerine_account(tangerine_credit_card_account):  #
 
 def test_transactions_get___pagination(tangerine_credit_card_account):  # noqa
     for _ in xrange(5):
-        create(account=tangerine_credit_card_account['id'])
+        create(account_id=tangerine_credit_card_account['id'])
     response = requests.get('http://localhost:7000/api/accounts/4?perPage=4&page=1')
     assert response.status_code == 200
     response_json = response.json()
@@ -38,7 +40,7 @@ def test_transactions_get___pagination(tangerine_credit_card_account):  # noqa
 
 def test_transactions_get___pagination___edge_case(tangerine_credit_card_account):  # noqa
     for _ in xrange(6):
-        create(account=tangerine_credit_card_account['id'])
+        create(account_id=tangerine_credit_card_account['id'])
     response = requests.get('http://localhost:7000/api/accounts/4?perPage=2&page=3')
     assert response.status_code == 200
     response_json = response.json()
@@ -49,9 +51,9 @@ def test_transactions_get___pagination___edge_case(tangerine_credit_card_account
 def test_transactions_get___transactions_from_multiple_accounts_are_available_under_all(  # noqa
         tangerine_credit_card_account, rogers_bank_credit_card_account):
     for _ in xrange(5):
-        create(account=tangerine_credit_card_account['id'])
+        create(account_id=tangerine_credit_card_account['id'])
     for _ in xrange(5):
-        create(account=rogers_bank_credit_card_account['id'])
+        create(account_id=rogers_bank_credit_card_account['id'])
     response = requests.get('http://localhost:7000/api/accounts/_all')
     assert response.status_code == 200
     response_json = response.json()
@@ -62,20 +64,20 @@ def test_transactions_get___transactions_from_multiple_accounts_are_available_un
 def test_transactions_get___transactions_in_date_range(tangerine_credit_card_account):  # noqa
     # before startDate
     for _ in xrange(2):
-        create(account=tangerine_credit_card_account['id'],
+        create(account_id=tangerine_credit_card_account['id'],
                date=fake.date_time_between_dates(
                    datetime_start=datetime.datetime(2017, 1, 1),
                    datetime_end=datetime.datetime(2017, 2, 28)).date())
     # between startDate and endDate
     for _ in xrange(3):
-        create(account=tangerine_credit_card_account['id'],
+        create(account_id=tangerine_credit_card_account['id'],
                date=fake.date_time_between_dates(
                    datetime_start=datetime.datetime(2017, 3, 1),
                    datetime_end=datetime.datetime(2017, 3, 13)).date())
     # on endDate
-    create(account=tangerine_credit_card_account['id'], date=datetime.date(2017, 3, 13))
+    create(account_id=tangerine_credit_card_account['id'], date=datetime.date(2017, 3, 13))
     for _ in xrange(3):
-        create(account=tangerine_credit_card_account['id'],
+        create(account_id=tangerine_credit_card_account['id'],
                date=fake.date_time_between_dates(
                    datetime_start=datetime.datetime(2017, 3, 14),
                    datetime_end=datetime.datetime(2017, 3, 31)).date())
@@ -88,7 +90,7 @@ def test_transactions_get___transactions_in_date_range(tangerine_credit_card_acc
 
 def test_transactions_get___invalid_order_by_param___invalid_direction(tangerine_credit_card_account):  # noqa
     for _ in xrange(10):
-        create(account=tangerine_credit_card_account['id'],
+        create(account_id=tangerine_credit_card_account['id'],
                date=fake.date_time_between_dates(
                    datetime_start=datetime.datetime(2017, 1, 1),
                    datetime_end=datetime.datetime(2017, 2, 28)).date())
@@ -100,7 +102,7 @@ def test_transactions_get___invalid_order_by_param___invalid_direction(tangerine
 
 def test_transactions_get___invalid_order_by_param___invalid_column(tangerine_credit_card_account):  # noqa
     for _ in xrange(10):
-        create(account=tangerine_credit_card_account['id'],
+        create(account_id=tangerine_credit_card_account['id'],
                date=fake.date_time_between_dates(
                    datetime_start=datetime.datetime(2017, 1, 1),
                    datetime_end=datetime.datetime(2017, 2, 28)).date())
@@ -112,7 +114,7 @@ def test_transactions_get___invalid_order_by_param___invalid_column(tangerine_cr
 
 def test_transactions_get___order_by_date_asc(tangerine_credit_card_account):  # noqa
     for _ in xrange(10):
-        create(account=tangerine_credit_card_account['id'],
+        create(account_id=tangerine_credit_card_account['id'],
                date=fake.date_time_between_dates(
                    datetime_start=datetime.datetime(2017, 1, 1),
                    datetime_end=datetime.datetime(2017, 2, 28)).date())
@@ -126,7 +128,7 @@ def test_transactions_get___order_by_date_asc(tangerine_credit_card_account):  #
 
 def test_transactions_get___order_by_date_desc(tangerine_credit_card_account):  # noqa
     for _ in xrange(10):
-        create(account=tangerine_credit_card_account['id'],
+        create(account_id=tangerine_credit_card_account['id'],
                date=fake.date_time_between_dates(
                    datetime_start=datetime.datetime(2017, 1, 1),
                    datetime_end=datetime.datetime(2017, 2, 28)).date())
@@ -136,6 +138,31 @@ def test_transactions_get___order_by_date_desc(tangerine_credit_card_account):  
     response_json = response.json()
     dates = [r['date'] for r in response_json['transactions']]
     assert dates == list(reversed(sorted(dates)))
+
+
+def test_transactions_delete(tangerine_credit_card_account):
+    for _ in xrange(10):
+        create(account_id=tangerine_credit_card_account['id'],
+               date=fake.date_time_between_dates(
+                   datetime_start=datetime.datetime(2017, 1, 1),
+                   datetime_end=datetime.datetime(2017, 2, 28)).date())
+    txns = db.Transaction.session.query(db.Transaction).all()
+    assert 10 == len(txns)
+    response = requests.delete('http://localhost:7000/api/transactions/{}'.format(txns[0].id))
+    assert response.status_code == 200
+    assert 9 == db.Transaction.session.query(db.Transaction).count()
+
+
+def test_transactions_put___change_memo(tangerine_credit_card_account):
+    create(account_id=tangerine_credit_card_account['id'])
+    txn_before = db.Transaction.session.query(db.Transaction).first()
+    response = requests.put('http://localhost:7000/api/transactions/{}'.format(txn_before.id),
+                            headers={'content-type': 'application/json'},
+                            data=json.dumps({
+                                'memo': 'XYZ'
+                            }))
+    assert response.status_code == 200
+    assert response.json()['transactions'][0]['memo'] == 'XYZ'
 
 
 # TODO: order by category name

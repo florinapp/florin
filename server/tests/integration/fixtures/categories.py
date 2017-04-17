@@ -1,5 +1,5 @@
 import pytest
-from florin.database import db
+from florin import db
 from ..utils import db_fixture
 
 
@@ -30,4 +30,4 @@ def mortgage():
 @pytest.fixture
 @db_fixture(db.Category)
 def salary():
-    return dict(id=4, name='Salary', parent_id=None, type='income')
+    return dict(id=5, name='Salary', parent_id=None, type='income')
