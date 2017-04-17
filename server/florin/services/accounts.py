@@ -114,7 +114,7 @@ def get(app):
 def post(app, request_json):
     session = app.session
     try:
-        request_json['account']['id'] = uuid.uuid4().hex
+        request_json['account']['id'] = None
         account = Account(**request_json['account'])
         session.add(account)
         session.commit()
@@ -122,6 +122,8 @@ def post(app, request_json):
         session.rollback()
         raise InvalidRequest(str(e))
     else:
+        account_id = account.id
+        account = get_by_id(app, account_id)
         return {'account': account.to_dict()}
 
 
