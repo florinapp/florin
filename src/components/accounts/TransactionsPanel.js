@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Button, Pagination } from 'react-bootstrap'
 import TransactionTable from '../../containers/accounts/TransactionTable'
 import FilterPanel from '../../containers/accounts/FilterPanel'
-import UploadTransactionsModal from './UploadTransactionsModal'
+import UploadTransactionsModal from '../../containers/accounts/UploadTransactionsModal'
 import './TransactionsPanel.css'
 
 class TransactionsPanel extends Component {
@@ -51,8 +51,7 @@ class TransactionsPanel extends Component {
     }
 
     render() {
-        const {uploadTransactionFile, pagination, onPageClicked} = this.props
-        const {showModal} = this.state
+        const {onShowUploadModal, uploadTransactionFile, pagination, onPageClicked} = this.props
         const {currentAccountId} = this
         return (
             <div className="col-lg-9 col-md-6">
@@ -64,9 +63,7 @@ class TransactionsPanel extends Component {
                         <div className="row">
                             <div className="col-md-12">
                                 <div className="btn-group pull-left" role="group" style={{marginTop: "0px"}}>
-                                    <Button bsStyle="primary" onClick={
-                                        () => {this.setState({showModal: true})}
-                                    }>Upload Transactions</Button>
+                                    <Button bsStyle="primary" onClick={()=>onShowUploadModal()}>Upload Transactions</Button>
                                 </div>
                                 <div className="text-center">
                                     <Pagination prev next first last ellipsis boundaryLinks
@@ -92,12 +89,13 @@ class TransactionsPanel extends Component {
                         </div>
                     </div>
                 </div>
-                <UploadTransactionsModal
+                <UploadTransactionsModal />
+                {/*<UploadTransactionsModal
                     accountId={this.currentAccountId}
                     show={showModal}
                     onClose={() => this.setState({ showModal: false })}
                     onUpload={(files, callback) => uploadTransactionFile(currentAccountId, files, callback)}
-                />
+                />*/}
             </div>
         )
     }

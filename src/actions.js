@@ -1,6 +1,7 @@
 import moment from 'moment'
 import fetch from 'isomorphic-fetch'
 import querystring from 'querystring'
+import request from 'superagent'  // TODO: use isomorphic-fetch
 
 // ----------------------------------------------------------------------------
 // Fetch assets chart data
@@ -350,5 +351,36 @@ export const createAccount = (account) => {
         return fetch(`http://localhost:9000/api/accounts`, options)
             .then(response => response.json())
             .then(json => dispatch(createAccountSucceeded(json)))
+    }
+}
+
+// ----------------------------------------------------------------------------
+// Upload Transaction Modal
+export const SHOW_UPLOAD_MODAL = 'SHOW_UPLOAD_MODAL'
+export const showUploadModal = () => {
+    return {
+        type: SHOW_UPLOAD_MODAL 
+    }
+}
+export const CLOSE_UPLOAD_MODAL = 'CLOSE_UPLOAD_MODAL'
+export const closeUploadModal = () => {
+    return {
+        type: CLOSE_UPLOAD_MODAL
+    }
+}
+export const REQUEST_UPLOAD_TRANSACTIONS = 'REQUEST_UPLOAD_TRANSACTIONS'
+export const requestUploadTransactions = () => {
+    return {
+        type: REQUEST_UPLOAD_TRANSACTIONS
+    }
+}
+export const uploadTransactions = (files) => {
+    return (dispatch) => {
+        dispatch(requestUploadTransactions())
+        const req = request.post(`http://localhost:9000/api/_upload`)
+        files.forEach((file) => {
+            req.attach(file.name, file)
+        })
+        req.end()
     }
 }

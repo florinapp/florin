@@ -8,6 +8,8 @@ import {
     SHOW_NEW_ACCOUNT_MODAL,
     CLOSE_NEW_ACCOUNT_MODAL,
     CREATE_ACCOUNT_SUCCEEDED,
+    SHOW_UPLOAD_MODAL,
+    CLOSE_UPLOAD_MODAL,
 } from '../actions'
 
 const initState = {
@@ -15,6 +17,12 @@ const initState = {
     loadingCategorySummary: false,
     loadingTransactions: false,
     showNewAccountModal: false,
+    uploadModal: {
+        show: false,
+        uploadComplete: false,
+        totalImported: 0,
+        totalSkipped: 0,
+    }
 }
 
 const ui = (state=initState, action) => {
@@ -63,6 +71,25 @@ const ui = (state=initState, action) => {
             return {
                 ...state,
                 showNewAccountModal: false
+            }
+        case SHOW_UPLOAD_MODAL:
+            return {
+                ...state,
+                uploadModal: {
+                    ...state.uploadModal,
+                    show: true
+                }
+            }
+        case CLOSE_UPLOAD_MODAL:
+            return {
+                ...state,
+                uploadModal: {
+                    ...state.uploadModal,
+                    show: false,
+                    uploadComplete: false,
+                    totalImported: 0,
+                    totalSkipped: 0,
+                }
             }
         default:
             return state
