@@ -92,6 +92,7 @@ const ui = (state=initState, action) => {
                     uploadComplete: false,
                     totalImported: 0,
                     totalSkipped: 0,
+                    errorMessage: null,
                 }
             }
         case UPLOAD_TRANSACTIONS_SUCCEEDED:
@@ -99,7 +100,8 @@ const ui = (state=initState, action) => {
                 ...state,
                 uploadModal: {
                     ...state.uploadModal,
-                    errorMessage: null
+                    errorMessage: null,
+                    uploadComplete: true,
                 }
             }
         case UPLOAD_TRANSACTIONS_FAILED:
