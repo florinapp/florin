@@ -10,6 +10,8 @@ import {
     CREATE_ACCOUNT_SUCCEEDED,
     SHOW_UPLOAD_MODAL,
     CLOSE_UPLOAD_MODAL,
+    UPLOAD_TRANSACTIONS_SUCCEEDED,
+    UPLOAD_TRANSACTIONS_FAILED,
 } from '../actions'
 
 const initState = {
@@ -22,6 +24,7 @@ const initState = {
         uploadComplete: false,
         totalImported: 0,
         totalSkipped: 0,
+        errorMessage: null,
     }
 }
 
@@ -89,6 +92,22 @@ const ui = (state=initState, action) => {
                     uploadComplete: false,
                     totalImported: 0,
                     totalSkipped: 0,
+                }
+            }
+        case UPLOAD_TRANSACTIONS_SUCCEEDED:
+            return {
+                ...state,
+                uploadModal: {
+                    ...state.uploadModal,
+                    errorMessage: null
+                }
+            }
+        case UPLOAD_TRANSACTIONS_FAILED:
+            return {
+                ...state,
+                uploadModal: {
+                    ...state.uploadModal,
+                    errorMessage: action.error,
                 }
             }
         default:

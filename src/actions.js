@@ -374,13 +374,35 @@ export const requestUploadTransactions = () => {
         type: REQUEST_UPLOAD_TRANSACTIONS
     }
 }
+export const UPLOAD_TRANSACTIONS_SUCCEEDED = 'UPLOAD_TRANSACTIONS_SUCCEEDED'
+export const uploadTransactionsSucceeded = (json) => {
+    return {
+        type: UPLOAD_TRANSACTIONS_SUCCEEDED,
+        fileUpload: json,
+    }
+}
+export const UPLOAD_TRANSACTIONS_FAILED = 'UPLOAD_TRANSACTIONS_FAILED'
+export const uploadTransactionsFailed = ({error}) => {
+    return {
+        type: UPLOAD_TRANSACTIONS_FAILED,
+        error,
+    }
+}
+
 export const uploadTransactions = (files) => {
     return (dispatch) => {
         dispatch(requestUploadTransactions())
-        const req = request.post(`http://localhost:9000/api/_upload`)
+        // TODO: use isomorphic-fetch
+        const req = request.post(`http://localhost:9000/api/fileUploads`)
         files.forEach((file) => {
             req.attach(file.name, file)
         })
-        req.end()
+        req.end((err, res) => {
+            if (err !== null) {
+                dispatch(uploadTransactionsFailed(res.body))
+                return
+            }
+            dispatch(uploadTransactionsSucceeded(res.body))
+        })
     }
 }
