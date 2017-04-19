@@ -61,6 +61,7 @@ class UploadTransactionsModalDialog extends Component {
                             </Dropzone>
                         </div>
                     </div>
+                    {uploadComplete ? <div style={{marginTop: "15px"}}><Alert bsStyle="info">Upload Complete!</Alert></div> : ""}
                     {uploadComplete ?
                         <div className="row">
                             <Form>
