@@ -414,3 +414,31 @@ export const changeLinkAccount = (accountId) => {
         accountId,
     }
 }
+
+export const REQUEST_LINK_UPLOAD_WITH_ACCOUNT = 'REQUEST_LINK_UPLOAD_WITH_ACCOUNT'
+export const requestLinkUploadWithAccount = () => {
+    return {
+        type: REQUEST_LINK_UPLOAD_WITH_ACCOUNT
+    }
+}
+export const LINK_UPLOAD_WITH_ACCOUNT_SUCCEEDED = 'LINK_UPLOAD_WITH_ACCOUNT_SUCCEEDED'
+export const linkUploadWithAccountSucceeded = (json) => {
+    return {
+        type: LINK_UPLOAD_WITH_ACCOUNT_SUCCEEDED,
+    }
+}
+export const linkUploadWithAccount = (fileUpload, selectedAccountId) => {
+    return (dispatch) => {
+        dispatch(requestLinkUploadWithAccount())
+        let headers = new Headers()
+        headers.set("Content-Type", "application/json")
+        const options = {
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify({accountId: selectedAccountId})
+        }
+        return fetch(`http://localhost:9000/api/fileUploads/${fileUpload.id}/linkAccount`, options)
+            .then(response => response.json())
+            .then(json => dispatch(linkUploadWithAccountSucceeded(json)))
+    }
+}

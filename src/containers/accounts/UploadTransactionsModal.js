@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import UploadTransactionsModal from '../../components/accounts/UploadTransactionsModal'
-import { changeLinkAccount, closeUploadModal, uploadTransactions } from '../../actions'
+import { changeLinkAccount, closeUploadModal, uploadTransactions, linkUploadWithAccount } from '../../actions'
 
 const mapStateToProps = ({ ui, accounts }) => {
     const { uploadModal } = ui
@@ -22,8 +22,7 @@ const mapDispatchToProps = (dispatch) => {
             dispatch(changeLinkAccount(accountId))
         },
         onImportTransactions: (fileUpload, selectedAccountId) => {
-            console.log(fileUpload)
-            console.log(selectedAccountId)
+            dispatch(linkUploadWithAccount(fileUpload, selectedAccountId))
         }
     }
 }

@@ -27,7 +27,18 @@ const AccountSelect = ({accounts, selectedAccountId, onAccountChange}) => {
 class UploadTransactionsModalDialog extends Component {
 
     render() {
-        const { show, errorMessage, onClose, onDrop, uploadComplete, fileUpload, accounts, selectedAccountId, onAccountChange, onImportTransactions } = this.props
+        const {
+            accounts,
+            show,
+            errorMessage,
+            onClose,
+            onDrop,
+            uploadComplete,
+            fileUpload,
+            selectedAccountId,
+            onAccountChange,
+            onImportTransactions
+        } = this.props
         return (
             <Modal show={show}>
                 <Modal.Header>
@@ -38,12 +49,14 @@ class UploadTransactionsModalDialog extends Component {
                         {errorMessage !== null ? <Alert bsStyle="danger">{errorMessage}</Alert> : ""}
                     </div>
                     <div className="row">
-                        <Dropzone onDrop={(files) => onDrop(files)} multiple={false}>
-                            <div style={{margin: "10px"}}>
-                                <i className="fa fa-upload" aria-hidden="true" style={{fontSize: "96px"}}></i>
-                                <div>Only OFX/QFX files are accepted at this moment</div>
-                            </div>
-                        </Dropzone>
+                        <div className="container">
+                            <Dropzone onDrop={(files) => onDrop(files)} multiple={false}>
+                                <div style={{margin: "10px"}}>
+                                    <i className="fa fa-upload" aria-hidden="true" style={{fontSize: "96px"}}></i>
+                                    <div>Only OFX/QFX files are accepted at this moment</div>
+                                </div>
+                            </Dropzone>
+                        </div>
                     </div>
                     {uploadComplete ?
                         <div className="row">
