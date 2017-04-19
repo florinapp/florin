@@ -37,7 +37,10 @@ class UploadTransactionsModalDialog extends Component {
             fileUpload,
             selectedAccountId,
             onAccountChange,
-            onImportTransactions
+            onImportTransactions,
+            linkComplete,
+            totalImported,
+            totalSkipped,
         } = this.props
         return (
             <Modal show={show}>
@@ -67,6 +70,13 @@ class UploadTransactionsModalDialog extends Component {
                                 </FormGroup>
                             </Form>
                         </div>
+                    : ""}
+                    {linkComplete ?
+                        <Alert bsStyle="success">
+                            <p>Success!</p>
+                            <p>Total transactions imported: {totalImported}</p>
+                            <p>Total transactions skipped: {totalSkipped}</p>
+                        </Alert>
                     : ""}
                 </Modal.Body>
                 <Modal.Footer>

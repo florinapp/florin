@@ -13,6 +13,7 @@ import {
     UPLOAD_TRANSACTIONS_SUCCEEDED,
     UPLOAD_TRANSACTIONS_FAILED,
     CHANGE_LINK_ACCOUNT,
+    LINK_UPLOAD_WITH_ACCOUNT_SUCCEEDED,
 } from '../actions'
 
 const initState = {
@@ -27,7 +28,9 @@ const initState = {
         totalImported: 0,
         totalSkipped: 0,
         errorMessage: null,
-        selectedAccountId: null,
+        selectedAccountId: null,  // Account selected from the UI
+        importedAccountId: null,  // Account id the transactions imported into (deal with accountId = 'NEW' case)
+        linkComplete: false,
     }
 }
 
@@ -98,6 +101,8 @@ const ui = (state=initState, action) => {
                     totalSkipped: 0,
                     errorMessage: null,
                     selectedAccountId: null,
+                    importedAccountId: null,
+                    linkComplete: false,
                 }
             }
         case UPLOAD_TRANSACTIONS_SUCCEEDED:
@@ -108,6 +113,7 @@ const ui = (state=initState, action) => {
                     errorMessage: null,
                     uploadComplete: true,
                     fileUpload: action.fileUpload,
+                    linkComplete: false,
                 }
             }
         case UPLOAD_TRANSACTIONS_FAILED:
@@ -116,6 +122,7 @@ const ui = (state=initState, action) => {
                 uploadModal: {
                     ...state.uploadModal,
                     errorMessage: action.error,
+                    linkComplete: false,
                 }
             }
         case CHANGE_LINK_ACCOUNT:
@@ -124,6 +131,17 @@ const ui = (state=initState, action) => {
                 uploadModal: {
                     ...state.uploadModal,
                     selectedAccountId: action.accountId,
+                }
+            }
+        case LINK_UPLOAD_WITH_ACCOUNT_SUCCEEDED:
+            return {
+                ...state,
+                uploadModal: {
+                    ...state.uploadModal,
+                    importedAccountId: action.accountId,
+                    totalImported: action.totalImported,
+                    totalSkipped: action.totalSkipped,
+                    linkComplete: true,
                 }
             }
         default:

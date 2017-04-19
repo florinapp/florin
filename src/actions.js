@@ -425,6 +425,9 @@ export const LINK_UPLOAD_WITH_ACCOUNT_SUCCEEDED = 'LINK_UPLOAD_WITH_ACCOUNT_SUCC
 export const linkUploadWithAccountSucceeded = (json) => {
     return {
         type: LINK_UPLOAD_WITH_ACCOUNT_SUCCEEDED,
+        accountId: json.account_id,
+        totalImported: json.total_imported,
+        totalSkipped: json.total_skipped,
     }
 }
 export const linkUploadWithAccount = (fileUpload, selectedAccountId) => {
