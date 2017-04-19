@@ -12,6 +12,7 @@ import {
     CLOSE_UPLOAD_MODAL,
     UPLOAD_TRANSACTIONS_SUCCEEDED,
     UPLOAD_TRANSACTIONS_FAILED,
+    CHANGE_LINK_ACCOUNT,
 } from '../actions'
 
 const initState = {
@@ -25,6 +26,7 @@ const initState = {
         totalImported: 0,
         totalSkipped: 0,
         errorMessage: null,
+        selectedAccountId: null,
     }
 }
 
@@ -93,6 +95,7 @@ const ui = (state=initState, action) => {
                     totalImported: 0,
                     totalSkipped: 0,
                     errorMessage: null,
+                    selectedAccountId: null,
                 }
             }
         case UPLOAD_TRANSACTIONS_SUCCEEDED:
@@ -110,6 +113,14 @@ const ui = (state=initState, action) => {
                 uploadModal: {
                     ...state.uploadModal,
                     errorMessage: action.error,
+                }
+            }
+        case CHANGE_LINK_ACCOUNT:
+            return {
+                ...state,
+                uploadModal: {
+                    ...state.uploadModal,
+                    selectedAccountId: action.accountId,
                 }
             }
         default:

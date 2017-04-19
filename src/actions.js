@@ -406,3 +406,11 @@ export const uploadTransactions = (files) => {
         })
     }
 }
+
+export const CHANGE_LINK_ACCOUNT = 'CHANGE_LINK_ACCOUNT'
+export const changeLinkAccount = (accountId) => {
+    return {
+        type: CHANGE_LINK_ACCOUNT,
+        accountId,
+    }
+}
