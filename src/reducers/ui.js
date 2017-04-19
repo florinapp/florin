@@ -23,6 +23,7 @@ const initState = {
     uploadModal: {
         show: false,
         uploadComplete: false,
+        fileUpload: null,
         totalImported: 0,
         totalSkipped: 0,
         errorMessage: null,
@@ -92,6 +93,7 @@ const ui = (state=initState, action) => {
                     ...state.uploadModal,
                     show: false,
                     uploadComplete: false,
+                    fileUpload: null,
                     totalImported: 0,
                     totalSkipped: 0,
                     errorMessage: null,
@@ -105,6 +107,7 @@ const ui = (state=initState, action) => {
                     ...state.uploadModal,
                     errorMessage: null,
                     uploadComplete: true,
+                    fileUpload: action.fileUpload,
                 }
             }
         case UPLOAD_TRANSACTIONS_FAILED:

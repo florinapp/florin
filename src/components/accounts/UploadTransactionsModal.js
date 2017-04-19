@@ -27,7 +27,7 @@ const AccountSelect = ({accounts, selectedAccountId, onAccountChange}) => {
 class UploadTransactionsModalDialog extends Component {
 
     render() {
-        const { show, errorMessage, onClose, onDrop, uploadComplete, accounts, selectedAccountId, onAccountChange } = this.props
+        const { show, errorMessage, onClose, onDrop, uploadComplete, fileUpload, accounts, selectedAccountId, onAccountChange, onImportTransactions } = this.props
         return (
             <Modal show={show}>
                 <Modal.Header>
@@ -57,7 +57,9 @@ class UploadTransactionsModalDialog extends Component {
                     : ""}
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button bsStyle="primary" disabled={selectedAccountId === null}>Import Transactions</Button>
+                    <Button bsStyle="primary" disabled={selectedAccountId === null} onClick={() => {
+                        onImportTransactions(fileUpload, selectedAccountId)
+                    }}>Import Transactions</Button>
                     <Button onClick={onClose}>Close</Button>
                 </Modal.Footer>
             </Modal>

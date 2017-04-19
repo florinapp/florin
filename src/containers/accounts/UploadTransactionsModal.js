@@ -20,6 +20,10 @@ const mapDispatchToProps = (dispatch) => {
         },
         onAccountChange: (accountId) => {
             dispatch(changeLinkAccount(accountId))
+        },
+        onImportTransactions: (fileUpload, selectedAccountId) => {
+            console.log(fileUpload)
+            console.log(selectedAccountId)
         }
     }
 }
