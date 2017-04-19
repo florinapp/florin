@@ -1,6 +1,7 @@
 import moment from 'moment'
 import fetch from 'isomorphic-fetch'
 import querystring from 'querystring'
+import request from 'superagent'  // TODO: use isomorphic-fetch
 
 // ----------------------------------------------------------------------------
 // Fetch assets chart data
@@ -350,5 +351,97 @@ export const createAccount = (account) => {
         return fetch(`http://localhost:9000/api/accounts`, options)
             .then(response => response.json())
             .then(json => dispatch(createAccountSucceeded(json)))
+    }
+}
+
+// ----------------------------------------------------------------------------
+// Upload Transaction Modal
+export const SHOW_UPLOAD_MODAL = 'SHOW_UPLOAD_MODAL'
+export const showUploadModal = () => {
+    return {
+        type: SHOW_UPLOAD_MODAL 
+    }
+}
+export const CLOSE_UPLOAD_MODAL = 'CLOSE_UPLOAD_MODAL'
+export const closeUploadModal = () => {
+    return {
+        type: CLOSE_UPLOAD_MODAL
+    }
+}
+export const REQUEST_UPLOAD_TRANSACTIONS = 'REQUEST_UPLOAD_TRANSACTIONS'
+export const requestUploadTransactions = () => {
+    return {
+        type: REQUEST_UPLOAD_TRANSACTIONS
+    }
+}
+export const UPLOAD_TRANSACTIONS_SUCCEEDED = 'UPLOAD_TRANSACTIONS_SUCCEEDED'
+export const uploadTransactionsSucceeded = (json) => {
+    return {
+        type: UPLOAD_TRANSACTIONS_SUCCEEDED,
+        fileUpload: json,
+    }
+}
+export const UPLOAD_TRANSACTIONS_FAILED = 'UPLOAD_TRANSACTIONS_FAILED'
+export const uploadTransactionsFailed = ({error}) => {
+    return {
+        type: UPLOAD_TRANSACTIONS_FAILED,
+        error,
+    }
+}
+
+export const uploadTransactions = (files) => {
+    return (dispatch) => {
+        dispatch(requestUploadTransactions())
+        // TODO: use isomorphic-fetch
+        const req = request.post(`http://localhost:9000/api/fileUploads`)
+        files.forEach((file) => {
+            req.attach(file.name, file)
+        })
+        req.end((err, res) => {
+            if (err !== null) {
+                dispatch(uploadTransactionsFailed(res.body))
+                return
+            }
+            dispatch(uploadTransactionsSucceeded(res.body))
+        })
+    }
+}
+
+export const CHANGE_LINK_ACCOUNT = 'CHANGE_LINK_ACCOUNT'
+export const changeLinkAccount = (accountId) => {
+    return {
+        type: CHANGE_LINK_ACCOUNT,
+        accountId,
+    }
+}
+
+export const REQUEST_LINK_UPLOAD_WITH_ACCOUNT = 'REQUEST_LINK_UPLOAD_WITH_ACCOUNT'
+export const requestLinkUploadWithAccount = () => {
+    return {
+        type: REQUEST_LINK_UPLOAD_WITH_ACCOUNT
+    }
+}
+export const LINK_UPLOAD_WITH_ACCOUNT_SUCCEEDED = 'LINK_UPLOAD_WITH_ACCOUNT_SUCCEEDED'
+export const linkUploadWithAccountSucceeded = (json) => {
+    return {
+        type: LINK_UPLOAD_WITH_ACCOUNT_SUCCEEDED,
+        accountId: json.account_id,
+        totalImported: json.total_imported,
+        totalSkipped: json.total_skipped,
+    }
+}
+export const linkUploadWithAccount = (fileUpload, selectedAccountId) => {
+    return (dispatch) => {
+        dispatch(requestLinkUploadWithAccount())
+        let headers = new Headers()
+        headers.set("Content-Type", "application/json")
+        const options = {
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify({accountId: selectedAccountId})
+        }
+        return fetch(`http://localhost:9000/api/fileUploads/${fileUpload.id}/linkAccount`, options)
+            .then(response => response.json())
+            .then(json => dispatch(linkUploadWithAccountSucceeded(json)))
     }
 }

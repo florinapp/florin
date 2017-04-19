@@ -8,6 +8,12 @@ import {
     SHOW_NEW_ACCOUNT_MODAL,
     CLOSE_NEW_ACCOUNT_MODAL,
     CREATE_ACCOUNT_SUCCEEDED,
+    SHOW_UPLOAD_MODAL,
+    CLOSE_UPLOAD_MODAL,
+    UPLOAD_TRANSACTIONS_SUCCEEDED,
+    UPLOAD_TRANSACTIONS_FAILED,
+    CHANGE_LINK_ACCOUNT,
+    LINK_UPLOAD_WITH_ACCOUNT_SUCCEEDED,
 } from '../actions'
 
 const initState = {
@@ -15,6 +21,17 @@ const initState = {
     loadingCategorySummary: false,
     loadingTransactions: false,
     showNewAccountModal: false,
+    uploadModal: {
+        show: false,
+        uploadComplete: false,
+        fileUpload: null,
+        totalImported: 0,
+        totalSkipped: 0,
+        errorMessage: null,
+        selectedAccountId: null,  // Account selected from the UI
+        importedAccountId: null,  // Account id the transactions imported into (deal with accountId = 'NEW' case)
+        linkComplete: false,
+    }
 }
 
 const ui = (state=initState, action) => {
@@ -63,6 +80,69 @@ const ui = (state=initState, action) => {
             return {
                 ...state,
                 showNewAccountModal: false
+            }
+        case SHOW_UPLOAD_MODAL:
+            return {
+                ...state,
+                uploadModal: {
+                    ...state.uploadModal,
+                    show: true
+                }
+            }
+        case CLOSE_UPLOAD_MODAL:
+            return {
+                ...state,
+                uploadModal: {
+                    ...state.uploadModal,
+                    show: false,
+                    uploadComplete: false,
+                    fileUpload: null,
+                    totalImported: 0,
+                    totalSkipped: 0,
+                    errorMessage: null,
+                    selectedAccountId: null,
+                    importedAccountId: null,
+                    linkComplete: false,
+                }
+            }
+        case UPLOAD_TRANSACTIONS_SUCCEEDED:
+            return {
+                ...state,
+                uploadModal: {
+                    ...state.uploadModal,
+                    errorMessage: null,
+                    uploadComplete: true,
+                    fileUpload: action.fileUpload,
+                    linkComplete: false,
+                }
+            }
+        case UPLOAD_TRANSACTIONS_FAILED:
+            return {
+                ...state,
+                uploadModal: {
+                    ...state.uploadModal,
+                    errorMessage: action.error,
+                    linkComplete: false,
+                }
+            }
+        case CHANGE_LINK_ACCOUNT:
+            return {
+                ...state,
+                uploadModal: {
+                    ...state.uploadModal,
+                    selectedAccountId: action.accountId,
+                }
+            }
+        case LINK_UPLOAD_WITH_ACCOUNT_SUCCEEDED:
+            return {
+                ...state,
+                uploadModal: {
+                    ...state.uploadModal,
+                    importedAccountId: action.accountId,
+                    totalImported: action.totalImported,
+                    totalSkipped: action.totalSkipped,
+                    linkComplete: true,
+                }
             }
         default:
             return state
