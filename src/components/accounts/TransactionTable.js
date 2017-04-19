@@ -100,12 +100,12 @@ const TransactionTable = ({ loadingTransactions, currentAccountId, filter, sort,
                                         <ButtonGroup>
                                             <ButtonWithTooltip buttonStyle="primary" tooltip="Delete the transaction"
                                                                onClick={() => { onDeleteClicked(transaction.id) }}>
-                                                Delete
+                                                <i className="fa fa-trash-o" aria-hidden="true"></i>
                                             </ButtonWithTooltip>
 
                                             <ButtonWithTooltip buttonStyle="default" tooltip="Flag this transaction as internal transfer"
                                                                onClick={() => { onFlagAsInternalTransferClicked(transaction.id) }}>
-                                                Internal
+                                                <i className="fa fa-random" aria-hidden="true"></i>
                                             </ButtonWithTooltip>
 
                                         </ButtonGroup>

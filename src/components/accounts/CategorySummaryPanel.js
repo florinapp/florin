@@ -94,7 +94,7 @@ class CategorySummaryPanel extends Component {
                     <div className="pull-right">
                         <button type="button" className="btn btn-primary btn-xs"
                                 onClick={()=>fetchCategorySummary("_all", filter)}>
-                            <span className="glyphicon glyphicon-refresh"></span>
+                            <i className="fa fa-refresh"></i>&nbsp;Refresh
                         </button>
                     </div>
                 </div>
