@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import UploadTransactionsModal from '../../components/accounts/UploadTransactionsModal'
-import { changeLinkAccount, closeUploadModal, uploadTransactions, linkUploadWithAccount } from '../../actions'
+import { fetchAccountsData, changeLinkAccount, closeUploadModal, uploadTransactions, linkUploadWithAccount } from '../../actions'
 
 const mapStateToProps = ({ ui, accounts }) => {
     const { uploadModal } = ui
@@ -14,6 +14,7 @@ const mapDispatchToProps = (dispatch) => {
     return {
         onClose: () => {
             dispatch(closeUploadModal())
+            dispatch(fetchAccountsData())
         },
         onDrop: (files) => {
             dispatch(uploadTransactions(files))

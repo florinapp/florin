@@ -12,7 +12,7 @@ class AccountListPanel extends Component {
     }
 
     render() {
-        let { loadingAccountsData, accounts, match, location, currentAccountId, showNewAccountModal } = this.props
+        let { loadingAccountsData, accounts, match, location, currentAccountId, showNewAccountModal, fetchAccountsData } = this.props
         currentAccountId = currentAccountId || match.params.accountId
         return (
             <div className="panel panel-default">
@@ -21,6 +21,11 @@ class AccountListPanel extends Component {
                     {loadingAccountsData ? <Spinner size="16px" /> : ""}
                     </span>
                     <div className="pull-right">
+                        <button type="button" className="btn btn-primary btn-xs" onClick={() => fetchAccountsData()}>
+                            <span className="fa fa-refresh"></span>
+                            &nbsp;Refresh
+                        </button>
+                        <span style={{paddingRight: "2px"}}></span>
                         <button type="button" className="btn btn-primary btn-xs" onClick={() => showNewAccountModal()}>
                             <span className="fa fa-plus-circle"></span>
                             &nbsp;New
