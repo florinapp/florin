@@ -100,20 +100,18 @@ class AccountListPanel extends Component {
                             ...this.state,
                             showNewAccountModal: false
                         })
-                        fetchAccountsData()
                     }}
                 />
                 <AccountEditModal
                     mode="update"
                     show={showEditAccountModal}
                     currentAccount={currentAccount}
-                    onSaveClicked={updateAccount}
+                    onSaveClicked={(account) => updateAccount(currentAccountId, account)}
                     closeDialog={() => {
                         this.setState({
                             ...this.state,
                             showEditAccountModal: false
                         })
-                        fetchAccountsData()
                     }}
                 />
             </div>

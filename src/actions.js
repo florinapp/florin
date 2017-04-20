@@ -323,13 +323,13 @@ export const createAccountSucceeded = (json) => {
         receivedAt: Date.now(),
     }
 }
-export const createAccount = (account) => {
+export const createAccount = (request) => {
     let headers = new Headers()
     headers.set("Content-Type", "application/json")
     const options = {
         method: 'POST',
         headers: headers,
-        body: JSON.stringify(account)
+        body: JSON.stringify(request)
     }
     return (dispatch) => {
         dispatch(requestCreateAccount())
@@ -355,17 +355,17 @@ export const updateAccountSucceeded = (json) => {
         receivedAt: Date.now(),
     }
 }
-export const updateAccount = (account) => {
+export const updateAccount = (accountId, request) => {
     let headers = new Headers()
     headers.set("Content-Type", "application/json")
     const options = {
         method: 'PUT',
         headers: headers,
-        body: JSON.stringify(account)
+        body: JSON.stringify(request)
     }
     return (dispatch) => {
         dispatch(requestUpdateAccount())
-        return fetch(`http://localhost:9000/api/accounts`, options)
+        return fetch(`http://localhost:9000/api/accounts/${accountId}`, options)
             .then(response => response.json())
             .then(json => dispatch(updateAccountSucceeded(json)))
     }

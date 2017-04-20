@@ -20,8 +20,8 @@ const mapDispatchToProps = (dispatch) => {
         saveNewAccount: (account) => {
             dispatch(createAccount({account}))
         },
-        updateAccount: (account) => {
-            dispatch(updateAccount({account}))
+        updateAccount: (accountId, account) => {
+            dispatch(updateAccount(accountId, {account}))
         }
     }
 }

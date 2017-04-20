@@ -7,6 +7,7 @@ import {
     RECEIVE_CATEGORY_SUMMARY,
     CHANGE_TRANSACTION_PAGE_NUMBER,
     CREATE_ACCOUNT_SUCCEEDED,
+    UPDATE_ACCOUNT_SUCCEEDED,
 } from '../actions'
 import querystring from 'querystring'
 import { matchPath } from 'react-router'
@@ -138,6 +139,17 @@ const accounts = (state=initState, action) => {
             return {
                 ...state,
                 accounts: [...state.accounts, action.account]
+            }
+        case UPDATE_ACCOUNT_SUCCEEDED:
+            return {
+                ...state,
+                accounts: state.accounts.map((account) => {
+                    if (account.id !== action.account.id) {
+                        return account
+                    } else {
+                        return action.account
+                    }
+                })
             }
         default:
             return state
