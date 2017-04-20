@@ -3,6 +3,7 @@ import { NavLink } from 'react-router-dom'
 import AccountEditModal from '../../containers/accounts/AccountEditModal'
 import './AccountListPanel.css'
 import Spinner from '../Spinner'
+import Dialog from 'react-bootstrap-dialog'
 
 const Separator = () => <span style={{paddingRight: "2px"}}></span>
 
@@ -73,7 +74,18 @@ class AccountListPanel extends Component {
                          : ""}
                         <Separator />
                         {currentAccountId !== "_all" ?
-                         <button type="button" className="btn btn-danger btn-xs" onClick={() => { deleteAccount(currentAccountId) }}>
+                         <button type="button" className="btn btn-danger btn-xs" onClick={() => {
+                                this.refs.dialog.show({
+                                    title: 'Are you sure?',
+                                    body: 'Do you want to delete this account?',
+                                    actions: [
+                                        Dialog.CancelAction(),
+                                        Dialog.OKAction(() => {
+                                            deleteAccount(currentAccountId)
+                                        })
+                                    ],
+                                })
+                            }}>
                              <i className="fa fa-trash-o" aria-hidden="true"></i>
                              &nbsp;Delete
                          </button>
@@ -122,6 +134,7 @@ class AccountListPanel extends Component {
                         })
                     }}
                 />
+                <Dialog ref="dialog" />
             </div>
         )
     }
