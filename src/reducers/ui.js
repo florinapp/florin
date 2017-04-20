@@ -5,8 +5,6 @@ import {
     RECEIVE_CATEGORY_SUMMARY,
     REQUEST_TRANSACTIONS,
     RECEIVE_TRANSACTIONS,
-    SHOW_NEW_ACCOUNT_MODAL,
-    CLOSE_NEW_ACCOUNT_MODAL,
     CREATE_ACCOUNT_SUCCEEDED,
     SHOW_UPLOAD_MODAL,
     CLOSE_UPLOAD_MODAL,
@@ -65,16 +63,6 @@ const ui = (state=initState, action) => {
             return {
                 ...state,
                 loadingTransactions: false
-            }
-        case SHOW_NEW_ACCOUNT_MODAL:
-            return {
-                ...state,
-                showNewAccountModal: true
-            }
-        case CLOSE_NEW_ACCOUNT_MODAL:
-            return {
-                ...state,
-                showNewAccountModal: false
             }
         case CREATE_ACCOUNT_SUCCEEDED:
             return {

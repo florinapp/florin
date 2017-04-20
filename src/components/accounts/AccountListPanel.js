@@ -4,7 +4,17 @@ import NewAccountModal from '../../containers/accounts/NewAccountModal'
 import './AccountListPanel.css'
 import Spinner from '../Spinner'
 
+const Separator = () => <span style={{paddingRight: "2px"}}></span>
+
 class AccountListPanel extends Component {
+
+    constructor(props) {
+        super(props)
+        this.state = {
+            showNewAccountModal: false,
+            showEditAccountModal: false
+        }
+    }
 
     componentDidMount() {
         let { fetchAccountsData } = this.props
@@ -12,7 +22,15 @@ class AccountListPanel extends Component {
     }
 
     render() {
-        let { loadingAccountsData, accounts, match, location, currentAccountId, showNewAccountModal, fetchAccountsData } = this.props
+        let {
+            loadingAccountsData,
+            accounts,
+            match,
+            location,
+            currentAccountId,
+            fetchAccountsData,
+        } = this.props
+        const { showNewAccountModal, showEditAccountModal } = this.state
         currentAccountId = currentAccountId || match.params.accountId
         return (
             <div className="panel panel-default">
@@ -25,11 +43,24 @@ class AccountListPanel extends Component {
                             <span className="fa fa-refresh"></span>
                             &nbsp;Refresh
                         </button>
-                        <span style={{paddingRight: "2px"}}></span>
-                        <button type="button" className="btn btn-primary btn-xs" onClick={() => showNewAccountModal()}>
+                        <Separator />
+                        <button type="button" className="btn btn-primary btn-xs" onClick={() => {
+                            console.log(this)
+                            this.setState({
+                                ...this.state,
+                                showNewAccountModal: true
+                            })
+                        }}>
                             <span className="fa fa-plus-circle"></span>
                             &nbsp;New
                         </button>
+                        <Separator />
+                        {currentAccountId !== "_all" ?
+                         <button type="button" className="btn btn-primary btn-xs" onClick={() => showEditAccountModal()}>
+                             <i className="fa fa-pencil-square-o" aria-hidden="true"></i>
+                             &nbsp;Edit
+                         </button>
+                         : ""}
                     </div>
                 </div>
                 <div className="panel-body">
@@ -51,7 +82,13 @@ class AccountListPanel extends Component {
                         </ul>
                     }
                 </div>
-                <NewAccountModal />
+                <NewAccountModal show={showNewAccountModal} closeDialog={() => {
+                    this.setState({
+                        ...this.state,
+                        showNewAccountModal: false
+                    })
+                    // TODO: Dispatch fetchAccountData
+                }}/>
             </div>
         )
     }

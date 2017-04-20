@@ -19,7 +19,10 @@ const mapDispatchToProps = (dispatch) => {
         },
         showNewAccountModal: () => {
             dispatch(showNewAccountModal())
-        }
+        },
+        showEditAccountModal: () => {
+            console.log('here')
+        },
     }
 }
 

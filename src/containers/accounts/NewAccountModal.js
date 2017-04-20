@@ -1,12 +1,6 @@
 import { connect } from 'react-redux'
 import NewAccountModal from '../../components/accounts/NewAccountModal'
-import { closeNewAccountModal, createAccount } from '../../actions'
-
-const mapStateToProps = ({ ui }) => {
-    return {
-        show: ui.showNewAccountModal,
-    }
-}
+import { createAccount } from '../../actions'
 
 const mapDispatchToProps = (dispatch) => {
     return {
@@ -26,10 +20,7 @@ const mapDispatchToProps = (dispatch) => {
             )
             return result
         },
-        closeDialog: () => {
-            dispatch(closeNewAccountModal())
-        }
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(NewAccountModal)
+export default connect(null, mapDispatchToProps)(NewAccountModal)

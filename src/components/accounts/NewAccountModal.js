@@ -78,6 +78,7 @@ class NewAccountModal extends Component {
                             saveNewAccount(newAccount)
                             this.resetValidationState()
                             this.resetInputFields()
+                            closeDialog()
                         }
                     }}>Save</Button>
                     <Button onClick={
