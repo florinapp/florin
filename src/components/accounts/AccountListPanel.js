@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { NavLink } from 'react-router-dom'
-import NewAccountModal from '../../containers/accounts/NewAccountModal'
+import AccountEditModal from '../../containers/accounts/AccountEditModal'
 import './AccountListPanel.css'
 import Spinner from '../Spinner'
 
@@ -29,9 +29,14 @@ class AccountListPanel extends Component {
             location,
             currentAccountId,
             fetchAccountsData,
+            saveNewAccount,
+            updateAccount,
         } = this.props
         const { showNewAccountModal, showEditAccountModal } = this.state
         currentAccountId = currentAccountId || match.params.accountId
+        const currentAccount = currentAccountId ? accounts.filter((account) => {
+            return account.id.toString() === currentAccountId.toString()
+        })[0] : null
         return (
             <div className="panel panel-default">
                 <div className="panel-heading">
@@ -45,7 +50,6 @@ class AccountListPanel extends Component {
                         </button>
                         <Separator />
                         <button type="button" className="btn btn-primary btn-xs" onClick={() => {
-                            console.log(this)
                             this.setState({
                                 ...this.state,
                                 showNewAccountModal: true
@@ -56,7 +60,12 @@ class AccountListPanel extends Component {
                         </button>
                         <Separator />
                         {currentAccountId !== "_all" ?
-                         <button type="button" className="btn btn-primary btn-xs" onClick={() => showEditAccountModal()}>
+                         <button type="button" className="btn btn-primary btn-xs" onClick={() => {
+                             this.setState({
+                                 ...this.state,
+                                 showEditAccountModal: true
+                             })
+                         }}>
                              <i className="fa fa-pencil-square-o" aria-hidden="true"></i>
                              &nbsp;Edit
                          </button>
@@ -82,13 +91,31 @@ class AccountListPanel extends Component {
                         </ul>
                     }
                 </div>
-                <NewAccountModal show={showNewAccountModal} closeDialog={() => {
-                    this.setState({
-                        ...this.state,
-                        showNewAccountModal: false
-                    })
-                    // TODO: Dispatch fetchAccountData
-                }}/>
+                <AccountEditModal
+                    mode="create"
+                    show={showNewAccountModal}
+                    onSaveClicked={saveNewAccount}
+                    closeDialog={() => {
+                        this.setState({
+                            ...this.state,
+                            showNewAccountModal: false
+                        })
+                        fetchAccountsData()
+                    }}
+                />
+                <AccountEditModal
+                    mode="update"
+                    show={showEditAccountModal}
+                    currentAccount={currentAccount}
+                    onSaveClicked={updateAccount}
+                    closeDialog={() => {
+                        this.setState({
+                            ...this.state,
+                            showEditAccountModal: false
+                        })
+                        fetchAccountsData()
+                    }}
+                />
             </div>
         )
     }

@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import AccountListPanel from '../../components/accounts/AccountListPanel'
-import { fetchAccountsData, showNewAccountModal } from '../../actions'
+import { createAccount, updateAccount, fetchAccountsData } from '../../actions'
 import { withRouter } from 'react-router'
 
 const mapStateToProps = ({ ui, accounts, currentAccountId }) => {
@@ -17,12 +17,12 @@ const mapDispatchToProps = (dispatch) => {
         fetchAccountsData: () => {
             dispatch(fetchAccountsData())
         },
-        showNewAccountModal: () => {
-            dispatch(showNewAccountModal())
+        saveNewAccount: (account) => {
+            dispatch(createAccount({account}))
         },
-        showEditAccountModal: () => {
-            console.log('here')
-        },
+        updateAccount: (account) => {
+            dispatch(updateAccount({account}))
+        }
     }
 }
 

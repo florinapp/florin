@@ -1,12 +1,8 @@
 import { connect } from 'react-redux'
-import NewAccountModal from '../../components/accounts/NewAccountModal'
-import { createAccount } from '../../actions'
+import AccountEditModal from '../../components/accounts/AccountEditModal'
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        saveNewAccount: (account) => {
-            dispatch(createAccount({account}))
-        },
         validate: ({institution, name, type}) => {
             let result = {
                 institutionNameValidationState: (institution || "").length >= 1 ? 'success' : 'error',
@@ -23,4 +19,4 @@ const mapDispatchToProps = (dispatch) => {
     }
 }
 
-export default connect(null, mapDispatchToProps)(NewAccountModal)
+export default connect(null, mapDispatchToProps)(AccountEditModal)

@@ -340,6 +340,38 @@ export const createAccount = (account) => {
 }
 
 // ----------------------------------------------------------------------------
+// Update Account
+export const REQUEST_UPDATE_ACCOUNT = 'REQUEST_UPDATE_ACCOUNT'
+export const requestUpdateAccount = () => {
+    return {
+        type: REQUEST_UPDATE_ACCOUNT
+    }
+}
+export const UPDATE_ACCOUNT_SUCCEEDED = 'UPDATE_ACCOUNT_SUCCEEDED'
+export const updateAccountSucceeded = (json) => {
+    return {
+        type: UPDATE_ACCOUNT_SUCCEEDED,
+        account: json.account,
+        receivedAt: Date.now(),
+    }
+}
+export const updateAccount = (account) => {
+    let headers = new Headers()
+    headers.set("Content-Type", "application/json")
+    const options = {
+        method: 'PUT',
+        headers: headers,
+        body: JSON.stringify(account)
+    }
+    return (dispatch) => {
+        dispatch(requestUpdateAccount())
+        return fetch(`http://localhost:9000/api/accounts`, options)
+            .then(response => response.json())
+            .then(json => dispatch(updateAccountSucceeded(json)))
+    }
+}
+
+// ----------------------------------------------------------------------------
 // Upload Transaction Modal
 export const SHOW_UPLOAD_MODAL = 'SHOW_UPLOAD_MODAL'
 export const showUploadModal = () => {

@@ -11,7 +11,7 @@ const FieldGroup = ({id, label, help, validationState, ...props}) => {
     )
 }
 
-class NewAccountModal extends Component {
+class AccountEditModal extends Component {
     resetValidationState() {
         this.setState({
             institutionNameValidationState: null,
@@ -30,11 +30,14 @@ class NewAccountModal extends Component {
     }
 
     render() {
-        const { show, saveNewAccount, closeDialog, validate } = this.props
+        const { show, mode, closeDialog, validate, onSaveClicked } = this.props
+        const title = mode === "create" ? "Add New Account" : "Edit Account"
+        let currentAccount = mode === "create" ? {} : (this.props.currentAccount || {})
+        let buttonCaption = mode === "create" ? "Create" : "Update"
         return (
             <Modal show={show}>
                 <Modal.Header>
-                    <Modal.Title>Add New Account</Modal.Title>
+                    <Modal.Title>{title}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <form>
@@ -43,22 +46,27 @@ class NewAccountModal extends Component {
                                     label="Institution Name"
                                     placeholder="Institution Name"
                                     autoFocus
+                                    defaultValue={currentAccount.institution || null}
                                     validationState={this.state.institutionNameValidationState}
                                     inputRef={(node) => { this.institutionNameElement = node }} />
                         <FieldGroup id="account-name"
                                     type="text"
                                     label="Account Name"
                                     placeholder="Account Name"
+                                    defaultValue={currentAccount.name || null}
                                     validationState={this.state.accountNameValidationState}
                                     inputRef={(node) => { this.accountNameElement = node }} />
                         <FormGroup controlId="account-type" validationState={this.state.accountTypeValidationState}>
                             <ControlLabel>Account Type</ControlLabel>
                             <FormControl componentClass="select"
                                          placeholder="Type"
+                                         defaultValue={currentAccount.type}
                                          inputRef={(node) => { this.accountTypeNode = node }}>
-                                <option value="chequing">Chequing</option>
-                                <option value="savings">Savings</option>
-                                <option value="credit">Credit Card</option>
+                                {
+                                    ['chequing', 'savings', 'credit'].map((type) => {
+                                        return <option key={type} value={type} checked={currentAccount.type === type}>{type}</option>
+                                    })
+                                }
                             </FormControl>
                         </FormGroup>
                     </form>
@@ -75,12 +83,12 @@ class NewAccountModal extends Component {
                             ...validationResult
                         })
                         if (validationResult.isValid) {
-                            saveNewAccount(newAccount)
+                            onSaveClicked(newAccount)
                             this.resetValidationState()
                             this.resetInputFields()
                             closeDialog()
                         }
-                    }}>Save</Button>
+                    }}>{buttonCaption}</Button>
                     <Button onClick={
                         () => {
                             this.resetValidationState()
@@ -93,4 +101,4 @@ class NewAccountModal extends Component {
     }
 }
 
-export default NewAccountModal
+export default AccountEditModal
