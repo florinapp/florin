@@ -8,6 +8,7 @@ import {
     CHANGE_TRANSACTION_PAGE_NUMBER,
     CREATE_ACCOUNT_SUCCEEDED,
     UPDATE_ACCOUNT_SUCCEEDED,
+    DELETE_ACCOUNT_SUCCEEDED,
 } from '../actions'
 import querystring from 'querystring'
 import { matchPath } from 'react-router'
@@ -144,11 +145,19 @@ const accounts = (state=initState, action) => {
             return {
                 ...state,
                 accounts: state.accounts.map((account) => {
-                    if (account.id !== action.account.id) {
+                    if (account.id.toString() !== action.account.id.toString()) {
                         return account
                     } else {
                         return action.account
                     }
+                })
+            }
+        case DELETE_ACCOUNT_SUCCEEDED:
+            console.log(action.accountId)
+            return {
+                ...state,
+                accounts: state.accounts.filter((account) => {
+                    return account.id.toString() !== action.accountId.toString()
                 })
             }
         default:

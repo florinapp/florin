@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import AccountListPanel from '../../components/accounts/AccountListPanel'
-import { createAccount, updateAccount, fetchAccountsData } from '../../actions'
+import { createAccount, updateAccount, fetchAccountsData, deleteAccount } from '../../actions'
 import { withRouter } from 'react-router'
 
 const mapStateToProps = ({ ui, accounts, currentAccountId }) => {
@@ -22,7 +22,11 @@ const mapDispatchToProps = (dispatch) => {
         },
         updateAccount: (accountId, account) => {
             dispatch(updateAccount(accountId, {account}))
-        }
+        },
+        deleteAccount: (accountId) => {
+            dispatch(deleteAccount(accountId))
+            // After account delete, redirect to account _all
+        },
     }
 }
 

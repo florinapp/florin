@@ -372,6 +372,31 @@ export const updateAccount = (accountId, request) => {
 }
 
 // ----------------------------------------------------------------------------
+// Delete Account
+export const REQUEST_DELETE_ACCOUNT = 'REQUEST_DELETE_ACCOUNT'
+export const requestDeleteAccount = () => {
+    return {
+        type: REQUEST_DELETE_ACCOUNT
+    }
+}
+export const DELETE_ACCOUNT_SUCCEEDED = 'DELETE_ACCOUNT_SUCCEEDED'
+export const deleteAccountSucceeded = (json) => {
+    return {
+        type: DELETE_ACCOUNT_SUCCEEDED,
+        accountId: json.accountId,
+        receivedAt: Date.now(),
+    }
+}
+export const deleteAccount = (accountId) => {
+    return (dispatch) => {
+        dispatch(requestDeleteAccount())
+        return fetch(`http://localhost:9000/api/accounts/${accountId}`, {method: 'DELETE'})
+            .then(response => response.json())
+            .then(json => dispatch(deleteAccountSucceeded(json)))
+    }
+}
+
+// ----------------------------------------------------------------------------
 // Upload Transaction Modal
 export const SHOW_UPLOAD_MODAL = 'SHOW_UPLOAD_MODAL'
 export const showUploadModal = () => {

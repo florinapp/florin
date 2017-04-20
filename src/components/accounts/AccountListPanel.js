@@ -31,6 +31,7 @@ class AccountListPanel extends Component {
             fetchAccountsData,
             saveNewAccount,
             updateAccount,
+            deleteAccount,
         } = this.props
         const { showNewAccountModal, showEditAccountModal } = this.state
         currentAccountId = currentAccountId || match.params.accountId
@@ -68,6 +69,13 @@ class AccountListPanel extends Component {
                          }}>
                              <i className="fa fa-pencil-square-o" aria-hidden="true"></i>
                              &nbsp;Edit
+                         </button>
+                         : ""}
+                        <Separator />
+                        {currentAccountId !== "_all" ?
+                         <button type="button" className="btn btn-danger btn-xs" onClick={() => { deleteAccount(currentAccountId) }}>
+                             <i className="fa fa-trash-o" aria-hidden="true"></i>
+                             &nbsp;Delete
                          </button>
                          : ""}
                     </div>
