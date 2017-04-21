@@ -59,8 +59,7 @@ class TransactionsPanel extends Component {
     }
 
     render() {
-        const {onShowUploadModal, uploadTransactionFile, pagination, onPageClicked} = this.props
-        const {currentAccountId} = this
+        const {onShowUploadModal, pagination, onPageClicked} = this.props
         return (
             <div className="col-lg-9 col-md-6">
                 <div className="panel panel-default">

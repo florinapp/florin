@@ -1,5 +1,5 @@
 import React, { Component }  from 'react'
-import { Modal, Button, Alert, FormControl, ControlLabel, FormGroup, Form } from 'react-bootstrap'
+import { Modal, Button, Alert, ControlLabel, FormGroup, Form } from 'react-bootstrap'
 import Dropzone from 'react-dropzone'
 import Select from 'react-select'
 
