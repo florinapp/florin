@@ -2,13 +2,6 @@ import { connect } from 'react-redux'
 import AccountOverview from '../../components/dashboard/AccountOverview'
 import { fetchAccountsData } from '../../actions'
 
-const mapStateToProps = ({dashboard}) => {
-    let {accounts} = dashboard
-    return {
-        accounts
-    }
-}
-
 const mapDispatchToProps = (dispatch) => {
     return {
         onComponentMount: () => {
@@ -17,4 +10,4 @@ const mapDispatchToProps = (dispatch) => {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(AccountOverview)
+export default connect(null, mapDispatchToProps)(AccountOverview)

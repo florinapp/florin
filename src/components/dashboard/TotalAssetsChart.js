@@ -25,8 +25,8 @@ class TotalAssetsChart extends Component {
                 <div className="panel-heading">
                     <span className="panel-title">Total Assets over time</span>
                     <div className="pull-right">
-                        <button type="button" className="btn btn-primary btn-sm" onClick={onRefresh}>
-                            <span className="glyphicon glyphicon-refresh"></span>
+                        <button type="button" className="btn btn-primary btn-xs" onClick={onRefresh}>
+                            <span className="fa fa-refresh"></span>&nbsp;Refresh
                         </button>
                     </div>
                 </div>
