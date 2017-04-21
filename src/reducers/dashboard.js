@@ -1,15 +1,16 @@
-import { RECEIVE_ASSETS_CHART_DATA, RECEIVE_ACCOUNTS_DATA } from '../actions'
+import { RECEIVE_ACCOUNT_BALANCES_DATA, RECEIVE_ACCOUNTS_DATA } from '../actions'
 
 const initState = {
-    accounts: []
+    accounts: [],  // deprecate
+    accountBalances: [],
 }
 
 const dashboard = (state=initState, action) => {
     switch (action.type) {
-        case RECEIVE_ASSETS_CHART_DATA:
+        case RECEIVE_ACCOUNT_BALANCES_DATA:
             return {
                 ...state,
-                assets: action.data
+                accountBalances: action.accountBalances,
             }
         case RECEIVE_ACCOUNTS_DATA:
             return {

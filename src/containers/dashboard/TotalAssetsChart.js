@@ -1,17 +1,18 @@
 import { connect } from 'react-redux'
 import TotalAssetsChart from '../../components/dashboard/TotalAssetsChart'
-import { fetchAssetsChartData } from '../../actions'
+import { fetchAccountBalancesData } from '../../actions'
 
 const mapStateToProps = ({dashboard}) => {
     return {
-        assets: dashboard.assets
+        accountBalances: dashboard.accountBalances
+        // assets: dashboard.assets
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
         onRefresh: () => {
-            dispatch(fetchAssetsChartData())
+            dispatch(fetchAccountBalancesData())
         }
     }
 }

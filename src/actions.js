@@ -4,27 +4,27 @@ import querystring from 'querystring'
 import request from 'superagent'  // TODO: use isomorphic-fetch
 
 // ----------------------------------------------------------------------------
-// Fetch assets chart data
-export const REQUEST_ASSETS_CHART_DATA = 'REQUEST_ASSETS_CHART_DATA'
-export const RECEIVE_ASSETS_CHART_DATA = 'RECEIVE_ASSETS_CHART_DATA'
-export const requestAssetsChartData = () => {
+// Fetch account balances data
+export const REQUEST_ACCOUNT_BALANCES_DATA = 'REQUEST_ACCOUNT_BALANCES_DATA'
+export const RECEIVE_ACCOUNT_BALANCES_DATA = 'RECEIVE_ACCOUNT_BALANCES_DATA'
+export const requestAccountBalancesData = () => {
     return {
-        type: REQUEST_ASSETS_CHART_DATA
+        type: REQUEST_ACCOUNT_BALANCES_DATA
     }
 }
-export const receiveAssetsChartData = (json) => {
+export const receiveAccountBalancesData = (json) => {
     return {
-        type: RECEIVE_ASSETS_CHART_DATA,
-        data: json,
+        type: RECEIVE_ACCOUNT_BALANCES_DATA,
+        data: json.accountBalances,
         receivedAt: Date.now()
     }
 }
-export const fetchAssetsChartData = () => {
+export const fetchAccountBalancesData = () => {
     return (dispatch) => {
-        dispatch(requestAssetsChartData())
-        return fetch('http://localhost:9000/api/charts/assets')
+        dispatch(requestAccountBalancesData())
+        return fetch('http://localhost:9000/api/accounts/_all/balances')
             .then(response => response.json())
-            .then(json => dispatch(receiveAssetsChartData(json)))
+            .then(json => dispatch(receiveAccountBalancesData(json)))
     }
 }
 
