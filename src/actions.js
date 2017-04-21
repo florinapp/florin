@@ -15,7 +15,7 @@ export const requestAccountBalancesData = () => {
 export const receiveAccountBalancesData = (json) => {
     return {
         type: RECEIVE_ACCOUNT_BALANCES_DATA,
-        data: json.accountBalances,
+        accountBalances: json.accountBalances,
         receivedAt: Date.now()
     }
 }

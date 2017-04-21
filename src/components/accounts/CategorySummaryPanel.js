@@ -83,7 +83,6 @@ class CategorySummaryPanel extends Component {
 
     render() {
         const { loadingCategorySummary, categorySummary, fetchCategorySummary, filter } = this.props
-        console.log(categorySummary)
         const { income, expense } = categorySummary
         const { currentDateRange } = filter
         return (

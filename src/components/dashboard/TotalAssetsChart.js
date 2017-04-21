@@ -8,25 +8,51 @@ class TotalAssetsChart extends Component {
         onRefresh.call(this)
     }
 
+    randColor() {
+        // TODO: chart.js should provide this
+        const r = Math.floor(Math.random() * 255)
+        const g = Math.floor(Math.random() * 255)
+        const b = Math.floor(Math.random() * 255)
+        const a = Math.random()
+        return `rgba(${r}, ${g}, ${b}, ${a})`
+    }
+
     render() {
         let {accountBalances, onRefresh} = this.props
         const chartOptions = {
             responsive: true,
             maintainAspectRatio: false
         }
-        console.log(accountBalances)
-        // assets = assets || {}
-        // let accounts = Object.keys(assets.accounts || {})
-        // let data = assets.data || []
-        // let colors = [...Array(accounts.length).keys()].map(()=>generateColor())
+
+        let dateBalanceMap = {}
+        accountBalances.forEach((accountBalance) => {
+            accountBalance.balances.forEach((balance) => {
+                let accountBalancesOnTheDay = dateBalanceMap[balance.date] || {}
+                accountBalancesOnTheDay[balance.account_id] = balance.balance
+                dateBalanceMap[balance.date] = accountBalancesOnTheDay
+            })
+        })
+
+        let datasets = []
+        accountBalances.forEach((accountBalance) => {
+            let dataset = {
+                label: `${accountBalance.institution} - ${accountBalance.name}`,
+                fillColor: this.randColor(),
+                data: Object.keys(dateBalanceMap).map((date) => {
+                    return dateBalanceMap[date][accountBalance.id] || 0
+                }),
+                fill: true,
+            }
+            datasets = [...datasets, dataset]
+        })
+
         const chartData = {
-            labels: ["January", "February", "March", "April", "May", "June", "July"],
-            datasets: [
-                {
-                    data: [65, 59, 80, 81, 56, 55, 40],
-                }
-            ]
+            labels: Object.keys(dateBalanceMap),
+            datasets: datasets,
         }
+
+        console.log(chartData)
+
         return (
             <div className="panel panel-default">
                 <div className="panel-heading">
@@ -39,7 +65,7 @@ class TotalAssetsChart extends Component {
                 </div>
                 <div className="panel-body">
                     <div className="chart-holder">
-                        <Line data={chartData} options={chartOptions}/>
+                        <Line data={chartData} options={chartOptions} />
                     </div>
                 </div>
             </div>
