@@ -12,7 +12,7 @@ class AccountBalanceTable extends Component {
     }
 
     render() {
-        const { accountBalances, currentAccountId } = this.props
+        const { accountBalances, currentAccountId, createAccountBalance, fetchAccountBalancesData } = this.props
         if (!currentAccountId) {
             return <div />
         }
@@ -56,7 +56,11 @@ class AccountBalanceTable extends Component {
                 </div>
                 <NewAccountBalanceModal
                     show={this.state.showNewAccountBalanceModal}
-                    onClose={() => {this.setState({showNewAccountBalanceModal: false})}} />
+                    createAccountBalance={(date, balance) => createAccountBalance(currentAccountId, date, balance)}
+                    onClose={() => {
+                        this.setState({showNewAccountBalanceModal: false})
+                        fetchAccountBalancesData()
+                    }} />
             </div>
         )
     }

@@ -497,3 +497,35 @@ export const linkUploadWithAccount = (fileUpload, selectedAccountId) => {
             .then(json => dispatch(linkUploadWithAccountSucceeded(json)))
     }
 }
+
+// ----------------------------------------------------------------------------
+// Create New Account Balance
+export const REQUEST_CREATE_ACCOUNT_BALANCE = 'REQUEST_CREATE_ACCOUNT_BALANCE'
+export const requestCreateAccountBalance = () => {
+    return {
+        type: REQUEST_CREATE_ACCOUNT_BALANCE
+    }
+}
+export const CREATE_ACCOUNT_BALANCE_SUCCEEDED = 'CREATE_ACCOUNT_BALANCE_SUCCEEDED'
+export const createAccountBalanceSucceeded = (json) => {
+    return {
+        type: CREATE_ACCOUNT_BALANCE_SUCCEEDED,
+        accountId: json.accountId,
+        receivedAt: Date.now(),
+    }
+}
+export const createAccountBalance = (accountId, date, balance) => {
+    return (dispatch) => {
+        dispatch(requestCreateAccountBalance())
+        let headers = new Headers()
+        headers.set("Content-Type", "application/json")
+        const options = {
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify({date, balance})
+        }
+        return fetch(`http://localhost:9000/api/accounts/${accountId}/balances`, options)
+            .then(response => response.json())
+            .then(json => dispatch(createAccountBalanceSucceeded(json)))
+    }
+}

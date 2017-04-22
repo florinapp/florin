@@ -7,9 +7,17 @@ import 'react-datepicker/dist/react-datepicker.css';
 class NewAccountBalanceModal extends Component {
     constructor(props) {
         super(props)
-        this.state = {
-            date: moment()
+        this.initState = {
+            date: moment(),
+            balanceValidationState: null
         }
+        this.state = {
+            ...this.initState
+        }
+    }
+
+    resetState() {
+        this.setState(this.initState)
     }
 
     onChange(date) {
@@ -19,8 +27,17 @@ class NewAccountBalanceModal extends Component {
         })
     }
 
+    validate(date, balance) {
+        const isValidBalance = !Number.isNaN(balance)
+        const validationState = isValidBalance ? 'success' : 'error'
+        this.setState({
+            balanceValidationState: validationState
+        })
+        return isValidBalance
+    }
+
     render() {
-        const { show, onClose } = this.props
+        const { show, onClose, createAccountBalance } = this.props
         return (
             <Modal show={show}>
                 <Modal.Header>
@@ -39,16 +56,34 @@ class NewAccountBalanceModal extends Component {
                             />
                             </div>
                         </FormGroup>
-                        <FormGroup controlId="balance">
+                        <FormGroup controlId="balance"
+                                   validationState={this.state.balanceValidationState}>
                             <ControlLabel>Balance</ControlLabel>
-                            <FormControl placeholder="Balance" inputRef={(node) => this.balanceElement = node}>
-                            </FormControl>
+                            <FormControl
+                                placeholder="Balance"
+                                inputRef={(node) => this.balanceElement = node}
+                            ></FormControl>
                         </FormGroup>
                     </form>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button bsStyle="primary">Save</Button>
-                    <Button bsStyle="default" onClick={() => onClose()}>Cancel</Button>
+                    <Button bsStyle="primary" onClick={() => {
+                        let date = this.state.date.format('YYYY-MM-DD')
+                        let balance = this.balanceElement.value
+                        balance = Number.parseFloat(balance) 
+                        if (this.validate(date, balance)) {
+                            createAccountBalance(date, balance)
+                            this.resetState()
+                        }
+                    }}>
+                        Save
+                    </Button>
+                    <Button
+                        bsStyle="default"
+                        onClick={() => {
+                            this.resetState()
+                            onClose()
+                        }}>Cancel</Button>
                 </Modal.Footer>
             </Modal>
         )
