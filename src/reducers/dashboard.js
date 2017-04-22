@@ -1,4 +1,4 @@
-import { RECEIVE_ACCOUNT_BALANCES_DATA, RECEIVE_ACCOUNTS_DATA, CHANGE_DASHBOARD_SELECTED_ACCOUNT } from '../actions'
+import { RECEIVE_ACCOUNT_BALANCES_DATA, CHANGE_DASHBOARD_SELECTED_ACCOUNT } from '../actions'
 
 const initState = {
     accountBalances: [],

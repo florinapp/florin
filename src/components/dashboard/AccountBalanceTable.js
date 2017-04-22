@@ -1,5 +1,6 @@
 import React from 'react'
-import { Table, Button } from 'react-bootstrap'
+import { Button } from 'react-bootstrap'
+import currencyFormatter from 'currency-formatter'
 
 const AccountBalanceTable = ({ accountBalances, currentAccountId }) => {
     console.log(currentAccountId)
@@ -14,7 +15,6 @@ const AccountBalanceTable = ({ accountBalances, currentAccountId }) => {
         }
     })
 
-    console.log(currentAccountBalance)
     return (
         <div>
             <hr />
@@ -25,15 +25,15 @@ const AccountBalanceTable = ({ accountBalances, currentAccountId }) => {
                         <thead>
                             <tr>
                                 <th>Date </th>
-                                <th>Balance</th>
-                                <th> </th>
+                                <th className="current-value">Balance</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
                             {currentAccountBalance.balances.map(balance => (
-                                <tr>
+                                <tr key={balance.id}>
                                     <td>{balance.date}</td>
-                                    <td>{balance.balance}</td>
+                                    <td className="current-value">{currencyFormatter.format(balance.balance, {code: 'CAD'})}</td>
                                     <td>
                                         <Button bsStyle="primary" bsSize="xsmall"><i className="fa fa-trash-o"></i></Button>
                                     </td>

@@ -1,6 +1,122 @@
 import React, { Component } from 'react'
 import { Button } from 'react-bootstrap'
-import { Line } from 'react-chartjs'
+import createPlotlyComponent from 'react-plotlyjs'
+import Plotly from 'plotly.js/dist/plotly-basic'
+
+const PlotlyComponent = createPlotlyComponent(Plotly)
+
+const retroFit = (serie, allDates) => {
+    let { x, y } = serie
+    let retroFitDataPoints = {}
+
+    if (allDates[0] < x[0]) {
+        retroFitDataPoints[allDates[0]] = y[1]
+    }
+    let i = 1  // counter for x and y
+    let j = 1  // counter for allDates
+    do {
+        let date = x[i]
+        let dateToFit = allDates[j]
+
+        if (dateToFit === date) {
+            i += 1
+            j += 1
+            continue
+        }
+        if (dateToFit > date) {
+            i += 1
+            continue
+        }
+        if (dateToFit < date) {
+            retroFitDataPoints[dateToFit] = y[i - 1]
+            j += 1
+            continue
+        }
+    } while (j < allDates.length && i < x.length)
+
+    if (j > i && j < allDates.length) {
+        let previousBalance = y[i - 1]
+        for (; j < allDates.length; j++) {
+            retroFitDataPoints[allDates[j]] = previousBalance
+        }
+    }
+
+    x.forEach((itemX, idx) => {
+        let itemY = y[idx]
+        retroFitDataPoints[itemX] = itemY
+    })
+
+    for (let date in retroFitDataPoints) {
+        let balance = retroFitDataPoints[date]
+        x.push(date)
+        y.push(balance)
+    }
+
+    let sortedDates = Object.keys(retroFitDataPoints)
+    sortedDates.sort()
+
+    let balances = sortedDates.map((date) => retroFitDataPoints[date])
+    return {
+        ...serie,
+        x: sortedDates,
+        y: balances,
+        text: balances,
+        fill: 'tonexty',
+    }
+}
+
+const stackedArea = (series) => {
+    for (let i = 1; i < series.length; i++) {
+        for (var j = 0; j < (Math.min(series[i]['y'].length, series[i - 1]['y'].length)); j++) {
+            series[i]['y'][j] += series[i - 1]['y'][j]
+        }
+    }
+    return series
+}
+
+const getData = (accountBalances) => {
+    let allDates = {}
+    accountBalances.forEach((accountBalance) => {
+        accountBalance.balances.forEach((balance) => {
+            allDates[balance.date] = null
+        })
+    })
+
+    allDates = Object.keys(allDates)
+    allDates.sort()
+
+    let series = accountBalances.map((accountBalance) => {
+        const balances = accountBalance.balances
+        return {
+            name: `${accountBalance.institution} - ${accountBalance.name}`,
+            x: balances.map(balance => balance.date),
+            y: balances.map(balance => balance.balance),
+        }
+    })
+
+    series = series.map((serie) => retroFit(serie, allDates))
+    if (series.length > 0) {
+        series[0].fill = 'tozeroy'
+    }
+    series = stackedArea(series)
+    return series
+}
+
+const getLayout = (accountBalances) => {
+    return {
+        xaxis: {
+            title: 'Date'
+        },
+        yaxis: {
+            title: "$"
+        },
+    }
+}
+
+const config = {
+    showLink: false,
+    displayModeBar: false,
+}
 
 class TotalAssetsChart extends Component {
     componentDidMount() {
@@ -8,50 +124,8 @@ class TotalAssetsChart extends Component {
         onRefresh.call(this)
     }
 
-    randColor() {
-        // TODO: chart.js should provide this
-        const r = Math.floor(Math.random() * 255)
-        const g = Math.floor(Math.random() * 255)
-        const b = Math.floor(Math.random() * 255)
-        const a = Math.random()
-        return `rgba(${r}, ${g}, ${b}, ${a})`
-    }
-
     render() {
-        let {accountBalances, onRefresh} = this.props
-        const chartOptions = {
-            responsive: true,
-            maintainAspectRatio: false
-        }
-
-        let dateBalanceMap = {}
-        accountBalances.forEach((accountBalance) => {
-            accountBalance.balances.forEach((balance) => {
-                let accountBalancesOnTheDay = dateBalanceMap[balance.date] || {}
-                accountBalancesOnTheDay[balance.account_id] = balance.balance
-                dateBalanceMap[balance.date] = accountBalancesOnTheDay
-            })
-        })
-
-        let datasets = []
-        accountBalances.forEach((accountBalance) => {
-            let dataset = {
-                label: `${accountBalance.institution} - ${accountBalance.name}`,
-                fillColor: this.randColor(),
-                data: Object.keys(dateBalanceMap).map((date) => {
-                    return dateBalanceMap[date][accountBalance.id] || 0
-                }),
-                fill: true,
-            }
-            datasets = [...datasets, dataset]
-        })
-
-        const chartData = {
-            labels: Object.keys(dateBalanceMap),
-            datasets: datasets,
-        }
-
-        console.log(chartData)
+        const {accountBalances, onRefresh} = this.props
 
         return (
             <div className="panel panel-default">
@@ -64,9 +138,11 @@ class TotalAssetsChart extends Component {
                     </div>
                 </div>
                 <div className="panel-body">
-                    <div className="chart-holder">
-                        <Line data={chartData} options={chartOptions} />
-                    </div>
+                    <PlotlyComponent
+                        data={getData(accountBalances)}
+                        layout={getLayout(accountBalances)}
+                        config={config}
+                    />
                 </div>
             </div>
         )
