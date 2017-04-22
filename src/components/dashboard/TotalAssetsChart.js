@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Button } from 'react-bootstrap'
 import createPlotlyComponent from 'react-plotlyjs'
-import Plotly from 'plotly.js/dist/plotly-basic'
+import Plotly from 'plotly.js'
 
 const PlotlyComponent = createPlotlyComponent(Plotly)
 
@@ -130,7 +130,7 @@ class TotalAssetsChart extends Component {
         return (
             <div className="panel panel-default">
                 <div className="panel-heading">
-                    <span className="panel-title">Total Assets over time</span>
+                    <span className="panel-title">Total Assets Estimate</span>
                     <div className="pull-right">
                         <Button bsStyle="primary" bsSize="xsmall" onClick={onRefresh}>
                             <span className="fa fa-refresh"></span>&nbsp;Refresh
