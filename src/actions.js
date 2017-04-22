@@ -29,6 +29,16 @@ export const fetchAccountBalancesData = () => {
 }
 
 // ----------------------------------------------------------------------------
+// Change dashboard currently selected account
+export const CHANGE_DASHBOARD_SELECTED_ACCOUNT = 'CHANGE_DASHBOARD_SELECTED_ACCOUNT'
+export const changeDashboardSelectedAccount = (accountId) => {
+    return {
+        type: CHANGE_DASHBOARD_SELECTED_ACCOUNT,
+        accountId,
+    }
+}
+
+// ----------------------------------------------------------------------------
 // Fetch account data
 export const REQUEST_ACCOUNTS_DATA = 'REQUEST_ACCOUNTS_DATA'
 export const RECEIVE_ACCOUNTS_DATA = 'RECEIVE_ACCOUNTS_DATA'

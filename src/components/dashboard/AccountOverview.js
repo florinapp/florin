@@ -1,14 +1,9 @@
 import React, { Component } from 'react'
 import AccountsTable from '../../containers/dashboard/AccountsTable'
-import AccountBalanceTable from './AccountBalanceTable'
+import AccountBalanceTable from '../../containers/dashboard/AccountBalanceTable'
 import './AccountOverview.css'
 
 class AccountOverview extends Component {
-
-    componentDidMount() {
-        this.props.onComponentMount.call(this)
-    }
-
     render() {
         return (
             <div className="panel panel-default">

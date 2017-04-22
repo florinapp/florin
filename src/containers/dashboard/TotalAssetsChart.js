@@ -5,7 +5,6 @@ import { fetchAccountBalancesData } from '../../actions'
 const mapStateToProps = ({dashboard}) => {
     return {
         accountBalances: dashboard.accountBalances
-        // assets: dashboard.assets
     }
 }
 

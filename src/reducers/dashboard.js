@@ -1,8 +1,8 @@
-import { RECEIVE_ACCOUNT_BALANCES_DATA, RECEIVE_ACCOUNTS_DATA } from '../actions'
+import { RECEIVE_ACCOUNT_BALANCES_DATA, RECEIVE_ACCOUNTS_DATA, CHANGE_DASHBOARD_SELECTED_ACCOUNT } from '../actions'
 
 const initState = {
-    accounts: [],  // deprecate
     accountBalances: [],
+    currentAccountId: null,
 }
 
 const dashboard = (state=initState, action) => {
@@ -12,10 +12,10 @@ const dashboard = (state=initState, action) => {
                 ...state,
                 accountBalances: action.accountBalances,
             }
-        case RECEIVE_ACCOUNTS_DATA:
+        case CHANGE_DASHBOARD_SELECTED_ACCOUNT:
             return {
                 ...state,
-                accounts: action.accounts
+                currentAccountId: (state.currentAccountId === action.accountId ? null : action.accountId)
             }
         default:
             return state

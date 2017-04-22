@@ -1,11 +1,24 @@
 import { connect } from 'react-redux'
 import AccountsTable from '../../components/dashboard/AccountsTable'
+import { fetchAccountBalancesData, changeDashboardSelectedAccount } from '../../actions'
 
 const mapStateToProps = ({dashboard}) => {
-    const {accounts} = dashboard
+    const { accountBalances, currentAccountId } = dashboard
     return {
-        accounts
+        accountBalances,
+        currentAccountId,
     }
 }
 
-export default connect(mapStateToProps, null)(AccountsTable)
+const mapDispatchToProps = (dispatch) => {
+    return {
+        onRefresh: () => {
+            dispatch(fetchAccountBalancesData())
+        },
+        onCurrentAccountChange: (accountId) => {
+            dispatch(changeDashboardSelectedAccount(accountId))
+        }
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(AccountsTable)
