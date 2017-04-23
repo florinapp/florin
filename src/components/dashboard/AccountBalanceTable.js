@@ -12,7 +12,13 @@ class AccountBalanceTable extends Component {
     }
 
     render() {
-        const { accountBalances, currentAccountId, createAccountBalance, fetchAccountBalancesData } = this.props
+        const {
+            accountBalances,
+            currentAccountId,
+            createAccountBalance,
+            fetchAccountBalancesData,
+            deleteAccountBalance
+        } = this.props
         if (!currentAccountId) {
             return <div />
         }
@@ -41,15 +47,25 @@ class AccountBalanceTable extends Component {
                                 </tr>
                             </thead>
                             <tbody>
-                                {currentAccountBalance.balances.map(balance => (
+                                {currentAccountBalance.balances.map(balance => {
+                                    console.log(balance)
+                                    return (
                                     <tr key={balance.id}>
                                         <td>{balance.date}</td>
                                         <td className="current-value">{currencyFormatter.format(balance.balance, { code: 'CAD' })}</td>
                                         <td>
-                                            <Button bsStyle="primary" bsSize="xsmall"><i className="fa fa-trash-o"></i></Button>
+                                            <Button bsStyle="primary" bsSize="xsmall" onClick={
+                                                () => {
+                                                    deleteAccountBalance(balance.account_id, balance.id)
+                                                    fetchAccountBalancesData()
+                                                }
+                                            }>
+                                                <i className="fa fa-trash-o"></i>
+                                            </Button>
                                         </td>
                                     </tr>
-                                ))}
+                                    )
+                                })}
                             </tbody>
                         </table>
                         : ""}

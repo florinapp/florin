@@ -1,4 +1,4 @@
-import { RECEIVE_ACCOUNT_BALANCES_DATA, CHANGE_DASHBOARD_SELECTED_ACCOUNT } from '../actions'
+import { RECEIVE_ACCOUNT_BALANCES_DATA, CHANGE_DASHBOARD_SELECTED_ACCOUNT, DELETE_ACCOUNT_BALANCE_SUCCEEDED } from '../actions'
 
 const initState = {
     accountBalances: [],
@@ -16,6 +16,19 @@ const dashboard = (state=initState, action) => {
             return {
                 ...state,
                 currentAccountId: (state.currentAccountId === action.accountId ? null : action.accountId)
+            }
+        case DELETE_ACCOUNT_BALANCE_SUCCEEDED:
+            const accountBalanceId = action.id
+            return {
+                ...state,
+                accountBalances: state.accountBalances.map(accountBalance => {
+                    return {
+                        ...accountBalance,
+                        balances: accountBalance.balances.filter(balance => {
+                            return balance.id !== accountBalanceId
+                        })
+                    }
+                })
             }
         default:
             return state

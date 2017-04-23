@@ -529,3 +529,28 @@ export const createAccountBalance = (accountId, date, balance) => {
             .then(json => dispatch(createAccountBalanceSucceeded(json)))
     }
 }
+
+// ----------------------------------------------------------------------------
+// Delete Account Balance
+export const REQUEST_DELETE_ACCOUNT_BALANCE = 'REQUEST_DELETE_ACCOUNT_BALANCE'
+export const requestDeleteAccountBalance = () => {
+    return {
+        type: REQUEST_DELETE_ACCOUNT_BALANCE
+    }
+}
+export const DELETE_ACCOUNT_BALANCE_SUCCEEDED = 'DELETE_ACCOUNT_BALANCE_SUCCEEDED'
+export const deleteAccountBalanceSucceeded = (id) => {
+    return {
+        type: DELETE_ACCOUNT_BALANCE_SUCCEEDED,
+        id,
+    }
+}
+
+export const deleteAccountBalance = (accountId, id) => {
+    return (dispatch) => {
+        dispatch(requestDeleteAccountBalance())
+        return fetch(`http://localhost:9000/api/accounts/${accountId}/balances/${id}`, {method: 'DELETE'})
+            .then(response => response.json())
+            .then(json => dispatch(deleteAccountBalanceSucceeded(id)))
+    }
+}

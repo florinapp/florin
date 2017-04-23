@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import AccountBalanceTable from '../../components/dashboard/AccountBalanceTable'
-import { createAccountBalance, fetchAccountBalancesData } from '../../actions'
+import { createAccountBalance, fetchAccountBalancesData, deleteAccountBalance } from '../../actions'
 
 const mapStateToProps = ({dashboard}) => {
     const { accountBalances, currentAccountId } = dashboard
@@ -17,6 +17,9 @@ const mapDispatchToProps = (dispatch) => {
         },
         fetchAccountBalancesData: () => {
             dispatch(fetchAccountBalancesData())
+        },
+        deleteAccountBalance: (accountId, id) => {
+            dispatch(deleteAccountBalance(accountId, id))
         }
     }
 }
