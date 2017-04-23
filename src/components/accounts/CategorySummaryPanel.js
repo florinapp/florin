@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Table } from 'react-bootstrap'
+import { Table, Nav, NavItem } from 'react-bootstrap'
 import accounting from 'accounting'
 import Spinner from '../Spinner'
 import { Plotly, CONFIG } from '../Plotly'
@@ -12,10 +12,6 @@ const getChartData = (data) => {
         labels,
         type: 'pie',
     }]
-}
-
-const SummaryChart = ({data}) => {
-    return <Plotly data={getChartData(data)} config={CONFIG} />
 }
 
 const SummaryTable = ({data}) => {
@@ -53,6 +49,13 @@ const SummaryTable = ({data}) => {
 }
 
 class CategorySummaryPanel extends Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            selectedTab: 'expense'
+        }
+    }
+
     componentWillMount() {
         const { fetchCategorySummary, currentAccountId, filter } = this.props
         fetchCategorySummary(currentAccountId, filter)
@@ -84,6 +87,7 @@ class CategorySummaryPanel extends Component {
         const { loadingCategorySummary, categorySummary, fetchCategorySummary, filter } = this.props
         const { income, expense } = categorySummary
         const { currentDateRange } = filter
+        const chartData = this.state.selectedTab === 'expense' ? expense : income
         return (
             <div className="panel panel-default">
                 <div className="panel-heading">
@@ -96,14 +100,14 @@ class CategorySummaryPanel extends Component {
                         </button>
                     </div>
                 </div>
+
                 <div className="panel-body">
-                    <h3>Expense</h3>
-                    <SummaryChart data={expense} />
-                    <SummaryTable data={expense} />
-                    <hr />
-                    <h3>Income</h3>
-                    <SummaryChart data={income} />
-                    <SummaryTable data={income} />
+                    <Nav bsStyle="tabs" justified activeKey={this.state.selectedTab} onSelect={(key) => this.setState({selectedTab: key})}>
+                        <NavItem eventKey="expense">Expense</NavItem>
+                        <NavItem eventKey="income">Income</NavItem>
+                    </Nav>
+                    <Plotly data={getChartData(chartData)} config={CONFIG} />
+                    <SummaryTable data={chartData} />
                 </div>
             </div>
         )
