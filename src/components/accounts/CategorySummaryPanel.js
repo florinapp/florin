@@ -1,22 +1,21 @@
 import React, { Component } from 'react'
 import { Table } from 'react-bootstrap'
-import { Doughnut } from 'react-chartjs'
 import accounting from 'accounting'
 import Spinner from '../Spinner'
+import { Plotly, CONFIG } from '../Plotly'
+
+const getChartData = (data) => {
+    const values = data.map(item => Math.abs(item.amount))
+    const labels = data.map(item => item.category_name)
+    return [{
+        values,
+        labels,
+        type: 'pie',
+    }]
+}
 
 const SummaryChart = ({data}) => {
-    const chartData = data.map((item) => {
-        return {
-            value: Math.abs(item.amount),
-            label: item.category_name
-        }
-    })
-
-    return (
-        <div className="text-center">
-            <Doughnut data={chartData} />
-        </div>
-    )
+    return <Plotly data={getChartData(data)} config={CONFIG} />
 }
 
 const SummaryTable = ({data}) => {

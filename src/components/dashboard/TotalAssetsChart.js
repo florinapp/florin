@@ -1,9 +1,6 @@
 import React, { Component } from 'react'
 import { Button } from 'react-bootstrap'
-import createPlotlyComponent from 'react-plotlyjs'
-import Plotly from 'plotly.js'
-
-const PlotlyComponent = createPlotlyComponent(Plotly)
+import { Plotly, CONFIG } from '../../components/Plotly'
 
 const retroFit = (serie, allDates) => {
     let { x, y } = serie
@@ -113,11 +110,6 @@ const getLayout = (accountBalances) => {
     }
 }
 
-const config = {
-    showLink: false,
-    displayModeBar: false,
-}
-
 class TotalAssetsChart extends Component {
     componentDidMount() {
         let {onRefresh} = this.props
@@ -138,10 +130,10 @@ class TotalAssetsChart extends Component {
                     </div>
                 </div>
                 <div className="panel-body">
-                    <PlotlyComponent
+                    <Plotly
                         data={getData(accountBalances)}
                         layout={getLayout(accountBalances)}
-                        config={config}
+                        config={CONFIG}
                     />
                 </div>
             </div>
