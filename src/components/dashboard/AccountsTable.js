@@ -32,7 +32,7 @@ class AccountsTable extends Component {
                                     checked={currentAccountId === account.id}
                                     onChange={() => onCurrentAccountChange(account.id)} />
                                 </td>
-                                <td style={{verticalAlign: "middle"}}>{account.name}</td>
+                                <td style={{verticalAlign: "middle"}}>{account.institution} - {account.name}</td>
                                 <td style={{verticalAlign: "middle"}}>{account.type}</td>
                                 <td style={{verticalAlign: "middle"}} className="current-value">{
                                     latestBalance ? currencyFormatter.format(latestBalance.balance, { code: 'CAD' }) : "N/A"
