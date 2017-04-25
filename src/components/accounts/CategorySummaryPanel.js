@@ -1,17 +1,18 @@
 import React, { Component } from 'react'
 import { Table, Nav, NavItem } from 'react-bootstrap'
+import currencyFormatter from 'currency-formatter'
 import accounting from 'accounting'
 import Spinner from '../Spinner'
-import { Plotly, CONFIG } from '../Plotly'
+import NVD3Chart from 'react-nvd3'
+import 'nvd3/build/nv.d3.css'
 
 const getChartData = (data) => {
-    const values = data.map(item => Math.abs(item.amount))
-    const labels = data.map(item => item.category_name)
-    return [{
-        values,
-        labels,
-        type: 'pie',
-    }]
+    return data.map(item => {
+        return {
+            categoryName: item.category_name,
+            amount: Math.abs(item.amount)
+        }
+    })
 }
 
 const SummaryTable = ({data}) => {
@@ -106,7 +107,8 @@ class CategorySummaryPanel extends Component {
                         <NavItem eventKey="expense">Expense</NavItem>
                         <NavItem eventKey="income">Income</NavItem>
                     </Nav>
-                    <Plotly data={getChartData(chartData)} config={CONFIG} />
+                    <NVD3Chart type="pieChart" datum={getChartData(chartData)} x="categoryName" y="amount"
+                               showLabels={false} showLegend={false} valueFormat={(v) => currencyFormatter.format(v, {code: 'CAD'})}/>
                     <SummaryTable data={chartData} />
                 </div>
             </div>
