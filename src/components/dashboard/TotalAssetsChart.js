@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { Button } from 'react-bootstrap'
-import { Plotly, CONFIG } from '../../components/Plotly'
+import NVD3Chart from 'react-nvd3'
+import d3 from 'd3'
+import 'nvd3/build/nv.d3.css'
 
 const retroFit = (serie, allDates) => {
     let { x, y } = serie
@@ -117,8 +119,15 @@ class TotalAssetsChart extends Component {
     }
 
     render() {
-        const {accountBalances, onRefresh} = this.props
-
+        const {accountBalancesChartData, onRefresh} = this.props
+        console.log(accountBalancesChartData)
+        const data = accountBalancesChartData.map(accountBalancesChartDatum => {
+            return {
+                key: `${accountBalancesChartDatum.account.institution} - ${accountBalancesChartDatum.account.name}`,
+                values: accountBalancesChartDatum.history,
+            }
+        })
+        console.log(data)
         return (
             <div className="panel panel-default">
                 <div className="panel-heading">
@@ -130,11 +139,20 @@ class TotalAssetsChart extends Component {
                     </div>
                 </div>
                 <div className="panel-body">
-                    <Plotly
+                    <NVD3Chart
+                        type="stackedAreaChart"
+                        xAxis={{ tickFormat: (d) => d3.time.format('%x')(new Date(d)) }}
+                        datum={data}
+                        x={(d) => new Date(d[0]).getTime()}
+                        y={(d) => d[1]}
+                        height="350px"
+                    />,
+
+                    {/*<Plotly
                         data={getData(accountBalances)}
                         layout={getLayout(accountBalances)}
                         config={CONFIG}
-                    />
+                    />*/}
                 </div>
             </div>
         )

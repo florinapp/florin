@@ -28,6 +28,28 @@ export const fetchAccountBalancesData = () => {
     }
 }
 
+export const REQUEST_ACCOUNT_BALANCES_CHART_DATA = 'REQUEST_ACCOUNT_BALANCES_CHART_DATA'
+export const requestAccountBalancesChartData = () => {
+    return {
+        type: REQUEST_ACCOUNT_BALANCES_CHART_DATA
+    }
+}
+export const RECEIVE_ACCOUNT_BALANCES_CHART_DATA = 'RECEIVE_ACCOUNT_BALANCES_CHART_DATA'
+export const receiveAccountBalancesChartData = (json) => {
+    return {
+        type: RECEIVE_ACCOUNT_BALANCES_CHART_DATA,
+        accountBalancesChartData: json.chartData,
+        receivedAt: Date.now()
+    }
+}
+export const fetchAccountBalancesChartData = () => {
+    return (dispatch) => {
+        dispatch(requestAccountBalancesChartData())
+        return fetch('http://localhost:9000/api/charts/accountBalances')
+            .then(response => response.json())
+            .then(json => dispatch(receiveAccountBalancesChartData(json)))
+    }
+}
 // ----------------------------------------------------------------------------
 // Change dashboard currently selected account
 export const CHANGE_DASHBOARD_SELECTED_ACCOUNT = 'CHANGE_DASHBOARD_SELECTED_ACCOUNT'
