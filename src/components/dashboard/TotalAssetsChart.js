@@ -24,7 +24,7 @@ class TotalAssetsChart extends Component {
         return (
             <div className="panel panel-default">
                 <div className="panel-heading">
-                    <span className="panel-title">Total Assets Estimate</span>
+                    <span className="panel-title">Account Balance Chart</span>
                     <div className="pull-right">
                         <Button bsStyle="primary" bsSize="xsmall" onClick={onRefresh}>
                             <span className="fa fa-refresh"></span>&nbsp;Refresh
@@ -39,6 +39,7 @@ class TotalAssetsChart extends Component {
                         yAxis={{ tickFormat: (d) => currencyFormatter.format(d, {code: 'CAD'}) }}
                         x={(d) => new Date(d[0]).getTime()}
                         y={(d) => d[1]}
+                        height="400px"
                         datum={data}
                     />
                 </div>
