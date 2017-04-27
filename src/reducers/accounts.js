@@ -9,12 +9,14 @@ import {
     CREATE_ACCOUNT_SUCCEEDED,
     UPDATE_ACCOUNT_SUCCEEDED,
     DELETE_ACCOUNT_SUCCEEDED,
+    RECEIVE_ACCOUNT_TYPES,
 } from '../actions'
 import querystring from 'querystring'
 import { matchPath } from 'react-router'
 
 const initState = {
     accounts: [],
+    accountTypes: [],
     currentAccountId: "_all",
     transactions: [],  // transactions in the current selected account
     filter: {
@@ -153,12 +155,16 @@ const accounts = (state=initState, action) => {
                 })
             }
         case DELETE_ACCOUNT_SUCCEEDED:
-            console.log(action.accountId)
             return {
                 ...state,
                 accounts: state.accounts.filter((account) => {
                     return account.id.toString() !== action.accountId.toString()
                 })
+            }
+        case RECEIVE_ACCOUNT_TYPES:
+            return {
+                ...state,
+                accountTypes: action.accountTypes
             }
         default:
             return state
