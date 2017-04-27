@@ -61,7 +61,7 @@ class AccountListPanel extends Component {
                             &nbsp;New
                         </button>
                         <Separator />
-                        {currentAccountId !== "_all" ?
+                        {currentAccountId && currentAccountId !== "_all" ?
                          <button type="button" className="btn btn-primary btn-xs" onClick={() => {
                              this.setState({
                                  ...this.state,
@@ -73,7 +73,7 @@ class AccountListPanel extends Component {
                          </button>
                          : ""}
                         <Separator />
-                        {currentAccountId !== "_all" ?
+                        {currentAccountId && currentAccountId !== "_all" ?
                          <button type="button" className="btn btn-danger btn-xs" onClick={() => {
                                 this.refs.dialog.show({
                                     title: 'Are you sure?',
