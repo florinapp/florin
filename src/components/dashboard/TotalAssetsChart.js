@@ -21,6 +21,7 @@ class TotalAssetsChart extends Component {
                 values: accountBalancesChartDatum.history,
             }
         })
+        console.log(data)
         return (
             <div className="panel panel-default">
                 <div className="panel-heading">
@@ -37,8 +38,8 @@ class TotalAssetsChart extends Component {
                         type="lineChart"
                         xAxis={{ tickFormat: (d) => d3.time.format('%x')(new Date(d)) }}
                         yAxis={{ tickFormat: (d) => currencyFormatter.format(d, {code: 'CAD'}) }}
-                        x={(d) => new Date(d[0]).getTime()}
-                        y={(d) => d[1]}
+                        x={(d) => new Date(d.date).getTime()}
+                        y={(d) => d.balance}
                         height="400px"
                         datum={data}
                     />
