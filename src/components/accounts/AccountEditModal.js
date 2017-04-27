@@ -30,7 +30,7 @@ class AccountEditModal extends Component {
     }
 
     render() {
-        const { show, mode, closeDialog, validate, onSaveClicked } = this.props
+        const { show, mode, closeDialog, validate, onSaveClicked, accountTypes } = this.props
         const title = mode === "create" ? "Add New Account" : "Edit Account"
         let currentAccount = mode === "create" ? {} : (this.props.currentAccount || {})
         let buttonCaption = mode === "create" ? "Create" : "Update"
@@ -63,8 +63,8 @@ class AccountEditModal extends Component {
                                          defaultValue={currentAccount.type}
                                          inputRef={(node) => { this.accountTypeNode = node }}>
                                 {
-                                    ['chequing', 'savings', 'credit'].map((type) => {
-                                        return <option key={type} value={type} checked={currentAccount.type === type}>{type}</option>
+                                    accountTypes.map((type) => {
+                                        return <option key={type.name} value={type.name} checked={currentAccount.type === type.name}>{type.name}</option>
                                     })
                                 }
                             </FormControl>

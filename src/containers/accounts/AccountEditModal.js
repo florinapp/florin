@@ -1,6 +1,13 @@
 import { connect } from 'react-redux'
 import AccountEditModal from '../../components/accounts/AccountEditModal'
 
+const mapStateToProps = ({accounts}) => {
+    const {accountTypes} = accounts
+    return {
+        accountTypes,
+    }
+}
+
 const mapDispatchToProps = (dispatch) => {
     return {
         validate: ({institution, name, type}) => {
@@ -19,4 +26,4 @@ const mapDispatchToProps = (dispatch) => {
     }
 }
 
-export default connect(null, mapDispatchToProps)(AccountEditModal)
+export default connect(mapStateToProps, mapDispatchToProps)(AccountEditModal)
