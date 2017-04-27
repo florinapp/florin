@@ -3,6 +3,8 @@ import fetch from 'isomorphic-fetch'
 import querystring from 'querystring'
 import request from 'superagent'  // TODO: use isomorphic-fetch
 
+const API_BASE_URL = 'http://localhost:9000'
+
 // ----------------------------------------------------------------------------
 // Fetch account balances data
 export const REQUEST_ACCOUNT_BALANCES_DATA = 'REQUEST_ACCOUNT_BALANCES_DATA'
@@ -22,7 +24,7 @@ export const receiveAccountBalancesData = (json) => {
 export const fetchAccountBalancesData = () => {
     return (dispatch) => {
         dispatch(requestAccountBalancesData())
-        return fetch('http://localhost:9000/api/accounts/_all/balances')
+        return fetch(`${API_BASE_URL}/api/accounts/_all/balances`)
             .then(response => response.json())
             .then(json => dispatch(receiveAccountBalancesData(json)))
     }
@@ -45,7 +47,7 @@ export const receiveAccountBalancesChartData = (json) => {
 export const fetchAccountBalancesChartData = () => {
     return (dispatch) => {
         dispatch(requestAccountBalancesChartData())
-        return fetch('http://localhost:9000/api/charts/accountBalances')
+        return fetch(`${API_BASE_URL}/api/charts/accountBalances`)
             .then(response => response.json())
             .then(json => dispatch(receiveAccountBalancesChartData(json)))
     }
@@ -79,7 +81,7 @@ export const receiveAccountsData = (json) => {
 export const fetchAccountsData = () => {
     return (dispatch) => {
         dispatch(requestAccountsData())
-        return fetch('http://localhost:9000/api/accounts')
+        return fetch(`${API_BASE_URL}/api/accounts`)
             .then(response => response.json())
             .then(json => dispatch(receiveAccountsData(json)))
     }
@@ -160,16 +162,12 @@ export const receiveTransactions = (json) => {
     }
 }
 export const fetchTransactions = (accountId, filter, sort, pagination) => {
-    let url = `http://localhost:9000/api/accounts/${accountId}`
+    let url = `${API_BASE_URL}/api/accounts/${accountId}`
     const params = querystring.stringify(buildRequestParams(filter, sort, pagination))
     console.log(pagination)
     console.log(params)
     url = `${url}?${params}`
     return (dispatch) => {
-        // TODO: following doesn't work
-        // if (accountId === null || accountId === undefined) {
-        //     return dispatch(receiveTransactions({transactions: []}))
-        // }
         dispatch(requestTransactions(accountId))
         return fetch(url)
             .then(response => response.json())
@@ -196,7 +194,7 @@ export const receiveCategories = (json) => {
 export const fetchCategories = () => {
     return (dispatch) => {
         dispatch(requestCategories())
-        return fetch(`http://localhost:9000/api/categories`)
+        return fetch(`${API_BASE_URL}/api/categories`)
             .then(response => response.json())
             .then(json => dispatch(receiveCategories(json)))
     }
@@ -231,7 +229,7 @@ export const updateTransaction = (transactionId, transactionData) => {
             headers: headers,
             body: JSON.stringify(transactionData)
         }
-        return fetch(`http://localhost:9000/api/transactions/${transactionId}`, options)
+        return fetch(`${API_BASE_URL}/api/transactions/${transactionId}`, options)
             .then(response => response.json())
             .then(json => dispatch(updateTransactionSucceeded(json)))
     }
@@ -261,7 +259,7 @@ export const deleteTransaction = (transactionId) => {
         const options = {
             method: 'DELETE',
         }
-        return fetch(`http://localhost:9000/api/transactions/${transactionId}`, options)
+        return fetch(`${API_BASE_URL}/api/transactions/${transactionId}`, options)
             .then(response => response.json())
             .then(json => dispatch(deleteTransactionSucceeded(transactionId)))
     }
@@ -297,7 +295,7 @@ export const flagAsInternalTransaction = (transactionId) => {
                 category_id: 65534
             })
         }
-        return fetch(`http://localhost:9000/api/transactions/${transactionId}`, options)
+        return fetch(`${API_BASE_URL}/api/transactions/${transactionId}`, options)
             .then(response => response.json())
             .then(json => dispatch(flagAsInternalTransactionSucceeded(transactionId)))
     }
@@ -323,7 +321,7 @@ export const fetchCategorySummary = (accountId, filter) => {
     const params = querystring.stringify(buildDateRangeRequestParams(filter))
     return (dispatch) => {
         dispatch(requestCategorySummary())
-        return fetch(`http://localhost:9000/api/accounts/${accountId}/categorySummary?${params}`)
+        return fetch(`${API_BASE_URL}/api/accounts/${accountId}/categorySummary?${params}`)
             .then(response => response.json())
             .then(json => dispatch(receiveCategorySummary(json)))
     }
@@ -365,7 +363,7 @@ export const createAccount = (request) => {
     }
     return (dispatch) => {
         dispatch(requestCreateAccount())
-        return fetch(`http://localhost:9000/api/accounts`, options)
+        return fetch(`${API_BASE_URL}/api/accounts`, options)
             .then(response => response.json())
             .then(json => dispatch(createAccountSucceeded(json)))
     }
@@ -397,7 +395,7 @@ export const updateAccount = (accountId, request) => {
     }
     return (dispatch) => {
         dispatch(requestUpdateAccount())
-        return fetch(`http://localhost:9000/api/accounts/${accountId}`, options)
+        return fetch(`${API_BASE_URL}/api/accounts/${accountId}`, options)
             .then(response => response.json())
             .then(json => dispatch(updateAccountSucceeded(json)))
     }
@@ -422,7 +420,7 @@ export const deleteAccountSucceeded = (json) => {
 export const deleteAccount = (accountId) => {
     return (dispatch) => {
         dispatch(requestDeleteAccount())
-        return fetch(`http://localhost:9000/api/accounts/${accountId}`, {method: 'DELETE'})
+        return fetch(`${API_BASE_URL}/api/accounts/${accountId}`, {method: 'DELETE'})
             .then(response => response.json())
             .then(json => dispatch(deleteAccountSucceeded(json)))
     }
@@ -467,7 +465,7 @@ export const uploadTransactions = (files) => {
     return (dispatch) => {
         dispatch(requestUploadTransactions())
         // TODO: use isomorphic-fetch
-        const req = request.post(`http://localhost:9000/api/fileUploads`)
+        const req = request.post(`${API_BASE_URL}/api/fileUploads`)
         files.forEach((file) => {
             req.attach(file.name, file)
         })
@@ -514,7 +512,7 @@ export const linkUploadWithAccount = (fileUpload, selectedAccountId) => {
             headers: headers,
             body: JSON.stringify({accountId: selectedAccountId})
         }
-        return fetch(`http://localhost:9000/api/fileUploads/${fileUpload.id}/linkAccount`, options)
+        return fetch(`${API_BASE_URL}/api/fileUploads/${fileUpload.id}/linkAccount`, options)
             .then(response => response.json())
             .then(json => dispatch(linkUploadWithAccountSucceeded(json)))
     }
@@ -546,7 +544,7 @@ export const createAccountBalance = (accountId, date, balance) => {
             headers: headers,
             body: JSON.stringify({date, balance})
         }
-        return fetch(`http://localhost:9000/api/accounts/${accountId}/balances`, options)
+        return fetch(`${API_BASE_URL}/api/accounts/${accountId}/balances`, options)
             .then(response => response.json())
             .then(json => dispatch(createAccountBalanceSucceeded(json)))
     }
@@ -571,7 +569,7 @@ export const deleteAccountBalanceSucceeded = (id) => {
 export const deleteAccountBalance = (accountId, id) => {
     return (dispatch) => {
         dispatch(requestDeleteAccountBalance())
-        return fetch(`http://localhost:9000/api/accounts/${accountId}/balances/${id}`, {method: 'DELETE'})
+        return fetch(`${API_BASE_URL}/api/accounts/${accountId}/balances/${id}`, {method: 'DELETE'})
             .then(response => response.json())
             .then(json => dispatch(deleteAccountBalanceSucceeded(id)))
     }
@@ -596,7 +594,7 @@ export const receiveAccountTypes = (json) => {
 export const fetchAccountTypes = () => {
     return (dispatch) => {
         dispatch(requestFetchAccountTypes())
-        return fetch(`http://localhost:9000/api/accountTypes`)
+        return fetch(`${API_BASE_URL}/api/accountTypes`)
             .then(response => response.json())
             .then(json => dispatch(receiveAccountTypes(json)))
     }
