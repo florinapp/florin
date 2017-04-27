@@ -576,3 +576,28 @@ export const deleteAccountBalance = (accountId, id) => {
             .then(json => dispatch(deleteAccountBalanceSucceeded(id)))
     }
 }
+
+// ----------------------------------------------------------------------------
+// Fetch Account Types
+export const REQUEST_FETCH_ACCOUNT_TYPES = 'REQUEST_FETCH_ACCOUNT_TYPES'
+export const requestFetchAccountTypes = () => {
+    return {
+        type: REQUEST_FETCH_ACCOUNT_TYPES 
+    }
+}
+export const RECEIVE_ACCOUNT_TYPES = 'RECEIVE_ACCOUNT_TYPES'
+export const receiveAccountTypes = (json) => {
+    return {
+        type: RECEIVE_ACCOUNT_TYPES,
+        accountTypes: json.accountTypes,
+        receivedAt: Date.now(),
+    }
+}
+export const fetchAccountTypes = () => {
+    return (dispatch) => {
+        dispatch(requestFetchAccountTypes())
+        return fetch(`http://localhost:9000/api/accountTypes`)
+            .then(response => response.json())
+            .then(json => dispatch(receiveAccountTypes(json)))
+    }
+}
