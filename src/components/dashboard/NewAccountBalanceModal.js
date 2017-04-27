@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Button, Modal, FormGroup, ControlLabel, FormControl } from 'react-bootstrap'
+import { Button, Modal, FormGroup, ControlLabel, FormControl, Alert } from 'react-bootstrap'
 import DatePicker from 'react-datepicker'
 import moment from 'moment'
 import 'react-datepicker/dist/react-datepicker.css';
@@ -9,19 +9,25 @@ class NewAccountBalanceModal extends Component {
         super(props)
         this.initState = {
             date: moment(),
-            balanceValidationState: null
+            balanceValidationState: null,
+            success: null
         }
         this.state = {
             ...this.initState
         }
     }
 
-    resetState() {
+    resetFormState() {
+        this.setState({balanceValidationState: null})
+        this.balanceElement.value = ''
+    }
+
+    resetInitState() {
+        this.balanceElement.value = ''
         this.setState(this.initState)
     }
 
     onChange(date) {
-        console.log(date)
         this.setState({
             date
         })
@@ -38,12 +44,14 @@ class NewAccountBalanceModal extends Component {
 
     render() {
         const { show, onClose, createAccountBalance } = this.props
+        const { success } = this.state
         return (
             <Modal show={show}>
                 <Modal.Header>
                     <Modal.Title>New Account Balance</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
+                    { success ? <Alert bsStyle="success">New balance recorded!</Alert> : ""}
                     <form>
                         <FormGroup controlId="date">
                             <ControlLabel>Date</ControlLabel>
@@ -73,7 +81,8 @@ class NewAccountBalanceModal extends Component {
                         balance = Number.parseFloat(balance) 
                         if (this.validate(date, balance)) {
                             createAccountBalance(date, balance)
-                            this.resetState()
+                            this.setState({success: true})
+                            this.resetFormState()
                         }
                     }}>
                         Save
@@ -81,7 +90,7 @@ class NewAccountBalanceModal extends Component {
                     <Button
                         bsStyle="default"
                         onClick={() => {
-                            this.resetState()
+                            this.resetInitState()
                             onClose()
                         }}>Cancel</Button>
                 </Modal.Footer>
