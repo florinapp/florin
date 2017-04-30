@@ -1,18 +1,25 @@
-import React, { Component } from 'react'
-import './ChartFilter.css'
+import React from 'react'
 
-class ChartFilter extends Component {
-    render() {
-        let { onLastMonth, onTwoMonthsAgo, onYearToDate, onAllTime } = this.props
-        return (
-            <ul className="nav nav-pills">
-                <li name="last-month" className="active"><a onClick={onLastMonth}>Last Month</a></li>
-                <li><a onClick={onTwoMonthsAgo}>2 Months Ago</a></li>
-                <li><a onClick={onYearToDate}>Year to Date</a></li>
-                <li><a onClick={onAllTime}>All Time</a></li>
-            </ul>
-        )
-    }
+const dateRangeFilters = [
+    { name: 'thisMonth', caption: 'This Month' },
+    { name: 'lastMonth', caption: 'Last Month' },
+    { name: 'thisYear', caption: 'This Year' },
+    { name: 'allTime', caption: 'All Time' },
+]
+
+const ChartFilter = ({onDateRangeChange, currentDateRange}) => {
+    console.log(currentDateRange)
+    return (
+        <ul className="nav nav-pills">
+            {dateRangeFilters.map(dateRangeFilter => (
+                <li key={dateRangeFilter.name} className={currentDateRange === dateRangeFilter.name ? 'active' : ''}>
+                    <a onClick={() => onDateRangeChange(dateRangeFilter.name)}>
+                        {dateRangeFilter.caption}
+                    </a>
+                </li>
+            ))}
+        </ul>
+    )
 }
 
 export default ChartFilter

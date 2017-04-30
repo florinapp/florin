@@ -8,32 +8,25 @@ import ChartFilter from './ChartFilter'
 
 class TotalAssetsChart extends Component {
     componentDidMount() {
-        let {onRefresh} = this.props
-        onRefresh.call(this)
+        const {onDateRangeChange, currentDateRange} = this.props
+        onDateRangeChange(currentDateRange)
     }
 
     render() {
-        const {accountBalancesChartData, onRefresh} = this.props
-        console.log(accountBalancesChartData)
+        const {accountBalancesChartData, onDateRangeChange, currentDateRange} = this.props
         const data = accountBalancesChartData.map(accountBalancesChartDatum => {
             return {
                 key: `${accountBalancesChartDatum.account.institution} - ${accountBalancesChartDatum.account.name}`,
                 values: accountBalancesChartDatum.history,
             }
         })
-        console.log(data)
         return (
             <div className="panel panel-default">
                 <div className="panel-heading">
                     <span className="panel-title">Account Balance Chart</span>
-                    <div className="pull-right">
-                        <Button bsStyle="primary" bsSize="xsmall" onClick={onRefresh}>
-                            <span className="fa fa-refresh"></span>&nbsp;Refresh
-                        </Button>
-                    </div>
                 </div>
                 <div className="panel-body">
-                    <ChartFilter />
+                    <ChartFilter currentDateRange={currentDateRange} onDateRangeChange={onDateRangeChange}/>
                     <NVD3Chart
                         type="lineChart"
                         xAxis={{ tickFormat: (d) => d3.time.format('%x')(new Date(d)) }}

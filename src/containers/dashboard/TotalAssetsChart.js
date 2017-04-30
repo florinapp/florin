@@ -3,15 +3,17 @@ import TotalAssetsChart from '../../components/dashboard/TotalAssetsChart'
 import { fetchAccountBalancesChartData } from '../../actions'
 
 const mapStateToProps = ({dashboard}) => {
+    const {accountBalancesChartData, currentDateRange} = dashboard
     return {
-        accountBalancesChartData: dashboard.accountBalancesChartData
+        currentDateRange,
+        accountBalancesChartData,
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        onRefresh: () => {
-            dispatch(fetchAccountBalancesChartData())
+        onDateRangeChange: (dateRange) => {
+            dispatch(fetchAccountBalancesChartData(dateRange))
         }
     }
 }

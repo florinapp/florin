@@ -1,9 +1,16 @@
-import { RECEIVE_ACCOUNT_BALANCES_CHART_DATA, RECEIVE_ACCOUNT_BALANCES_DATA, CHANGE_DASHBOARD_SELECTED_ACCOUNT, DELETE_ACCOUNT_BALANCE_SUCCEEDED } from '../actions'
+import {
+    RECEIVE_ACCOUNT_BALANCES_CHART_DATA,
+    RECEIVE_ACCOUNT_BALANCES_DATA,
+    CHANGE_DASHBOARD_SELECTED_ACCOUNT,
+    DELETE_ACCOUNT_BALANCE_SUCCEEDED,
+    REQUEST_ACCOUNT_BALANCES_CHART_DATA,
+} from '../actions'
 
 const initState = {
     accountBalances: [],
     accountBalancesChartData: [],
     currentAccountId: null,
+    currentDateRange: 'thisMonth',
 }
 
 const dashboard = (state=initState, action) => {
@@ -35,6 +42,11 @@ const dashboard = (state=initState, action) => {
             return {
                 ...state,
                 accountBalancesChartData: action.accountBalancesChartData
+            }
+        case REQUEST_ACCOUNT_BALANCES_CHART_DATA:
+            return {
+                ...state,
+                currentDateRange: action.dateRange
             }
         default:
             return state

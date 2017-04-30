@@ -31,9 +31,10 @@ export const fetchAccountBalancesData = () => {
 }
 
 export const REQUEST_ACCOUNT_BALANCES_CHART_DATA = 'REQUEST_ACCOUNT_BALANCES_CHART_DATA'
-export const requestAccountBalancesChartData = () => {
+export const requestAccountBalancesChartData = (dateRange) => {
     return {
-        type: REQUEST_ACCOUNT_BALANCES_CHART_DATA
+        type: REQUEST_ACCOUNT_BALANCES_CHART_DATA,
+        dateRange,
     }
 }
 export const RECEIVE_ACCOUNT_BALANCES_CHART_DATA = 'RECEIVE_ACCOUNT_BALANCES_CHART_DATA'
@@ -44,10 +45,14 @@ export const receiveAccountBalancesChartData = (json) => {
         receivedAt: Date.now()
     }
 }
-export const fetchAccountBalancesChartData = () => {
+export const fetchAccountBalancesChartData = (dateRange) => {
     return (dispatch) => {
-        dispatch(requestAccountBalancesChartData())
-        return fetch(`${API_BASE_URL}/api/charts/accountBalances`)
+        dispatch(requestAccountBalancesChartData(dateRange))
+        const dateRangeFilter = buildDateRangeRequestParams({currentDateRange: dateRange})
+        const params = querystring.stringify(dateRangeFilter)
+        console.log(dateRangeFilter)
+        console.log(params)
+        return fetch(`${API_BASE_URL}/api/charts/accountBalances?${params}`)
             .then(response => response.json())
             .then(json => dispatch(receiveAccountBalancesChartData(json)))
     }
@@ -164,8 +169,6 @@ export const receiveTransactions = (json) => {
 export const fetchTransactions = (accountId, filter, sort, pagination) => {
     let url = `${API_BASE_URL}/api/accounts/${accountId}`
     const params = querystring.stringify(buildRequestParams(filter, sort, pagination))
-    console.log(pagination)
-    console.log(params)
     url = `${url}?${params}`
     return (dispatch) => {
         dispatch(requestTransactions(accountId))
