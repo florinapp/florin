@@ -94,6 +94,10 @@ const ui = (state=initState, action) => {
                 }
             }
         case UPLOAD_TRANSACTIONS_SUCCEEDED:
+            let selectedAccountId = state.uploadModal.selectedAccountId
+            if (action.fileUpload.link.accountId && action.fileUpload.link.confidenceIndex >= 0.8) {
+                selectedAccountId = action.fileUpload.link.accountId
+            }
             return {
                 ...state,
                 uploadModal: {
@@ -102,6 +106,7 @@ const ui = (state=initState, action) => {
                     uploadComplete: true,
                     fileUpload: action.fileUpload,
                     linkComplete: false,
+                    selectedAccountId,
                 }
             }
         case UPLOAD_TRANSACTIONS_FAILED:

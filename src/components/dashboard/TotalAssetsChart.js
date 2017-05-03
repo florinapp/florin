@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import { Button } from 'react-bootstrap'
 import NVD3Chart from 'react-nvd3'
 import currencyFormatter from 'currency-formatter'
 import d3 from 'd3'
@@ -33,7 +32,7 @@ class TotalAssetsChart extends Component {
                         yAxis={{ tickFormat: (d) => currencyFormatter.format(d, {code: 'CAD'}) }}
                         x={(d) => new Date(d.date).getTime()}
                         y={(d) => d.balance}
-                        height="400px"
+                        height="450px"
                         datum={data}
                     />
                 </div>
