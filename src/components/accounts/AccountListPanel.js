@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { NavLink } from 'react-router-dom'
+import { Badge, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import AccountEditModal from '../../containers/accounts/AccountEditModal'
 import './AccountListPanel.css'
 import Spinner from '../Spinner'
@@ -103,7 +104,14 @@ class AccountListPanel extends Component {
                                 return (
                                     <li key={account.id} className={isActive ? "active" : ""}>
                                         <NavLink to={`/accounts/${account.id}${location.search}`} activeClassName="active">
-                                        {account.institution}&nbsp;{account.name}
+                                            {account.institution}&nbsp;{account.name}
+                                            {account.uncategorized_transaction_count == 0 ? "" :
+                                                <OverlayTrigger placement="top" overlay={
+                                                    <Tooltip key={account.id}>Number of total uncategorized transactions</Tooltip>
+                                                }>
+                                                        <Badge pullRight>{account.uncategorized_transaction_count}</Badge>
+                                                </OverlayTrigger>
+                                            }
                                         </NavLink>
                                     </li>
                                 )
