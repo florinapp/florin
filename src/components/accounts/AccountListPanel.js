@@ -105,7 +105,7 @@ class AccountListPanel extends Component {
                                     <li key={account.id} className={isActive ? "active" : ""}>
                                         <NavLink to={`/accounts/${account.id}${location.search}`} activeClassName="active">
                                             {account.institution}&nbsp;{account.name}
-                                            {account.uncategorized_transaction_count == 0 ? "" :
+                                            {account.uncategorized_transaction_count === 0 ? "" :
                                                 <OverlayTrigger placement="top" overlay={
                                                     <Tooltip key={account.id}>Number of total uncategorized transactions</Tooltip>
                                                 }>
