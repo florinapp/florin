@@ -27,7 +27,7 @@ class AccountsTable extends Component {
                     <tbody>
                         {accountBalances.map(account => {
                             const latestBalance = account.balances[account.balances.length - 1]
-                            return <tr key={account.name}>
+                            return <tr key={account.id}>
                                 <td><Checkbox
                                     checked={currentAccountId === account.id}
                                     onChange={() => onCurrentAccountChange(account.id)} />
