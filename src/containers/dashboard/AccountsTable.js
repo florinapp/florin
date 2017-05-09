@@ -15,9 +15,6 @@ const mapDispatchToProps = (dispatch) => {
         onRefresh: () => {
             dispatch(fetchAccountBalancesData())
         },
-        onCurrentAccountChange: (accountId) => {
-            dispatch(changeDashboardSelectedAccount(accountId))
-        }
     }
 }
 

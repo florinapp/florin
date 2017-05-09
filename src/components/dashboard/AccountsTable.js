@@ -9,7 +9,7 @@ class AccountsTable extends Component {
     }
 
     render() {
-        const { accountBalances, currentAccountId, onCurrentAccountChange } = this.props
+        const { accountBalances, currentAccountId } = this.props
         if (accountBalances.length === 0) {
             return <div>No Accounts</div>  // TODO: add link to add accounts
         }
@@ -18,7 +18,6 @@ class AccountsTable extends Component {
                 <table className="table table-striped table-hover table-condensed">
                     <thead>
                         <tr>
-                            <th width="5%"></th>
                             <th>Name</th>
                             <th>Type</th>
                             <th className="current-value" width="20%">Latest Balance</th>
@@ -28,10 +27,6 @@ class AccountsTable extends Component {
                         {accountBalances.map(account => {
                             const latestBalance = account.balances[account.balances.length - 1]
                             return <tr key={account.id}>
-                                <td><Checkbox
-                                    checked={currentAccountId === account.id}
-                                    onChange={() => onCurrentAccountChange(account.id)} />
-                                </td>
                                 <td style={{verticalAlign: "middle"}}>{account.institution} - {account.name}</td>
                                 <td style={{verticalAlign: "middle"}}>{account.type}</td>
                                 <td style={{verticalAlign: "middle"}} className="current-value">{

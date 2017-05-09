@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import AccountsTable from '../../containers/dashboard/AccountsTable'
-import AccountBalanceTable from '../../containers/dashboard/AccountBalanceTable'
 import './AccountOverview.css'
 
 class AccountOverview extends Component {
@@ -12,7 +11,6 @@ class AccountOverview extends Component {
                 </div>
                 <div className="panel-body">
                     <AccountsTable />
-                    <AccountBalanceTable />
                 </div>
             </div>
         )
