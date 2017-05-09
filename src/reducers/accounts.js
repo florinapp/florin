@@ -10,6 +10,7 @@ import {
     UPDATE_ACCOUNT_SUCCEEDED,
     DELETE_ACCOUNT_SUCCEEDED,
     RECEIVE_ACCOUNT_TYPES,
+    RECEIVE_ACCOUNT_BALANCES_DATA,
 } from '../actions'
 import querystring from 'querystring'
 import { matchPath } from 'react-router'
@@ -17,6 +18,7 @@ import { matchPath } from 'react-router'
 const initState = {
     accounts: [],
     accountTypes: [],
+    accountBalances: [],
     currentAccountId: "_all",
     transactions: [],  // transactions in the current selected account
     filter: {
@@ -165,6 +167,11 @@ const accounts = (state=initState, action) => {
             return {
                 ...state,
                 accountTypes: action.accountTypes
+            }
+        case RECEIVE_ACCOUNT_BALANCES_DATA:
+            return {
+                ...state,
+                accountBalances: action.accountBalances,
             }
         default:
             return state

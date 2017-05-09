@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import AccountListPanel from '../../containers/accounts/AccountListPanel'
 import TransactionsPanel from '../../containers/accounts/TransactionsPanel'
-import AccountBalancePanel from './AccountBalancePanel'
+import AccountBalancePanel from '../../containers/accounts/AccountBalancePanel'
 import CategorySummaryPanel from '../../containers/accounts/CategorySummaryPanel'
 
 class Accounts extends Component {
@@ -17,8 +17,8 @@ class Accounts extends Component {
                 <div className="col-lg-3 col-md-6">
                     <AccountListPanel />
                     <CategorySummaryPanel />
+                    <AccountBalancePanel />
                 </div>
-                <AccountBalancePanel />
                 <TransactionsPanel />
             </div>
         )
