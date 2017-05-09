@@ -19,7 +19,9 @@ class Accounts extends Component {
                     <CategorySummaryPanel />
                     <AccountBalancePanel />
                 </div>
-                <TransactionsPanel />
+                <div className="col-lg-9 col-md-6">
+                    <TransactionsPanel />
+                </div>
             </div>
         )
     }

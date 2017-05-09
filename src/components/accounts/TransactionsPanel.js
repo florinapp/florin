@@ -61,7 +61,7 @@ class TransactionsPanel extends Component {
     render() {
         const {onShowUploadModal, pagination, onPageClicked} = this.props
         return (
-            <div className="col-lg-9 col-md-6">
+            <div>
                 <div className="panel panel-default">
                     <div className="panel-heading">
                         <h3 className="panel-title">Transactions</h3></div>

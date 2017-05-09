@@ -94,7 +94,7 @@ class AccountListPanel extends Component {
                     </div>
                 </div>
                 <div className="panel-body">
-                    {loadingAccountsData ? "" :
+                    {loadingAccountsData ? <Spinner size="64px" /> :
                         <ul className="nav nav-pills nav-stacked">
                             <li className={currentAccountId === undefined || currentAccountId === "_all" ? "active" : ""}>
                                 <NavLink to={`/accounts/_all${location.search}`} activeClassName="active">All</NavLink>
