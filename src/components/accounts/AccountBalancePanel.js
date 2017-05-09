@@ -1,8 +1,16 @@
 import React, { Component } from 'react'
 import { Panel, Button } from 'react-bootstrap'
 import currencyFormatter from 'currency-formatter'
+import NewAccountBalanceModal from './NewAccountBalanceModal'
 
 class AccountBalancePanel extends Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            showNewAccountBalanceModal: false
+        }
+    }
+
     componentWillMount() {
         const { fetchAccountBalancesData } = this.props
         fetchAccountBalancesData()
@@ -67,6 +75,13 @@ class AccountBalancePanel extends Component {
                         </table>
                     }
                 </Panel>
+                <NewAccountBalanceModal
+                    show={this.state.showNewAccountBalanceModal}
+                    createAccountBalance={(date, balance) => createAccountBalance(currentAccountId, date, balance)}
+                    onClose={() => {
+                        this.setState({showNewAccountBalanceModal: false})
+                        fetchAccountBalancesData()
+                    }} />
             </div>
         )
     }

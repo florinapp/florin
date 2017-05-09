@@ -11,6 +11,7 @@ import {
     DELETE_ACCOUNT_SUCCEEDED,
     RECEIVE_ACCOUNT_TYPES,
     RECEIVE_ACCOUNT_BALANCES_DATA,
+    DELETE_ACCOUNT_BALANCE_SUCCEEDED,
 } from '../actions'
 import querystring from 'querystring'
 import { matchPath } from 'react-router'
@@ -172,6 +173,19 @@ const accounts = (state=initState, action) => {
             return {
                 ...state,
                 accountBalances: action.accountBalances,
+            }
+        case DELETE_ACCOUNT_BALANCE_SUCCEEDED:
+            const accountBalanceId = action.id
+            return {
+                ...state,
+                accountBalances: state.accountBalances.map(accountBalance => {
+                    return {
+                        ...accountBalance,
+                        balances: accountBalance.balances.filter(balance => {
+                            return balance.id !== accountBalanceId
+                        })
+                    }
+                })
             }
         default:
             return state
