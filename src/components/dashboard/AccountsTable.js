@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import { Checkbox } from 'react-bootstrap'
 import currencyFormatter from 'currency-formatter'
 
 class AccountsTable extends Component {
@@ -9,7 +8,7 @@ class AccountsTable extends Component {
     }
 
     render() {
-        const { accountBalances, currentAccountId } = this.props
+        const { accountBalances } = this.props
         if (accountBalances.length === 0) {
             return <div>No Accounts</div>  // TODO: add link to add accounts
         }

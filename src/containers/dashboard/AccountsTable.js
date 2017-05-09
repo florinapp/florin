@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import AccountsTable from '../../components/dashboard/AccountsTable'
-import { fetchAccountBalancesData, changeDashboardSelectedAccount } from '../../actions'
+import { fetchAccountBalancesData } from '../../actions'
 
 const mapStateToProps = ({dashboard}) => {
     const { accountBalances, currentAccountId } = dashboard
