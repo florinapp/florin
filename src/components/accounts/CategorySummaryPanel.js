@@ -114,11 +114,11 @@ class CategorySummaryPanel extends Component {
                             <NavItem eventKey="expense">Expense</NavItem>
                             <NavItem eventKey="income">Income</NavItem>
                         </Nav>
-                        <div className="col-lg-6">
+                        <div className="col-lg-4">
                             <NVD3Chart type="pieChart" datum={getChartData(chartData)} x="categoryName" y="amount"
                                     showLabels={false} showLegend={false} valueFormat={(v) => currencyFormatter.format(v, {code: 'CAD'})}/>
                         </div>
-                        <div className="col-lg-6">
+                        <div className="col-lg-8">
                             <SummaryTable data={chartData} />
                         </div>
                     </div>

@@ -34,6 +34,20 @@ class AccountsTable extends Component {
                             </tr>
                         })}
                     </tbody>
+                    <tfoot>
+                        <tr>
+                            <td>
+                                <strong>Total</strong>
+                            </td>
+                            <td></td>
+                            <td className="current-value">
+                                {currencyFormatter.format(accountBalances.reduce((total, accountBalance) => {
+                                    const latestBalance = accountBalance.balances[accountBalance.balances.length - 1]
+                                    return latestBalance.balance + total
+                                }, 0), {code: 'CAD'})}
+                            </td>
+                        </tr>
+                    </tfoot>
                 </table>
             </div>
         )
