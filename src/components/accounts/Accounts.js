@@ -16,10 +16,10 @@ class Accounts extends Component {
             <div>
                 <div className="col-lg-3 col-md-6">
                     <AccountListPanel />
-                    <CategorySummaryPanel />
                     <AccountBalancePanel />
                 </div>
                 <div className="col-lg-9 col-md-6">
+                    <CategorySummaryPanel />
                     <TransactionsPanel />
                 </div>
             </div>

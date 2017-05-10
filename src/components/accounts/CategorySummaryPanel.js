@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
-import { Table, Nav, NavItem } from 'react-bootstrap'
+import { Button, Table, Nav, NavItem, Collapse } from 'react-bootstrap'
 import currencyFormatter from 'currency-formatter'
 import accounting from 'accounting'
 import Spinner from '../Spinner'
 import NVD3Chart from 'react-nvd3'
 import 'nvd3/build/nv.d3.css'
+import './CategorySummaryPanel.css'
 
 const getChartData = (data) => {
     return data.map(item => {
@@ -53,7 +54,8 @@ class CategorySummaryPanel extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            selectedTab: 'expense'
+            selectedTab: 'expense',
+            collapsed: false,
         }
     }
 
@@ -92,25 +94,35 @@ class CategorySummaryPanel extends Component {
         return (
             <div className="panel panel-default">
                 <div className="panel-heading">
+                    <i className={"collapse-trigger fa fa-chevron-" + (this.state.collapsed ? "down" : "up")}
+                        aria-hidden="true" onClick={() => {
+                        this.setState({collapsed: !this.state.collapsed})
+                    }}></i>
                     <span className="panel-title">Category Summary ({currentDateRange})</span>
                     {loadingCategorySummary ? <Spinner size="16px" /> : ""}
                     <div className="pull-right">
-                        <button type="button" className="btn btn-primary btn-xs"
+                        <Button bsStyle="primary" bsSize="xsmall"
                                 onClick={()=>fetchCategorySummary("_all", filter)}>
                             <i className="fa fa-refresh"></i>&nbsp;Refresh
-                        </button>
+                        </Button>
                     </div>
                 </div>
 
-                <div className="panel-body">
-                    <Nav bsStyle="tabs" justified activeKey={this.state.selectedTab} onSelect={(key) => this.setState({selectedTab: key})}>
-                        <NavItem eventKey="expense">Expense</NavItem>
-                        <NavItem eventKey="income">Income</NavItem>
-                    </Nav>
-                    <NVD3Chart type="pieChart" datum={getChartData(chartData)} x="categoryName" y="amount"
-                               showLabels={false} showLegend={false} valueFormat={(v) => currencyFormatter.format(v, {code: 'CAD'})}/>
-                    <SummaryTable data={chartData} />
-                </div>
+                <Collapse in={this.state.collapsed}>
+                    <div className="panel-body">
+                        <Nav bsStyle="tabs" justified activeKey={this.state.selectedTab} onSelect={(key) => this.setState({selectedTab: key})}>
+                            <NavItem eventKey="expense">Expense</NavItem>
+                            <NavItem eventKey="income">Income</NavItem>
+                        </Nav>
+                        <div className="col-lg-6">
+                            <NVD3Chart type="pieChart" datum={getChartData(chartData)} x="categoryName" y="amount"
+                                    showLabels={false} showLegend={false} valueFormat={(v) => currencyFormatter.format(v, {code: 'CAD'})}/>
+                        </div>
+                        <div className="col-lg-6">
+                            <SummaryTable data={chartData} />
+                        </div>
+                    </div>
+                </Collapse>
             </div>
         )
     }
