@@ -3,18 +3,8 @@ import { Button, Table, Nav, NavItem, Collapse } from 'react-bootstrap'
 import currencyFormatter from 'currency-formatter'
 import accounting from 'accounting'
 import Spinner from '../Spinner'
-import NVD3Chart from 'react-nvd3'
-import 'nvd3/build/nv.d3.css'
+import { VictoryPie, VictoryTheme, VictoryTooltip } from 'victory';
 import './CategorySummaryPanel.css'
-
-const getChartData = (data) => {
-    return data.map(item => {
-        return {
-            categoryName: item.category_name,
-            amount: Math.abs(item.amount)
-        }
-    })
-}
 
 const SummaryTable = ({data}) => {
     return (
@@ -114,11 +104,16 @@ class CategorySummaryPanel extends Component {
                             <NavItem eventKey="expense">Expense</NavItem>
                             <NavItem eventKey="income">Income</NavItem>
                         </Nav>
-                        <div className="col-lg-4">
-                            <NVD3Chart type="pieChart" datum={getChartData(chartData)} x="categoryName" y="amount"
-                                    showLabels={false} showLegend={false} valueFormat={(v) => currencyFormatter.format(v, {code: 'CAD'})}/>
+                        <div className="col-lg-6">
+                            <VictoryPie data={chartData}
+                                padding={25}
+                                x="category_name" y={(datum) => Math.abs(datum.amount)}
+                                theme={VictoryTheme.material}
+                                height={200}
+                                style={{labels: {fontSize: 5}}}
+                            />
                         </div>
-                        <div className="col-lg-8">
+                        <div className="col-lg-6">
                             <SummaryTable data={chartData} />
                         </div>
                     </div>

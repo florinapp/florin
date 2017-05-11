@@ -14,14 +14,12 @@
     "history": "^4.6.1",
     "isomorphic-fetch": "^2.2.1",
     "moment": "^2.18.1",
-    "nvd3": "^1.8.5",
     "react": "^15.4.2",
     "react-bootstrap": "^0.30.8",
     "react-bootstrap-dialog": "^0.9.1",
     "react-datepicker": "^0.46.0",
     "react-dom": "^15.4.2",
     "react-dropzone": "^3.12.2",
-    "react-nvd3": "^0.5.7",
     "react-redux": "^5.0.3",
     "react-router": "^4.0.0",
     "react-router-dom": "^4.0.0",
@@ -30,7 +28,8 @@
     "redux": "^3.6.0",
     "redux-logger": "^3.0.0",
     "redux-thunk": "^2.2.0",
-    "superagent": "^3.5.2"
+    "superagent": "^3.5.2",
+    "victory": "^0.19.0"
   },
   "scripts": {
     "start": "react-scripts start",
