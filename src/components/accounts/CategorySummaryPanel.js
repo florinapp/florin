@@ -3,8 +3,10 @@ import { Button, Table, Nav, NavItem, Collapse } from 'react-bootstrap'
 import currencyFormatter from 'currency-formatter'
 import accounting from 'accounting'
 import Spinner from '../Spinner'
-import { VictoryPie, VictoryTheme, VictoryTooltip } from 'victory';
 import './CategorySummaryPanel.css'
+import { Cell, Pie, PieChart, Tooltip } from 'recharts'
+
+const COLORS = ['#EFBDEB', '#B68CB8', '#6461A0', '#314CB6', '#0A81D1', '#9F7E69', '#D2BBA0', '#F2EFC7', '#F7FFE0', '#FFEEE2']
 
 const SummaryTable = ({data}) => {
     return (
@@ -81,6 +83,12 @@ class CategorySummaryPanel extends Component {
         const { income, expense } = categorySummary
         const { currentDateRange } = filter
         const chartData = this.state.selectedTab === 'expense' ? expense : income
+        const transformedChartData = chartData.map(data => {
+            return {
+                name: data.category_name,
+                value: Math.abs(data.amount),
+            }
+        })
         return (
             <div className="panel panel-default">
                 <div className="panel-heading">
@@ -105,13 +113,12 @@ class CategorySummaryPanel extends Component {
                             <NavItem eventKey="income">Income</NavItem>
                         </Nav>
                         <div className="col-lg-6">
-                            <VictoryPie data={chartData}
-                                padding={25}
-                                x="category_name" y={(datum) => Math.abs(datum.amount)}
-                                theme={VictoryTheme.material}
-                                height={200}
-                                style={{labels: {fontSize: 5}}}
-                            />
+                            <PieChart height={300} width={350}>
+                                <Pie isAnimationActive={true} data={transformedChartData} cx={200} cy={200} outerRadius={80} label>
+                                    {transformedChartData.map((entry, index) => <Cell key={entry.name} fill={COLORS[index % COLORS.length]}/>)}
+                                </Pie>
+                                <Tooltip />
+                            </PieChart>
                         </div>
                         <div className="col-lg-6">
                             <SummaryTable data={chartData} />
