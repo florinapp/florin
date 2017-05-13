@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { Button, Table, Nav, NavItem, Collapse } from 'react-bootstrap'
-import currencyFormatter from 'currency-formatter'
 import accounting from 'accounting'
 import Spinner from '../Spinner'
 import './CategorySummaryPanel.css'

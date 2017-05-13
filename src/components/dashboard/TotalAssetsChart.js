@@ -1,9 +1,31 @@
 import React, { Component } from 'react'
-import NVD3Chart from 'react-nvd3'
-import currencyFormatter from 'currency-formatter'
-import d3 from 'd3'
-import 'nvd3/build/nv.d3.css'
 import ChartFilter from './ChartFilter'
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts'
+import COLORS from '../../colors'
+
+const transformChartData = (chartData) => {
+    let dateAccountMap = {}
+
+    chartData.forEach(accountData => {
+        let accountName = `${accountData.account.institution} - ${accountData.account.name}`
+        accountData.history.forEach(accountHistory => {
+            dateAccountMap[accountHistory.date] = dateAccountMap[accountHistory.date] || {}
+            dateAccountMap[accountHistory.date][accountName] = parseFloat(accountHistory.balance)
+        })
+    })
+
+
+    return Object.entries(dateAccountMap).map(([date, data]) => {
+        data['date'] = date
+        return data
+    })
+}
+
+const getAccountNames = (chartData) => {
+    return chartData.map(accountData => {
+        return `${accountData.account.institution} - ${accountData.account.name}`
+    })
+}
 
 class TotalAssetsChart extends Component {
     componentDidMount() {
@@ -13,12 +35,9 @@ class TotalAssetsChart extends Component {
 
     render() {
         const {accountBalancesChartData, onDateRangeChange, currentDateRange} = this.props
-        const data = accountBalancesChartData.map(accountBalancesChartDatum => {
-            return {
-                key: `${accountBalancesChartDatum.account.institution} - ${accountBalancesChartDatum.account.name}`,
-                values: accountBalancesChartDatum.history,
-            }
-        })
+        let accounts = getAccountNames(accountBalancesChartData)
+        let chartData = transformChartData(accountBalancesChartData)
+
         return (
             <div className="panel panel-default">
                 <div className="panel-heading">
@@ -26,15 +45,17 @@ class TotalAssetsChart extends Component {
                 </div>
                 <div className="panel-body">
                     <ChartFilter currentDateRange={currentDateRange} onDateRangeChange={onDateRangeChange}/>
-                    <NVD3Chart
-                        type="lineChart"
-                        xAxis={{ tickFormat: (d) => d3.time.format('%x')(new Date(d)) }}
-                        yAxis={{ tickFormat: (d) => currencyFormatter.format(d, {code: 'CAD'}) }}
-                        x={(d) => new Date(d.date).getTime()}
-                        y={(d) => d.balance}
-                        height="450px"
-                        datum={data}
-                    />
+                    {chartData.length === 0 ? "" :
+                        <AreaChart width={1200} height={400} data={chartData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+                            <XAxis dataKey="date" />
+                            <YAxis />
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <Tooltip />
+                            {accounts.map((account, idx) => (
+                                <Area key={idx} type="monotone" dataKey={account} stackId="1" stroke={COLORS[idx % COLORS.length]} fill={COLORS[idx % COLORS.length]} />
+                            ))}
+                        </AreaChart>
+                    }
                 </div>
             </div>
         )
