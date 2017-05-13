@@ -1,2 +1,15 @@
-const COLORS = ['#EFBDEB', '#B68CB8', '#6461A0', '#314CB6', '#0A81D1', '#9F7E69', '#D2BBA0', '#F2EFC7', '#F7FFE0', '#FFEEE2']
+const COLORS = [
+    '#5CBAE6',
+    '#B6D957',
+    '#FAc364',
+    '#8CD3FF',
+    '#D998CB',
+    '#F2D249',
+    '#93B9C6',
+    '#CCC5A8',
+    '#52BACC',
+    '#DBDB46',
+    '#98AAFB',
+]
+
 export default COLORS
