@@ -87,14 +87,15 @@ class CategorySummaryPanel extends Component {
                 value: Math.abs(data.amount),
             }
         })
+        const togglePanel = () => {
+            this.setState({ collapsed: !this.state.collapsed })
+        }
         return (
             <div className="panel panel-default">
                 <div className="panel-heading">
                     <i className={"collapse-trigger fa fa-chevron-" + (this.state.collapsed ? "down" : "up")}
-                        aria-hidden="true" onClick={() => {
-                        this.setState({collapsed: !this.state.collapsed})
-                    }}></i>
-                    <span className="panel-title">Category Summary ({currentDateRange})</span>
+                        aria-hidden="true" onClick={togglePanel}></i>
+                    <span style={{cursor: "pointer"}} className="panel-title" onClick={togglePanel}>Category Summary ({currentDateRange})</span>
                     {loadingCategorySummary ? <Spinner size="16px" /> : ""}
                     <div className="pull-right">
                         <Button bsStyle="primary" bsSize="xsmall"
