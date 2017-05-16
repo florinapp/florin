@@ -44,7 +44,7 @@ class MonthsAgo extends DateRangeFilter {
 
 
     getDateRangeFilterParam() {
-        const lastMonth = moment(this.getNow() - moment.duration(numMonths, 'month'))
+        const lastMonth = moment(this.getNow() - moment.duration(this.numMonths, 'month'))
         return {
             startDate: lastMonth.startOf('month').format(FORMAT),
             endDate: lastMonth.endOf('month').format(FORMAT)
@@ -66,9 +66,9 @@ class ThisYear extends DateRangeFilter {
     }
 }
 
-lastMonth = new MonthsAgo({name: 'lastMonth', caption: 'Last Month', numMonths: 1})
+const lastMonth = new MonthsAgo({name: 'lastMonth', caption: 'Last Month', numMonths: 1})
 
-twoMonthsAgo = new MonthsAgo({name: 'twoMonthsAgo', caption: 'Two Months Ago', numMonths: 2})
+const twoMonthsAgo = new MonthsAgo({name: 'twoMonthsAgo', caption: 'Two Months Ago', numMonths: 2})
 
 export const DATE_RANGE_FILTERS = [
     new ThisMonth(),
