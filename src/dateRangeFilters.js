@@ -36,13 +36,15 @@ class ThisMonth extends DateRangeFilter {
     }
 }
 
-class LastMonth extends DateRangeFilter {
-    constructor() {
-        super({name: 'lastMonth', caption: 'Last Month'})
+class MonthsAgo extends DateRangeFilter {
+    constructor({name, caption, numMonths}) {
+        super({name, caption})
+        this.numMonths = numMonths
     }
 
+
     getDateRangeFilterParam() {
-        const lastMonth = moment(this.getNow()- moment.duration(32, 'd'))
+        const lastMonth = moment(this.getNow() - moment.duration(numMonths, 'month'))
         return {
             startDate: lastMonth.startOf('month').format(FORMAT),
             endDate: lastMonth.endOf('month').format(FORMAT)
@@ -64,17 +66,16 @@ class ThisYear extends DateRangeFilter {
     }
 }
 
-class AllTime extends DateRangeFilter {
-    constructor() {
-        super({name: 'allTime', caption: 'All Time'})
-    }
-}
+lastMonth = new MonthsAgo({name: 'lastMonth', caption: 'Last Month', numMonths: 1})
+
+twoMonthsAgo = new MonthsAgo({name: 'twoMonthsAgo', caption: 'Two Months Ago', numMonths: 2})
 
 export const DATE_RANGE_FILTERS = [
     new ThisMonth(),
-    new LastMonth(),
+    lastMonth,
+    twoMonthsAgo,
     new ThisYear(),
-    new AllTime(),
+    new DateRangeFilter({name: 'allTime', caption: 'All Time'}),
 ]
 
 const DATE_RANGE_FILTER_MAP = DATE_RANGE_FILTERS.reduce((aggregatedMap, currentFilter) => {
