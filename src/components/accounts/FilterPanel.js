@@ -1,6 +1,7 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
 import q from '../../q'
+import { DATE_RANGE_FILTERS } from '../../dateRangeFilters'
 
 const toBool = (val) => {
     if (typeof(val) === 'boolean') {
@@ -12,22 +13,15 @@ const toBool = (val) => {
     return false
 }
 
-const dateRangeFilters = [
-    { name: 'thisMonth', caption: 'This Month' },
-    { name: 'lastMonth', caption: 'Last Month' },
-    { name: 'thisYear', caption: 'This Year' },
-    { name: 'allTime', caption: 'All Time' },
-]
-
 const DateRangeFilterPanel = ({ currentAccountId, filter }) => {
     const { currentDateRange } = filter
 
     return (
         <ul className="nav nav-pills">
-            {dateRangeFilters.map((dateRangeFilter) => (
+            {DATE_RANGE_FILTERS.map((dateRangeFilter) => (
                 <li key={dateRangeFilter.name} role="presentation"
                     className={currentDateRange === dateRangeFilter.name ? "active" : ""}>
-                    <NavLink to={`/accounts/${currentAccountId}?${q(filter, { currentDateRange: dateRangeFilter.name })}`}>
+                    <NavLink to={`/accounts/${currentAccountId}?${dateRangeFilter.generateQueryString(filter)}`}>
                         {dateRangeFilter.caption}
                     </NavLink>
                 </li>

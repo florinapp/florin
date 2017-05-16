@@ -2,9 +2,10 @@ import React, { Component } from 'react'
 import { Button, Table, Nav, NavItem, Collapse } from 'react-bootstrap'
 import accounting from 'accounting'
 import Spinner from '../Spinner'
-import './CategorySummaryPanel.css'
 import { Cell, Pie, PieChart, Tooltip } from 'recharts'
+import { getDateRangeFilterByName } from '../../dateRangeFilters'
 import COLORS from '../../colors'
+import './CategorySummaryPanel.css'
 
 const SummaryTable = ({data}) => {
     return (
@@ -90,12 +91,14 @@ class CategorySummaryPanel extends Component {
         const togglePanel = () => {
             this.setState({ collapsed: !this.state.collapsed })
         }
+        const dateRangeFilter = getDateRangeFilterByName(currentDateRange)
         return (
             <div className="panel panel-default">
                 <div className="panel-heading">
                     <i className={"collapse-trigger fa fa-chevron-" + (this.state.collapsed ? "down" : "up")}
                         aria-hidden="true" onClick={togglePanel}></i>
-                    <span style={{cursor: "pointer"}} className="panel-title" onClick={togglePanel}>Category Summary ({currentDateRange})</span>
+                    <span style={{cursor: "pointer"}} className="panel-title" onClick={togglePanel}>
+                        Category Summary ({dateRangeFilter.caption})</span>
                     {loadingCategorySummary ? <Spinner size="16px" /> : ""}
                     <div className="pull-right">
                         <Button bsStyle="primary" bsSize="xsmall"

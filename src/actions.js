@@ -1,7 +1,7 @@
-import moment from 'moment'
 import fetch from 'isomorphic-fetch'
 import querystring from 'querystring'
 import request from 'superagent'  // TODO: use isomorphic-fetch
+import { getDateRangeFilterByName } from './dateRangeFilters'
 
 const API_BASE_URL = 'http://localhost:9000'
 
@@ -96,32 +96,12 @@ export const fetchAccountsData = () => {
 // Fetch transactions
 
 const buildDateRangeRequestParams = ({ currentDateRange }) => {
-    const FORMAT = 'YYYY-MM-DD'
     if (currentDateRange === undefined) {
         return {}
     }
 
-    const now = moment(moment.now())
-    switch (currentDateRange) {
-        case 'thisMonth':
-            return {
-                startDate: now.startOf('month').format(FORMAT),
-                endDate: now.endOf('month').format(FORMAT)
-            }
-        case 'lastMonth':
-            const lastMonth = moment(now - moment.duration(32, 'd'))
-            return {
-                startDate: lastMonth.startOf('month').format(FORMAT),
-                endDate: lastMonth.endOf('month').format(FORMAT)
-            }
-        case 'thisYear':
-            return {
-                startDate: now.startOf('year').format(FORMAT),
-                endDate: now.endOf('year').format(FORMAT)
-            }
-        default:
-            return {}
-    }
+    const dateRangeFilter = getDateRangeFilterByName(currentDateRange)
+    return dateRangeFilter.getDateRangeFilterParam()
 }
 
 const buildPaginationRequestParams = ({ currentPage }) => {
