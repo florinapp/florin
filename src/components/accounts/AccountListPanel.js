@@ -8,20 +8,21 @@ import Dialog from 'react-bootstrap-dialog'
 
 const Separator = ({padding="2px"}) => <span style={{paddingRight: padding}}></span>
 
+const TYPE_ICON = {
+    debit: 'fa-bank',
+    savings: 'fa-bank',
+    chequing: 'fa-bank',
+    credit: 'fa-credit-card',
+    investment: 'fa-line-chart'
+}
+
 const AccountLink = ({account, location}) => {
-    const typeIcon = {
-        debit: 'fa-bank',
-        savings: 'fa-bank',
-        chequing: 'fa-bank',
-        credit: 'fa-credit-card',
-        investment: 'fa-line-chart'
-    }
     return (
         <NavLink to={`/accounts/${account.id}${location.search}`} activeClassName="active">
             <OverlayTrigger placement="top" overlay={
                 <Tooltip key={account.id}>Account type: {account.type}</Tooltip>
             }>
-                <i className={"fa " + typeIcon[account.type]} aria-hidden="true"></i>
+                <i className={"fa " + TYPE_ICON[account.type]} aria-hidden="true"></i>
             </OverlayTrigger>
             <Separator padding="5px" />
             {account.institution}&nbsp;{account.name}
