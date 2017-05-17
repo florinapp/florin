@@ -6,7 +6,35 @@ import './AccountListPanel.css'
 import Spinner from '../Spinner'
 import Dialog from 'react-bootstrap-dialog'
 
-const Separator = () => <span style={{paddingRight: "2px"}}></span>
+const Separator = ({padding="2px"}) => <span style={{paddingRight: padding}}></span>
+
+const AccountLink = ({account, location}) => {
+    const typeIcon = {
+        debit: 'fa-bank',
+        savings: 'fa-bank',
+        chequing: 'fa-bank',
+        credit: 'fa-credit-card',
+        investment: 'fa-line-chart'
+    }
+    return (
+        <NavLink to={`/accounts/${account.id}${location.search}`} activeClassName="active">
+            <OverlayTrigger placement="top" overlay={
+                <Tooltip key={account.id}>Account type: {account.type}</Tooltip>
+            }>
+                <i className={"fa " + typeIcon[account.type]} aria-hidden="true"></i>
+            </OverlayTrigger>
+            <Separator padding="5px" />
+            {account.institution}&nbsp;{account.name}
+            {account.uncategorized_transaction_count === 0 ? "" :
+                <OverlayTrigger placement="top" overlay={
+                    <Tooltip key={account.id}>Number of total uncategorized transactions</Tooltip>
+                }>
+                    <Badge pullRight>{account.uncategorized_transaction_count}</Badge>
+                </OverlayTrigger>
+            }
+        </NavLink>
+    )
+}
 
 class AccountListPanel extends Component {
 
@@ -103,16 +131,7 @@ class AccountListPanel extends Component {
                                 const isActive = currentAccountId === account.id.toString()
                                 return (
                                     <li key={account.id} className={isActive ? "active" : ""}>
-                                        <NavLink to={`/accounts/${account.id}${location.search}`} activeClassName="active">
-                                            {account.institution}&nbsp;{account.name}
-                                            {account.uncategorized_transaction_count === 0 ? "" :
-                                                <OverlayTrigger placement="top" overlay={
-                                                    <Tooltip key={account.id}>Number of total uncategorized transactions</Tooltip>
-                                                }>
-                                                        <Badge pullRight>{account.uncategorized_transaction_count}</Badge>
-                                                </OverlayTrigger>
-                                            }
-                                        </NavLink>
+                                        <AccountLink account={account} location={location} />
                                     </li>
                                 )
                             })}
