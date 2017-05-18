@@ -15,6 +15,13 @@ export const requestFailed = (message) => {
     }
 }
 
+export const CLEAR_FLASH_MESSAGE = 'CLEAR_FLASH_MESSAGE'
+export const clearFlashMessage = () => {
+    return {
+        type: CLEAR_FLASH_MESSAGE,
+    }
+}
+
 // ----------------------------------------------------------------------------
 // Fetch account balances data
 export const REQUEST_ACCOUNT_BALANCES_DATA = 'REQUEST_ACCOUNT_BALANCES_DATA'

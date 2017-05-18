@@ -12,6 +12,8 @@ import {
     UPLOAD_TRANSACTIONS_FAILED,
     CHANGE_LINK_ACCOUNT,
     LINK_UPLOAD_WITH_ACCOUNT_SUCCEEDED,
+    REQUEST_FAILED,
+    CLEAR_FLASH_MESSAGE,
 } from '../actions'
 
 const initState = {
@@ -19,6 +21,10 @@ const initState = {
     loadingCategorySummary: false,
     loadingTransactions: false,
     showNewAccountModal: false,
+    flashMessage: {
+        title: null,
+        text: null,
+    },
     uploadModal: {
         show: false,
         uploadComplete: false,
@@ -135,6 +141,22 @@ const ui = (state=initState, action) => {
                     totalImported: action.totalImported,
                     totalSkipped: action.totalSkipped,
                     linkComplete: true,
+                }
+            }
+        case REQUEST_FAILED:
+            return {
+                ...state,
+                flashMessage: {
+                    visible: true,
+                    text: action.message,
+                }
+            }
+        case CLEAR_FLASH_MESSAGE:
+            return {
+                ...state,
+                flashMessage: {
+                    visible: false,
+                    text: null,
                 }
             }
         default:
