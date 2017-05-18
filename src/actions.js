@@ -6,6 +6,16 @@ import { getDateRangeFilterByName } from './dateRangeFilters'
 const API_BASE_URL = 'http://localhost:9000'
 
 // ----------------------------------------------------------------------------
+// Error state
+export const REQUEST_FAILED = 'REQUEST_FAILED'
+export const requestFailed = (message) => {
+    return {
+        type: REQUEST_FAILED,
+        message: message,
+    }
+}
+
+// ----------------------------------------------------------------------------
 // Fetch account balances data
 export const REQUEST_ACCOUNT_BALANCES_DATA = 'REQUEST_ACCOUNT_BALANCES_DATA'
 export const RECEIVE_ACCOUNT_BALANCES_DATA = 'RECEIVE_ACCOUNT_BALANCES_DATA'
@@ -50,8 +60,6 @@ export const fetchAccountBalancesChartData = (dateRange) => {
         dispatch(requestAccountBalancesChartData(dateRange))
         const dateRangeFilter = buildDateRangeRequestParams({currentDateRange: dateRange})
         const params = querystring.stringify(dateRangeFilter)
-        console.log(dateRangeFilter)
-        console.log(params)
         return fetch(`${API_BASE_URL}/api/charts/accountBalances?${params}`)
             .then(response => response.json())
             .then(json => dispatch(receiveAccountBalancesChartData(json)))
@@ -83,12 +91,24 @@ export const receiveAccountsData = (json) => {
         receivedAt: Date.now()
     }
 }
+
+const handleResponse = response => {
+    return response.json()
+}
+
+const makeErrorHandler = (dispatch, message) => {
+    return error => {
+        dispatch(requestFailed(message))
+    }
+}
+
 export const fetchAccountsData = () => {
     return (dispatch) => {
         dispatch(requestAccountsData())
         return fetch(`${API_BASE_URL}/api/accounts`)
-            .then(response => response.json())
+            .then(handleResponse)
             .then(json => dispatch(receiveAccountsData(json)))
+            .catch(makeErrorHandler(dispatch, 'Unable to fetch accounts data'))
     }
 }
 
