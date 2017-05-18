@@ -28,6 +28,9 @@ const Navigation = (props) => {
             <NavLink to="/dashboard" caption="Dashboard" />
             <NavLink to="/accounts" caption="Accounts" />
           </ul>
+          <ul className="nav navbar-nav navbar-right">
+            <NavLink to="/settings" caption="Settings" />
+          </ul>
         </div>
       </div>
     </nav>
