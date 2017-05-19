@@ -83,7 +83,7 @@ const handleDeleteTransactionSucceeded = (state, action) => {
     return {
         ...state,
         transactions: transactions.filter((transaction) => {
-            return transaction.id !== transactionId
+            return transaction.id.toString() !== transactionId.toString()
         })
     }
 }
@@ -182,7 +182,7 @@ const accounts = (state=initState, action) => {
                     return {
                         ...accountBalance,
                         balances: accountBalance.balances.filter(balance => {
-                            return balance.id !== accountBalanceId
+                            return balance.id.toString() !== accountBalanceId
                         })
                     }
                 })

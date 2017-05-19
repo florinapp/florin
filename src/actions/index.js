@@ -267,7 +267,7 @@ export const requestDeleteTransaction = (transactionId) => {
     }
 }
 
-export const deleteTransactionSucceeded = (transactionId) => {
+export const deleteTransactionSucceeded = ({transactionId}) => {
     return {
         type: DELETE_TRANSACTION_SUCCEEDED,
         transactionId
@@ -283,7 +283,7 @@ export const deleteTransaction = (transactionId) => {
         return fetch(`${API_BASE_URL}/api/transactions/${transactionId}`, options)
             .then(unwrapJsonResponse)
             .then(dispatchSuccessEvent(dispatch, deleteTransactionSucceeded))
-            .catch(dispatchRequestFailedEvent(dispatch, 'Unable to delete transaction'))  // TODO: transactionId
+            .catch(dispatchRequestFailedEvent(dispatch, 'Unable to delete transaction'))
     }
 }
 
@@ -588,7 +588,7 @@ export const requestDeleteAccountBalance = () => {
     }
 }
 export const DELETE_ACCOUNT_BALANCE_SUCCEEDED = 'DELETE_ACCOUNT_BALANCE_SUCCEEDED'
-export const deleteAccountBalanceSucceeded = (id) => {
+export const deleteAccountBalanceSucceeded = ({id}) => {
     return {
         type: DELETE_ACCOUNT_BALANCE_SUCCEEDED,
         id,
@@ -601,7 +601,7 @@ export const deleteAccountBalance = (accountId, id) => {
         return fetch(`${API_BASE_URL}/api/accounts/${accountId}/balances/${id}`, {method: 'DELETE'})
             .then(unwrapJsonResponse)
             .then(dispatchSuccessEvent(dispatch, deleteAccountBalanceSucceeded))
-            .catch(dispatchRequestFailedEvent(dispatch, 'Unable to delete account balance'))  // TODO: dispatch id
+            .catch(dispatchRequestFailedEvent(dispatch, 'Unable to delete account balance'))
     }
 }
 
