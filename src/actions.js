@@ -5,6 +5,22 @@ import { getDateRangeFilterByName } from './dateRangeFilters'
 
 const API_BASE_URL = 'http://localhost:9000'
 
+const unwrapJsonResponse = response => {
+    return response.json()
+}
+
+const dispatchSuccessEvent = (dispatch, eventFactory) => {
+    return (json) => {
+        dispatch(eventFactory(json))
+    }
+}
+
+const dispatchRequestFailedEvent = (dispatch, message) => {
+    return (error) => {
+        dispatch(requestFailed(message))
+    }
+}
+
 // ----------------------------------------------------------------------------
 // Error state
 export const REQUEST_FAILED = 'REQUEST_FAILED'
@@ -91,6 +107,7 @@ export const requestAccountsData = () => {
         type: REQUEST_ACCOUNTS_DATA
     }
 }
+
 export const receiveAccountsData = (json) => {
     return {
         type: RECEIVE_ACCOUNTS_DATA,
@@ -99,23 +116,13 @@ export const receiveAccountsData = (json) => {
     }
 }
 
-const handleResponse = response => {
-    return response.json()
-}
-
-const makeErrorHandler = (dispatch, message) => {
-    return error => {
-        dispatch(requestFailed(message))
-    }
-}
-
 export const fetchAccountsData = () => {
     return (dispatch) => {
         dispatch(requestAccountsData())
         return fetch(`${API_BASE_URL}/api/accounts`)
-            .then(handleResponse)
-            .then(json => dispatch(receiveAccountsData(json)))
-            .catch(makeErrorHandler(dispatch, 'Unable to fetch accounts data'))
+            .then(unwrapJsonResponse)
+            .then(dispatchSuccessEvent(dispatch, receiveAccountsData))
+            .catch(dispatchRequestFailedEvent(dispatch, 'Unable to fetch accounts data'))
     }
 }
 
