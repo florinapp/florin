@@ -1,7 +1,7 @@
 import fetch from 'isomorphic-fetch'
 import querystring from 'querystring'
 import request from 'superagent'  // TODO: use isomorphic-fetch
-import { getDateRangeFilterByName } from './dateRangeFilters'
+import { getDateRangeFilterByName } from '../dateRangeFilters'
 
 const API_BASE_URL = 'http://localhost:9000'
 
