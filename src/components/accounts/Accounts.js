@@ -15,9 +15,7 @@ class Accounts extends Component {
     render() {
         return (
             <div>
-                <div className="col-lg-12 col-md-12">
-                    <FlashMessage />
-                </div>
+                <FlashMessage />
                 <div className="col-lg-3 col-md-6">
                     <AccountListPanel />
                     <AccountBalancePanel />

@@ -6,7 +6,7 @@ const FlashMessage = ({ flashMessage, onDismiss }) => {
     if (visible) {
         return (
             <div className="container">
-                <Alert bsStyle="danger" onDismiss={() => onDismiss()}>
+                <Alert bsStyle="danger" onDismiss={onDismiss}>
                     {flashMessage.title ?
                         <h3>{flashMessage.title}</h3> : ""}
                     <p>{flashMessage.text}</p>
