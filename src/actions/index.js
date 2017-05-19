@@ -84,8 +84,9 @@ export const fetchAccountBalancesChartData = (dateRange) => {
         const dateRangeFilter = buildDateRangeRequestParams({currentDateRange: dateRange})
         const params = querystring.stringify(dateRangeFilter)
         return fetch(`${API_BASE_URL}/api/charts/accountBalances?${params}`)
-            .then(response => response.json())
-            .then(json => dispatch(receiveAccountBalancesChartData(json)))
+            .then(unwrapJsonResponse)
+            .then(dispatchSuccessEvent(dispatch, receiveAccountBalancesChartData))
+            .catch(dispatchRequestFailedEvent(dispatch, 'Unable to fetch account balances chart data'))
     }
 }
 // ----------------------------------------------------------------------------
@@ -187,8 +188,9 @@ export const fetchTransactions = (accountId, filter, sort, pagination) => {
     return (dispatch) => {
         dispatch(requestTransactions(accountId))
         return fetch(url)
-            .then(response => response.json())
-            .then(json => dispatch(receiveTransactions(json)))
+            .then(unwrapJsonResponse)
+            .then(dispatchSuccessEvent(dispatch, receiveTransactions))
+            .catch(dispatchRequestFailedEvent(dispatch, 'Unable to fetch transaction'))
     }
 }
 
@@ -212,8 +214,9 @@ export const fetchCategories = () => {
     return (dispatch) => {
         dispatch(requestCategories())
         return fetch(`${API_BASE_URL}/api/categories`)
-            .then(response => response.json())
-            .then(json => dispatch(receiveCategories(json)))
+            .then(unwrapJsonResponse)
+            .then(dispatchSuccessEvent(dispatch, receiveCategories))
+            .catch(dispatchRequestFailedEvent(dispatch, 'Unable to fetch categories'))
     }
 }
 
@@ -247,8 +250,9 @@ export const updateTransaction = (transactionId, transactionData) => {
             body: JSON.stringify(transactionData)
         }
         return fetch(`${API_BASE_URL}/api/transactions/${transactionId}`, options)
-            .then(response => response.json())
-            .then(json => dispatch(updateTransactionSucceeded(json)))
+            .then(unwrapJsonResponse)
+            .then(dispatchSuccessEvent(dispatch, updateTransactionSucceeded))
+            .catch(dispatchRequestFailedEvent(dispatch, 'Unable to update transaction'))
     }
 }
 
@@ -277,8 +281,9 @@ export const deleteTransaction = (transactionId) => {
             method: 'DELETE',
         }
         return fetch(`${API_BASE_URL}/api/transactions/${transactionId}`, options)
-            .then(response => response.json())
-            .then(json => dispatch(deleteTransactionSucceeded(transactionId)))
+            .then(unwrapJsonResponse)
+            .then(dispatchSuccessEvent(dispatch, deleteTransactionSucceeded))
+            .catch(dispatchRequestFailedEvent(dispatch, 'Unable to delete transaction'))  // TODO: transactionId
     }
 }
 
@@ -313,8 +318,9 @@ export const flagAsInternalTransaction = (transactionId) => {
             })
         }
         return fetch(`${API_BASE_URL}/api/transactions/${transactionId}`, options)
-            .then(response => response.json())
-            .then(json => dispatch(flagAsInternalTransactionSucceeded(transactionId)))
+            .then(unwrapJsonResponse)
+            .then(dispatchSuccessEvent(dispatch, flagAsInternalTransactionSucceeded))
+            .catch(dispatchRequestFailedEvent(dispatch, 'Unable to update transaction'))
     }
 }
 
@@ -339,8 +345,9 @@ export const fetchCategorySummary = (accountId, filter) => {
     return (dispatch) => {
         dispatch(requestCategorySummary())
         return fetch(`${API_BASE_URL}/api/accounts/${accountId}/categorySummary?${params}`)
-            .then(response => response.json())
-            .then(json => dispatch(receiveCategorySummary(json)))
+            .then(unwrapJsonResponse)
+            .then(dispatchSuccessEvent(dispatch, receiveCategorySummary))
+            .catch(dispatchRequestFailedEvent(dispatch, 'Unable to fetch account summary'))
     }
 }
 
@@ -381,8 +388,9 @@ export const createAccount = (request) => {
     return (dispatch) => {
         dispatch(requestCreateAccount())
         return fetch(`${API_BASE_URL}/api/accounts`, options)
-            .then(response => response.json())
-            .then(json => dispatch(createAccountSucceeded(json)))
+            .then(unwrapJsonResponse)
+            .then(dispatchSuccessEvent(dispatch, createAccountSucceeded))
+            .catch(dispatchRequestFailedEvent(dispatch, 'Unable to create account'))
     }
 }
 
@@ -413,8 +421,9 @@ export const updateAccount = (accountId, request) => {
     return (dispatch) => {
         dispatch(requestUpdateAccount())
         return fetch(`${API_BASE_URL}/api/accounts/${accountId}`, options)
-            .then(response => response.json())
-            .then(json => dispatch(updateAccountSucceeded(json)))
+            .then(unwrapJsonResponse)
+            .then(dispatchSuccessEvent(dispatch, updateAccountSucceeded))
+            .catch(dispatchRequestFailedEvent(dispatch, 'Unable to update account'))
     }
 }
 
@@ -438,8 +447,9 @@ export const deleteAccount = (accountId) => {
     return (dispatch) => {
         dispatch(requestDeleteAccount())
         return fetch(`${API_BASE_URL}/api/accounts/${accountId}`, {method: 'DELETE'})
-            .then(response => response.json())
-            .then(json => dispatch(deleteAccountSucceeded(json)))
+            .then(unwrapJsonResponse)
+            .then(dispatchSuccessEvent(dispatch, deleteAccountSucceeded))
+            .catch(dispatchRequestFailedEvent(dispatch, 'Unable to delete account'))
     }
 }
 
@@ -530,8 +540,9 @@ export const linkUploadWithAccount = (fileUpload, selectedAccountId) => {
             body: JSON.stringify({accountId: selectedAccountId})
         }
         return fetch(`${API_BASE_URL}/api/fileUploads/${fileUpload.id}/linkAccount`, options)
-            .then(response => response.json())
-            .then(json => dispatch(linkUploadWithAccountSucceeded(json)))
+            .then(unwrapJsonResponse)
+            .then(dispatchSuccessEvent(dispatch, linkUploadWithAccountSucceeded))
+            .catch(dispatchRequestFailedEvent(dispatch, 'Unable to link upload with account'))
     }
 }
 
@@ -562,8 +573,9 @@ export const createAccountBalance = (accountId, date, balance) => {
             body: JSON.stringify({date, balance})
         }
         return fetch(`${API_BASE_URL}/api/accounts/${accountId}/balances`, options)
-            .then(response => response.json())
-            .then(json => dispatch(createAccountBalanceSucceeded(json)))
+            .then(unwrapJsonResponse)
+            .then(dispatchSuccessEvent(dispatch, createAccountBalanceSucceeded))
+            .catch(dispatchRequestFailedEvent(dispatch, 'Unable to create new account balance'))
     }
 }
 
@@ -587,8 +599,9 @@ export const deleteAccountBalance = (accountId, id) => {
     return (dispatch) => {
         dispatch(requestDeleteAccountBalance())
         return fetch(`${API_BASE_URL}/api/accounts/${accountId}/balances/${id}`, {method: 'DELETE'})
-            .then(response => response.json())
-            .then(json => dispatch(deleteAccountBalanceSucceeded(id)))
+            .then(unwrapJsonResponse)
+            .then(dispatchSuccessEvent(dispatch, deleteAccountBalanceSucceeded))
+            .catch(dispatchRequestFailedEvent(dispatch, 'Unable to delete account balance'))  // TODO: dispatch id
     }
 }
 
@@ -612,7 +625,8 @@ export const fetchAccountTypes = () => {
     return (dispatch) => {
         dispatch(requestFetchAccountTypes())
         return fetch(`${API_BASE_URL}/api/accountTypes`)
-            .then(response => response.json())
-            .then(json => dispatch(receiveAccountTypes(json)))
+            .then(unwrapJsonResponse)
+            .then(dispatchSuccessEvent(dispatch, receiveAccountTypes))
+            .catch(dispatchRequestFailedEvent(dispatch, 'Unable to fetch account types'))
     }
 }
