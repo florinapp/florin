@@ -1,15 +1,6 @@
 import React, { Component } from 'react'
-import { Button, Modal, ControlLabel, FormControl, HelpBlock, FormGroup } from 'react-bootstrap'
-
-const FieldGroup = ({id, label, help, validationState, ...props}) => {
-    return (
-        <FormGroup controlId={id} validationState={validationState}>
-            <ControlLabel>{label}</ControlLabel>
-            <FormControl {...props} />
-            {help && <HelpBlock>{help}</HelpBlock>}
-        </FormGroup>
-    )
-}
+import { Button, Modal, ControlLabel, FormControl, FormGroup } from 'react-bootstrap'
+import FieldGroup from '../FieldGroup'
 
 class AccountEditModal extends Component {
     resetValidationState() {

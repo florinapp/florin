@@ -3,12 +3,21 @@ import { Button, Pagination } from 'react-bootstrap'
 import TransactionTable from '../../containers/accounts/TransactionTable'
 import FilterPanel from '../../containers/accounts/FilterPanel'
 import UploadTransactionsModal from '../../containers/accounts/UploadTransactionsModal'
+import TransactionModal from './TransactionModal'
 import './TransactionsPanel.css'
 
 const UploadButton = ({ onShowUploadModal }) => {
     return (
         <Button bsStyle="primary" onClick={() => onShowUploadModal()}>
             <i className="fa fa-upload" aria-hidden="true"></i>&nbsp;Upload Transactions
+        </Button>
+    )
+}
+
+const NewTransactionButton = ({ onShowNewTransactionModal }) => {
+    return (
+        <Button bsStyle="primary" onClick={() => onShowNewTransactionModal()}>
+            <i className="fa fa-plus" aria-hidden="true"></i>&nbsp;Add New Transaction
         </Button>
     )
 }
@@ -21,6 +30,10 @@ class TransactionsPanel extends Component {
         this.pagination = this.props.pagination
         this.currentAccountId = this.props.currentAccountId
         this.fetchTransactions = this.props.fetchTransactions
+        this.state = {
+            showUploadTransactionsModal: false,  // TODO: un-redux this part
+            showNewTransactionModal: false,
+        }
     }
 
     componentWillReceiveProps(nextProps) {
@@ -53,7 +66,6 @@ class TransactionsPanel extends Component {
     }
 
     componentWillMount() {
-        this.setState({showModal: false})
         // Triggers the initial fetch, subsequent fetches will be initiated by componentWillReceiveProps
         this.fetchTransactions(this.currentAccountId, this.filter, this.sort, this.pagination)
     }
@@ -71,8 +83,10 @@ class TransactionsPanel extends Component {
                             <div className="col-md-12">
                                 <div className="btn-group pull-left" role="group" style={{marginTop: "0px"}}>
                                     <UploadButton onShowUploadModal={onShowUploadModal} />
+                                    <NewTransactionButton onShowNewTransactionModal={() => {
+                                        this.setState({showNewTransactionModal: true})}} />
                                 </div>
-                                <div className="text-center">
+                                <div className="text-center pull-right">
                                     <Pagination prev next first last ellipsis boundaryLinks
                                                 items={pagination.totalPages} maxButtons={5}
                                                 activePage={pagination.currentPage}
@@ -95,6 +109,11 @@ class TransactionsPanel extends Component {
                     </div>
                 </div>
                 <UploadTransactionsModal />
+                <TransactionModal
+                    show={this.state.showNewTransactionModal}
+                    onClose={() => {
+                        this.setState({ showNewTransactionModal: false })
+                    }} />
             </div>
         )
     }
