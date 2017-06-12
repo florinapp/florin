@@ -1,8 +1,21 @@
 import React, { Component } from 'react'
-import { Modal, Button } from 'react-bootstrap'
+import { Modal, Button, FormGroup, ControlLabel } from 'react-bootstrap'
+import DatePicker from 'react-datepicker'
 import FieldGroup from '../FieldGroup'
 
 class TransactionModal extends Component {
+    constructor() {
+        super()
+        this.state = {
+            date: null
+        }
+    }
+
+    onChange(date) {
+        this.setState({
+            date
+        })
+    }
 
     render() {
         const title = 'New Transaction'
@@ -14,6 +27,17 @@ class TransactionModal extends Component {
                 </Modal.Header>
                 <Modal.Body>
                     <form>
+                        <FormGroup controlId="date">
+                            <ControlLabel>Date</ControlLabel>
+                            <div>
+                                <DatePicker
+                                    dateFormat="YYYY/MM/DD"
+                                    className="form-control"
+                                    selected={this.state.date || null}
+                                    onChange={(date) => {this.onChange(date)}}
+                                />
+                            </div>
+                        </FormGroup>
                         <FieldGroup id="payee" type="text" label="Payee" autoFocus />
                         <FieldGroup id="info" type="text" label="Info" />
                         <FieldGroup id="amount" type="text" label="Amount" />
