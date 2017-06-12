@@ -94,7 +94,7 @@ const handleFlagAsInternalTransferSucceeded = (state, action) => {
     return {
         ...state,
         transactions: transactions.filter((transaction) => {
-            return transaction.id !== transactionId
+            return transaction.id.toString() !== transactionId.toString()
         })
     }
 }
